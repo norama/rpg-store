@@ -1,0 +1,41 @@
+---
+import '../styles/global.css'
+
+type Props = {
+  pageTitle: string
+}
+const { pageTitle }: Props = Astro.props
+---
+
+<style>
+  body {
+    padding: 1rem;
+    background-color: beige;
+  }
+  .header {
+    padding: 2rem;
+    background-color: cadetblue;
+  }
+  .content {
+    padding: 2rem;
+    background-color: rgb(244, 165, 202);
+  }
+</style>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <div class="header">
+      <slot name="header" />
+    </div>
+    <div class="content">
+      <slot />
+    </div>
+  </body>
+</html>
