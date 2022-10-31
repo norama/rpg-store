@@ -1,8 +1,9 @@
 ---
+import Board from 'components/Board'
 import BaseLayout from 'layouts/BaseLayout.astro'
 ---
 
 <BaseLayout pageTitle="RPG Store">
   <h1 slot="header">Astro</h1>
-  <div slot="content">Content</div>
+  <div slot="content"><Board n={8} client:only="solid-js" /></div>
 </BaseLayout>
