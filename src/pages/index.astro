@@ -1,9 +1,26 @@
 ---
-import Board from 'components/Board'
+import Board from 'components/board/Board'
+import GridSideLength from 'components/board/GridSideLength.astro'
 import BaseLayout from 'layouts/BaseLayout.astro'
 ---
 
 <BaseLayout pageTitle="RPG Store">
-  <h1 slot="header">Astro</h1>
-  <div slot="content"><Board n={8} client:only="solid-js" /></div>
+  <div slot="header"><GridSideLength /></div>
+  <div slot="content"><Board client:only="solid-js" /></div>
 </BaseLayout>
+<script>
+  import gridSideLengthAtom from 'stores/gridSideLength'
+
+  gridSideLengthAtom.subscribe((value) => {
+    if (value > 10 && value < 16) {
+      gridSideLengthAtom.set(value < 13 ? 16 : 10)
+    }
+
+    if (value > 20) {
+      gridSideLengthAtom.set(1)
+    }
+    if (value < 1) {
+      gridSideLengthAtom.set(20)
+    }
+  })
+</script>

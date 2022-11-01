@@ -2,14 +2,18 @@ lockfileVersion: 5.4
 
 specifiers:
   '@astrojs/solid-js': ^1.2.2
+  '@nanostores/solid': ^0.3.0
   astro: ^1.6.0
+  nanostores: ^0.7.0
   prettier: ^2.7.1
   prettier-plugin-astro: ^0.7.0
   solid-js: ^1.4.3
 
 dependencies:
   '@astrojs/solid-js': 1.2.2_solid-js@1.6.1
+  '@nanostores/solid': 0.3.0_kfyrmeplinth63os5kam5vl7vy
   astro: 1.6.2
+  nanostores: 0.7.0
   solid-js: 1.6.1
 
 devDependencies:
@@ -468,6 +472,16 @@ packages:
 
   /@ljharb/has-package-exports-patterns/0.0.2:
     resolution: {integrity: sha512-4/RWEeXDO6bocPONheFe6gX/oQdP/bEpv0oL4HqjPP5DCenBSt0mHgahppY49N0CpsaqffdwPq+TlX9CYOq2Dw==}
+    dev: false
+
+  /@nanostores/solid/0.3.0_kfyrmeplinth63os5kam5vl7vy:
+    resolution: {integrity: sha512-OE5oKS42lJ+ahHjINgRxI/1Jl76VQy6i8fvAfdYE4UySMFXMEB69Qh8e4L7TObRzxIVl2PeoMacHM10PydBV9w==}
+    peerDependencies:
+      nanostores: ^0.7.0
+      solid-js: '>=1.4.0'
+    dependencies:
+      nanostores: 0.7.0
+      solid-js: 1.6.1
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -2592,6 +2606,11 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: false
+
+  /nanostores/0.7.0:
+    resolution: {integrity: sha512-y+ma9MVXuPzXKEXaRYW/iL/xG/HtMwB8fmFcMfUqt5fCNR/na2kDubbZGV4furUMTgmxfySJs0cQjORWhaPDyA==}
+    engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
     dev: false
 
   /nlcst-to-string/2.0.4:
