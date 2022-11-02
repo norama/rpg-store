@@ -1,13 +1,13 @@
 ---
 import Board from 'components/board/Board'
 import GridSideLength from 'components/board/GridSideLength.astro'
-import BaseLayout from 'layouts/board/BaseLayout.astro'
+import BoardLayout from 'layouts/board/BoardLayout.astro'
 ---
 
-<BaseLayout pageTitle="RPG Store">
+<BoardLayout pageTitle="RPG Store">
   <div slot="header"><GridSideLength /></div>
   <div slot="content"><Board client:only="solid-js" /></div>
-</BaseLayout>
+</BoardLayout>
 <script>
   import gridSideLengthAtom from 'stores/gridSideLength'
 
