@@ -11,6 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/netlify": "^1.2.0",
     "@astrojs/solid-js": "^1.2.2",
     "@nanostores/solid": "^0.3.0",
     "astro": "^1.6.0",

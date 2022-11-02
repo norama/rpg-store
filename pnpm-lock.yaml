@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@astrojs/netlify': ^1.2.0
   '@astrojs/solid-js': ^1.2.2
   '@nanostores/solid': ^0.3.0
   astro: ^1.6.0
@@ -10,6 +11,7 @@ specifiers:
   solid-js: ^1.4.3
 
 dependencies:
+  '@astrojs/netlify': 1.2.0
   '@astrojs/solid-js': 1.2.2_solid-js@1.6.1
   '@nanostores/solid': 0.3.0_kfyrmeplinth63os5kam5vl7vy
   astro: 1.6.2
@@ -98,6 +100,13 @@ packages:
       micromark-util-types: 1.0.2
       uvu: 0.5.6
       vfile-message: 3.1.2
+    dev: false
+
+  /@astrojs/netlify/1.2.0:
+    resolution: {integrity: sha512-nFWdgR5OVUCdYt/d3U3XBYPEMukGwxzRKH4D20lk8SjQsKTtvhJpRIJWrhlGJApidjms1WJXa8xh6A8BQYRmmA==}
+    dependencies:
+      '@astrojs/webapi': 1.1.1
+      esbuild: 0.14.54
     dev: false
 
   /@astrojs/prism/1.0.1:
