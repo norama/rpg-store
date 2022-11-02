@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/solid'
 import gridSideLengthAtom from 'stores/gridSideLength'
-import { createSignal, createMemo, Index } from 'solid-js'
+import { createMemo, Index } from 'solid-js'
 
 import './board.css'
 
