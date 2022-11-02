@@ -2,4 +2,15 @@
   width: 10rem;
   height: 10rem;
   background-color: cornflowerblue;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.tile:hover {
+  background-color: rgb(17, 52, 116);
+  color: white;
 }

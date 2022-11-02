@@ -2,6 +2,10 @@
 import Tile from 'components/Tile'
 import MainLayout from 'layouts/MainLayout.astro'
 import TileLayout from 'layouts/TileLayout.astro'
+
+import fetchCount from 'api/server/fetchCount'
+
+const count = await fetchCount()
 ---
 
 <style>
@@ -12,15 +16,16 @@ import TileLayout from 'layouts/TileLayout.astro'
 </style>
 
 <MainLayout pageTitle="RPG Store">
-  <h1 slot="header">RPG Store</h1>
+  <h1 slot="header">RPG Store: {count}</h1>
   <div slot="content">
     <div class="content">
-      <TileLayout>
-        <Tile client:only="solid-js" />
-      </TileLayout>
-      <TileLayout>
-        <Tile client:only="solid-js" />
-      </TileLayout>
+      {
+        [...Array(count).keys()].map(() => (
+          <TileLayout>
+            <Tile client:only="solid-js" />
+          </TileLayout>
+        ))
+      }
     </div>
   </div>
 </MainLayout>

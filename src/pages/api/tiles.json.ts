@@ -1,0 +1,13 @@
+import getRandomInt from 'util/getRandomInt'
+
+export async function get() {
+  console.log('get tiles.json SSR', import.meta.env.SSR)
+  const count = getRandomInt(10)
+
+  return new Response(JSON.stringify({ count }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
