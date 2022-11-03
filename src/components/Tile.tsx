@@ -1,4 +1,3 @@
-import { createEffect, createSignal } from 'solid-js'
 import { useStore } from '@nanostores/solid'
 import { activeTileIdsAtom, setLastActive, tilesMap } from 'stores/tiles'
 import styles from './Tile.module.css'
