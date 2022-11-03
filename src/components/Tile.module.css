@@ -1,16 +1,25 @@
 .tile {
-  width: 10rem;
-  height: 10rem;
+  width: 12rem;
+  height: 12rem;
   background-color: cornflowerblue;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  cursor: pointer;
+  opacity: 0.6;
 }
 
-.tile:hover {
+.tile.active {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.tile.active:hover {
   background-color: rgb(17, 52, 116);
   color: white;
+}
+
+.tile.lastActive {
+  border: 2px solid red;
 }

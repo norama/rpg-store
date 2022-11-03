@@ -3,9 +3,7 @@ import Tile from 'components/Tile'
 import MainLayout from 'layouts/MainLayout.astro'
 import TileLayout from 'layouts/TileLayout.astro'
 
-import fetchCount from 'api/server/fetchCount'
-
-const count = await fetchCount()
+import { tileIdsAtom } from 'stores/tiles'
 ---
 
 <style>
@@ -16,13 +14,13 @@ const count = await fetchCount()
 </style>
 
 <MainLayout pageTitle="RPG Store">
-  <h1 slot="header">RPG Store: {count}</h1>
+  <h1 slot="header">RPG Store</h1>
   <div slot="content">
     <div class="content">
       {
-        [...Array(count).keys()].map(() => (
+        tileIdsAtom.get().map((id) => (
           <TileLayout>
-            <Tile client:only="solid-js" />
+            <Tile id={id} client:only="solid-js" />
           </TileLayout>
         ))
       }

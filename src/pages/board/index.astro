@@ -9,7 +9,7 @@ import BoardLayout from 'layouts/board/BoardLayout.astro'
   <div slot="content"><Board client:only="solid-js" /></div>
 </BoardLayout>
 <script>
-  import gridSideLengthAtom from 'stores/gridSideLength'
+  import gridSideLengthAtom from 'stores/board/gridSideLength'
 
   gridSideLengthAtom.subscribe((value) => {
     if (value > 10 && value < 16) {

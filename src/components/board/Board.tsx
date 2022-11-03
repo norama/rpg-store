@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/solid'
-import gridSideLengthAtom from 'stores/gridSideLength'
+import gridSideLengthAtom from 'stores/board/gridSideLength'
 import { createMemo, Index } from 'solid-js'
 
 import './board.css'
