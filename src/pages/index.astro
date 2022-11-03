@@ -4,6 +4,8 @@ import MainLayout from 'layouts/MainLayout.astro'
 import TileLayout from 'layouts/TileLayout.astro'
 
 import { tileIdsAtom } from 'stores/tiles'
+
+const tileIds = ['Race', 'Occupation', 'Abilities', 'Symbols']
 ---
 
 <style>
@@ -18,7 +20,7 @@ import { tileIdsAtom } from 'stores/tiles'
   <div slot="content">
     <div class="content">
       {
-        tileIdsAtom.get().map((id) => (
+        tileIds.map((id) => (
           <TileLayout>
             <Tile id={id} client:only="solid-js" />
           </TileLayout>

@@ -1,16 +1,25 @@
 import { useStore } from '@nanostores/solid'
+import { createSignal } from 'solid-js'
 import { activeTileIdsAtom, setLastActive, tilesMap } from 'stores/tiles'
 import styles from './Tile.module.css'
 
 type Props = { id: string }
 
 const Tile = ({ id }: Props) => {
-  const tile = useStore(tilesMap)
   const activeTileIds = useStore(activeTileIdsAtom)
+  const [tile, setTile] = createSignal<Tile>({ id, name: '' })
+
+  tilesMap.listen((tiles, key) => {
+    console.log(key, tiles)
+    if (key === id) {
+      console.log('SET', tiles[id])
+      setTile(tiles[id])
+    }
+  })
 
   return (
     <div class={tileClasses(id, activeTileIds())} onClick={() => setLastActive(id)}>
-      <h2>{tile()[id].name}</h2>
+      <h2>{tile().name}</h2>
     </div>
   )
 }
