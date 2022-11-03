@@ -1,7 +1,6 @@
 import PubSub from 'pubsub-js'
 import M from 'constants/messages'
 import { atom, map, computed } from 'nanostores'
-import data from 'business/data'
 
 export const tileIdsAtom = atom<string[]>([])
 
@@ -23,5 +22,3 @@ PubSub.subscribeOnce(M.initTiles, (_msg: string, { tiles, lastActiveTileId }) =>
   tileIdsAtom.set(tiles.map((tile) => tile.id))
   lastActiveTileIdAtom.set(lastActiveTileId)
 })
-
-data.publish()

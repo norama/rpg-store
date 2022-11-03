@@ -11,9 +11,10 @@ class Data {
 
   lastActiveTileId = 'Race'
 
+  tileIds = this.tiles.map((tile) => tile.id)
+
   constructor() {
     this.subscribe()
-    this.publish()
   }
 
   subscribe() {

@@ -2,10 +2,9 @@
 import Tile from 'components/Tile'
 import MainLayout from 'layouts/MainLayout.astro'
 import TileLayout from 'layouts/TileLayout.astro'
+import data from 'business/data'
 
-import { tileIdsAtom } from 'stores/tiles'
-
-const tileIds = ['Race', 'Occupation', 'Abilities', 'Symbols']
+const tileIds = data.tileIds
 ---
 
 <style>
@@ -29,3 +28,9 @@ const tileIds = ['Race', 'Occupation', 'Abilities', 'Symbols']
     </div>
   </div>
 </MainLayout>
+
+<script>
+  import data from 'business/data'
+  import 'stores/tiles'
+  data.publish()
+</script>
