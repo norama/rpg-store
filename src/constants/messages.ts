@@ -1,7 +1,11 @@
+export const TOPIC = 'tiles'
+
+const msg = (m: string) => TOPIC + '.' + m
+
 const M = {
-  tileIds: 'tileIds',
-  lastActiveTileId: 'lastActiveTileId',
-  initTiles: 'initTiles',
+  tileIds: msg('tileIds'),
+  lastActiveTileId: msg('lastActiveTileId'),
+  initTiles: msg('initTiles'),
 }
 
 export default M
