@@ -6,7 +6,7 @@ export const tileIdsAtom = atom<string[]>([])
 
 export const tilesMap = map<Record<string, Tile>>()
 
-export const lastActiveTileIdAtom = atom<string>('Race')
+export const lastActiveTileIdAtom = atom<string>()
 
 export const activeTileIdsAtom = computed(
   [tileIdsAtom, lastActiveTileIdAtom],
@@ -15,14 +15,20 @@ export const activeTileIdsAtom = computed(
 
 export const setLastActive = (id: string) => lastActiveTileIdAtom.set(id)
 
-PubSub.subscribeOnce(M.initTiles, (_msg: string, { tiles, lastActiveTileId }) => {
+PubSub.subscribeOnce(M.initTiles, (_msg: string, tiles: Tile[]) => {
   tiles.forEach((tile) => {
     tilesMap.setKey(tile.id, tile)
   })
   tileIdsAtom.set(tiles.map((tile) => tile.id))
-  lastActiveTileIdAtom.set(lastActiveTileId)
+  setLastActive(tiles[0].id)
+
+  lastActiveTileIdAtom.listen((lastActiveTileId) => {
+    PubSub.publish(M.lastActiveTileId, lastActiveTileId)
+  })
 })
 
-lastActiveTileIdAtom.listen((lastActiveTileId) => {
-  PubSub.publish(M.lastActiveTileId, lastActiveTileId)
+PubSub.subscribe(M.lastActiveTileId, (_msg: string, lastActiveTileId: string) => {
+  if (lastActiveTileIdAtom.get() !== lastActiveTileId) {
+    lastActiveTileIdAtom.set(lastActiveTileId)
+  }
 })

@@ -9,7 +9,7 @@ const Tile = ({ id }: Props) => {
   const activeTileIds = useStore(activeTileIdsAtom)
 
   return (
-    <div class={tileClasses(id, activeTileIds())} onClick={() => setLastActive(id)}>
+    <div id={id} class={tileClasses(id, activeTileIds())} onClick={() => setLastActive(id)}>
       <h2>{tiles()[id] ? tiles()[id].name : ''}</h2>
     </div>
   )

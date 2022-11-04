@@ -24,7 +24,7 @@ class Data {
   }
 
   publish() {
-    PubSub.publish(M.initTiles, { tiles: this.tiles, lastActiveTileId: this.lastActiveTileId })
+    PubSub.publish(M.initTiles, this.tiles)
   }
 }
 
