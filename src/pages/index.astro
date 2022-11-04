@@ -30,7 +30,10 @@ const tileIds = data.tileIds
 </MainLayout>
 
 <script>
-  import 'log/pubsub'
+  if (import.meta.env.PUBLIC_LOGGING === 'true') {
+    await import('log/pubsub')
+  }
+
   import data from 'business/data'
   import 'stores/tiles'
   data.publish()
