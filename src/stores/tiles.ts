@@ -22,3 +22,7 @@ PubSub.subscribeOnce(M.initTiles, (_msg: string, { tiles, lastActiveTileId }) =>
   tileIdsAtom.set(tiles.map((tile) => tile.id))
   lastActiveTileIdAtom.set(lastActiveTileId)
 })
+
+lastActiveTileIdAtom.listen((lastActiveTileId) => {
+  PubSub.publish(M.lastActiveTileId, lastActiveTileId)
+})
