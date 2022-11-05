@@ -10,16 +10,16 @@
   opacity: 0.6;
 }
 
-.tile.active {
+.tile:global(.active) {
   cursor: pointer;
   opacity: 1;
 }
 
-.tile.active:hover {
+.tile:global(.active):hover {
   background-color: rgb(17, 52, 116);
   color: white;
 }
 
-.tile.lastActive {
+.tile:global(.lastActive) {
   border: 2px solid red;
 }

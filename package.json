@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "pnpm dlx playwright test --project=chromium"
   },
   "dependencies": {
     "@astrojs/netlify": "^1.2.0",
@@ -20,6 +21,7 @@
     "solid-js": "^1.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.27.1",
     "@types/pubsub-js": "^1.8.3",
     "prettier": "^2.7.1",
     "prettier-plugin-astro": "^0.7.0"

@@ -9,7 +9,11 @@ const Tile = ({ id }: Props) => {
   const activeTileIds = useStore(activeTileIdsAtom)
 
   return (
-    <div id={id} class={tileClasses(id, activeTileIds())} onClick={() => setLastActive(id)}>
+    <div
+      data-testid={id}
+      class={tileClasses(id, activeTileIds())}
+      onClick={() => setLastActive(id)}
+    >
       <h2>{tiles()[id] ? tiles()[id].name : ''}</h2>
     </div>
   )
@@ -18,9 +22,9 @@ const Tile = ({ id }: Props) => {
 const tileClasses = (id, ids) => {
   const classes = [styles.tile]
   if (ids.includes(id)) {
-    classes.push(styles.active)
+    classes.push('active')
     if (ids.indexOf(id) === ids.length - 1) {
-      classes.push(styles.lastActive)
+      classes.push('lastActive')
     }
   }
   return classes.join(' ')
