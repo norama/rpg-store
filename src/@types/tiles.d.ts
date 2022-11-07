@@ -1,4 +1,4 @@
-type Tile = {
+type ITile = {
   id: string
   name: string
 }

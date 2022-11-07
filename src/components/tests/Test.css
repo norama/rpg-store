@@ -1,0 +1,28 @@
+.test {
+  padding: 1rem;
+  margin: 1rem;
+  width: 500px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.test .action {
+  cursor: pointer;
+}
+
+.test .result {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: beige;
+}
+
+.result.success {
+  background-color: green;
+}
+
+.result.failure {
+  background-color: red;
+}

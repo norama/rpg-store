@@ -4,7 +4,7 @@ import { atom, map, computed } from 'nanostores'
 
 export const tileIdsAtom = atom<string[]>([])
 
-export const tilesMap = map<Record<string, Tile>>()
+export const tilesMap = map<Record<string, ITile>>()
 
 export const lastActiveTileIdAtom = atom<string>()
 
@@ -15,7 +15,7 @@ export const activeTileIdsAtom = computed(
 
 export const setLastActive = (id: string) => lastActiveTileIdAtom.set(id)
 
-PubSub.subscribeOnce(M.initTiles, (_msg: string, tiles: Tile[]) => {
+PubSub.subscribeOnce(M.initTiles, (_msg: string, tiles: ITile[]) => {
   tiles.forEach((tile) => {
     tilesMap.setKey(tile.id, tile)
   })

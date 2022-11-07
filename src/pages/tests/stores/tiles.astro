@@ -1,0 +1,9 @@
+---
+import TestSuite from 'components/tests/TestSuite'
+import TestLayout from 'layouts/tests/TestLayout.astro'
+import TestSuiteTiles from 'pages/tests/stores/TestSuiteTiles'
+---
+
+<TestLayout pageTitle="Unit tests: stores.tiles">
+  <TestSuiteTiles client:only="solid-js" />
+</TestLayout>

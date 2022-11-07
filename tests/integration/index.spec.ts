@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('tiles', async ({ page }) => {
+test('integration:index', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveTitle('RPG Store')
 
