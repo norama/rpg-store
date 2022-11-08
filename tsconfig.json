@@ -4,6 +4,11 @@
     "baseUrl": "./src",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "typeRoots": ["./node_modules/@types", "./src/@types"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "src/projects/rpg/@types",
+      "./src/tests/@types",
+      "./src/projects/rpg/@types"
+    ]
   }
 }

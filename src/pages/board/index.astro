@@ -1,7 +1,7 @@
 ---
-import Board from 'components/board/Board'
-import GridSideLength from 'components/board/GridSideLength.astro'
-import BoardLayout from 'layouts/board/BoardLayout.astro'
+import Board from 'projects/board/components/Board'
+import GridSideLength from 'projects/board/components/GridSideLength.astro'
+import BoardLayout from 'projects/board/layouts/BoardLayout.astro'
 ---
 
 <BoardLayout pageTitle="RPG Store">
@@ -9,7 +9,7 @@ import BoardLayout from 'layouts/board/BoardLayout.astro'
   <div slot="content"><Board client:only="solid-js" /></div>
 </BoardLayout>
 <script>
-  import gridSideLengthAtom from 'stores/board/gridSideLength'
+  import gridSideLengthAtom from 'projects/board/stores/gridSideLength'
 
   gridSideLengthAtom.subscribe((value) => {
     if (value > 10 && value < 16) {

@@ -1,0 +1,8 @@
+---
+import TestLayout from 'tests/layouts/TestLayout.astro'
+import TestSuiteData from 'pages/tests/projects/rpg/tiles/business/TestSuiteData'
+---
+
+<TestLayout pageTitle="Unit tests: business.data"
+  ><TestSuiteData client:only="solid-js" />
+</TestLayout>

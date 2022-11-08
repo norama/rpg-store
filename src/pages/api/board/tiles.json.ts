@@ -1,4 +1,4 @@
-import getRandomInt from 'util/getRandomInt'
+import getRandomInt from 'projects/board/api/util/getRandomInt'
 
 export async function get() {
   console.log('get tiles.json SSR', import.meta.env.SSR)

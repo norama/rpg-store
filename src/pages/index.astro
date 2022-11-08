@@ -1,8 +1,8 @@
 ---
-import Tile from 'components/Tile'
-import MainLayout from 'layouts/MainLayout.astro'
-import TileLayout from 'layouts/TileLayout.astro'
-import data from 'business/data'
+import MainLayout from 'projects/rpg/tiles/layouts/MainLayout.astro'
+import TileLayout from 'projects/rpg/tiles/layouts/TileLayout.astro'
+import Tile from 'projects/rpg/tiles/components/Tile'
+import data from 'projects/rpg/tiles/business/data'
 
 const tileIds = data.tileIds
 ---
@@ -30,5 +30,5 @@ const tileIds = data.tileIds
 </MainLayout>
 
 <script>
-  import 'scripts/startup'
+  import 'projects/rpg/tiles/scripts/startup'
 </script>

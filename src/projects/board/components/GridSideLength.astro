@@ -1,0 +1,17 @@
+<div>
+  <label>Grid Side Length:</label>
+  <input id="GridSideLength" type="number" min={0} max={21} value={8} />
+  <script>
+    import gridSideLengthAtom from 'projects/board/stores/gridSideLength'
+
+    const GridSideLengthInput = document.querySelector('#GridSideLength') as HTMLInputElement
+    GridSideLengthInput.addEventListener('change', function () {
+      gridSideLengthAtom.set(Number(this.value))
+    })
+    gridSideLengthAtom.listen((value) => {
+      if (value !== Number(GridSideLengthInput.value)) {
+        GridSideLengthInput.value = String(value)
+      }
+    })
+  </script>
+</div>

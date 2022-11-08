@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test('unit:business.data', async ({ page }) => {
-  await page.goto('/tests/business/data')
+  await page.goto('/tests/projects/rpg/tiles/business/data')
   await expect(page).toHaveTitle('Unit tests: business.data')
 
   const Tests = await page.locator('.test')
