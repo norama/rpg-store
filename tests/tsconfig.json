@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // This must be specified if "paths" is.
+    "paths": {
+      "@unit/*": ["unit/*"] // This mapping is relative to "baseUrl".
+    },
+    "lib": ["es2015"]
+  }
+}

@@ -1,20 +1,5 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
+// @ts-ignore
+import testPage from '@unit/testPage.ts'
 
-test('unit:stores.tiles', async ({ page }) => {
-  await page.goto('/tests/projects/rpg/tiles/stores/tiles')
-  await expect(page).toHaveTitle('Unit tests: stores.tiles')
-
-  const Tests = await page.locator('.test')
-  let count = 0
-  while (count === 0) {
-    count = await Tests.count()
-  }
-
-  for (let i = 0; i < count; ++i) {
-    const Test = await Tests.nth(i)
-    const TestButton = await Test.getByTestId('action')
-    TestButton.click()
-    const TestResult = await Test.getByTestId('result')
-    await expect(TestResult).toHaveClass(/success/)
-  }
-})
+test('unit:stores.tiles', testPage('/tests/projects/rpg/tiles/stores/tiles'))
