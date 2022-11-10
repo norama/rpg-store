@@ -11,27 +11,17 @@ const tiles: ITestConfig = {
   tests: [
     {
       name: 'lastActiveTileId',
-      action: () =>
-        new Promise<boolean>((resolve) => {
-          lastActiveTileIdAtom.listen((lastActiveTileId) => {
-            if (lastActiveTileId === 'Occupation') {
-              resolve(true)
-            }
-          })
-          PubSub.publish(M.lastActiveTileId, 'Occupation')
-        }),
+      run: async () => {
+        PubSub.publish(M.lastActiveTileId, 'Occupation')
+      },
+      expect: () => lastActiveTileIdAtom.get() === 'Occupation',
     },
     {
       name: 'activeTileIds',
-      action: () =>
-        new Promise<boolean>((resolve) => {
-          activeTileIdsAtom.listen((activeTileIds) => {
-            if (activeTileIds.length === 3) {
-              resolve(true)
-            }
-          })
-          PubSub.publish(M.lastActiveTileId, 'Abilities')
-        }),
+      run: async () => {
+        PubSub.publish(M.lastActiveTileId, 'Abilities')
+      },
+      expect: () => activeTileIdsAtom.get().length === 3,
     },
   ],
   beforeAll: async () => {
@@ -39,10 +29,6 @@ const tiles: ITestConfig = {
   },
   before: async () => {
     setLastActive('Race')
-  },
-  after: async () => {
-    lastActiveTileIdAtom.off()
-    activeTileIdsAtom.off()
   },
 }
 

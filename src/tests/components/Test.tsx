@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js'
 import './Test.css'
 
 type Props = {
-  test: ITest
+  test: ITestCase
   prevResult?: boolean
 }
 

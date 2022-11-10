@@ -1,7 +1,7 @@
 import Test from 'tests/components/Test'
 
 type Props = {
-  tests: ITest[]
+  tests: ITestCase[]
 }
 
 const Tests = ({ tests }: Props) => {

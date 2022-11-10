@@ -1,6 +1,7 @@
 type ITest = {
   name: string
-  action: () => Promise<boolean>
+  run: () => Promise<void>
+  expect: () => boolean
 }
 
 type ITestConfig = {
@@ -9,4 +10,9 @@ type ITestConfig = {
   afterAll?: () => Promise<void>
   before?: () => Promise<void>
   after?: () => Promise<void>
+}
+
+type ITestCase = {
+  name: string
+  action: () => Promise<boolean>
 }
