@@ -1,28 +1,57 @@
 .test {
   padding: 1rem;
   margin: 1rem;
-  width: 500px;
+  width: 800px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.test .action {
-  cursor: pointer;
-}
-
 .test .result {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 4px;
   background-color: beige;
+  border: 2px solid beige;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.test .name {
+  width: 300px;
+}
+
+.test .action {
+  width: 80px;
+  height: 36px;
+  background-color: lightgray;
+  border: 1px solid grey;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.test .action:disabled,
+.test .action:disabled:hover {
+  background-color: lightgray;
+  cursor: default;
+}
+.test .action:hover {
+  background-color: beige;
+  opacity: 1;
 }
 
 .result.success {
-  background-color: green;
+  color: green;
+  border: 2px solid green;
 }
 
 .result.failure {
-  background-color: red;
+  color: red;
+  border: 2px solid red;
 }

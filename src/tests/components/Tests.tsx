@@ -1,4 +1,5 @@
 import Test from 'tests/components/Test'
+import './Tests.css'
 
 type Props = {
   tests: ITestCase[]
@@ -6,11 +7,14 @@ type Props = {
 
 const Tests = ({ tests }: Props) => {
   return (
-    <>
-      {tests.map((test) => (
-        <Test test={test} />
+    <div class="tests">
+      {tests.map((test, i) => (
+        <div class="item">
+          <h2>{i + 1}.</h2>
+          <Test test={test} />
+        </div>
       ))}
-    </>
+    </div>
   )
 }
 

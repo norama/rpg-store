@@ -25,7 +25,7 @@ const tiles: ITestConfig = {
     },
   ],
   beforeAll: async () => {
-    data.publish()
+    PubSub.publishSync(M.initTiles, data.tiles)
   },
   before: async () => {
     setLastActive('Race')

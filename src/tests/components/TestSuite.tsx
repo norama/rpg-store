@@ -1,3 +1,4 @@
+import { onMount, onCleanup } from 'solid-js'
 import Tests from 'tests/components/Tests'
 
 const INTERVAL = 500
@@ -15,13 +16,13 @@ const validate = (expect: () => boolean) => {
         }
       }, INTERVAL)
     }),
-    new Promise<boolean>((_r, reject) =>
+    new Promise<boolean>((resolve) =>
       setTimeout(() => {
         if (t) {
           clearInterval(t)
           t = undefined
         }
-        reject()
+        resolve(false)
       }, TIMEOUT)
     ),
   ])
@@ -32,22 +33,24 @@ type Props = {
 }
 
 const TestSuite = ({ suite }: Props) => {
+  onMount(async () => {
+    suite.beforeAll && (await suite.beforeAll())
+  })
+
+  onCleanup(async () => {
+    suite.afterAll && (await suite.afterAll())
+  })
+
   const tests = suite.tests.map((test, index) => ({
     name: test.name,
     action: async () => {
-      index === 0 && suite.beforeAll && (await suite.beforeAll())
       suite.before && (await suite.before())
 
       await test.run()
-      let result: boolean = undefined
-      try {
-        result = await validate(test.expect)
-      } catch (e) {
-        console.error(`${test.name}: timeout`, e)
-      }
+
+      const result = await validate(test.expect)
 
       suite.after && (await suite.after())
-      index === suite.tests.length - 1 && suite.afterAll && (await suite.afterAll())
 
       return result
     },
