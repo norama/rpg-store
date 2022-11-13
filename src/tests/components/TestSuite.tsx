@@ -43,6 +43,7 @@ const TestSuite = ({ suite }: Props) => {
 
   const tests = suite.tests.map((test, index) => ({
     name: test.name,
+    description: test.description,
     action: async () => {
       suite.before && (await suite.before())
 

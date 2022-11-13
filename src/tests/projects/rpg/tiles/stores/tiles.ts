@@ -11,6 +11,7 @@ const tiles: ITestConfig = {
   tests: [
     {
       name: 'lastActiveTileId',
+      description: 'Last active tile ID',
       run: async () => {
         PubSub.publish(M.lastActiveTileId, 'Occupation')
       },
@@ -18,6 +19,8 @@ const tiles: ITestConfig = {
     },
     {
       name: 'activeTileIds',
+      description:
+        'Active tile IDs sdfsd f sdf sd fsd fsd f sd fsd f sd fsd fsd fsd fsd f sdf sd fsd f sd fsd fsd fsd f dfgd aaaaaaaaaaa bbbbbbbbbbbbb cccccccccc ddddddd ww eeeeeeeeeeeeeee ffffffffffffffff',
       run: async () => {
         PubSub.publish(M.lastActiveTileId, 'Abilities')
       },

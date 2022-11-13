@@ -11,7 +11,7 @@ type Props = {
 }
 
 const Test = ({ test }: Props) => {
-  const { name, action } = test
+  const { name, description, action } = test
   const [result, setResult] = createSignal<boolean>()
 
   const handleClick = async () => {
@@ -24,6 +24,7 @@ const Test = ({ test }: Props) => {
   return (
     <div data-testid={name} class="test">
       <div class="name">{name}</div>
+      <div class="description">{description}</div>
       <button
         data-testid="action"
         class="action"

@@ -6,6 +6,7 @@ const tiles: ITestConfig = {
   tests: [
     {
       name: 'lastActiveTileId',
+      description: 'Last acrive tile ID',
       run: async () => {
         PubSub.publish(M.lastActiveTileId, 'Occupation')
       },
