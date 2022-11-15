@@ -3,9 +3,13 @@
   overflow-y: auto;
 }
 
-.tests .item {
+.item {
   display: flex;
   align-items: center;
+}
+
+.item h2 {
+  width: 100px;
 }
 
 /* scrollbar */

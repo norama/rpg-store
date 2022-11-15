@@ -5,7 +5,7 @@ const testPage =
   async ({ page }) => {
     await page.goto(url)
 
-    const Tests = await page.locator('.test')
+    const Tests = await page.locator('[data-test=test-item]')
     let count = 0
     while (count === 0) {
       count = await Tests.count()

@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js'
-import state from 'tests/components/state'
+import state, { ALL } from 'tests/components/state'
 import './Test.css'
 
 const sign = (result?: boolean) => (result === true ? '\u2713' : result === false ? '\u2716' : '')
@@ -22,7 +22,7 @@ const Test = ({ test }: Props) => {
   }
 
   return (
-    <div data-testid={name} class="test">
+    <div data-testid={name} data-test={name === ALL ? 'test-all' : 'test-item'} class="test">
       <div class="name">{name}</div>
       <div class="description">{description}</div>
       <button
@@ -31,7 +31,7 @@ const Test = ({ test }: Props) => {
         onClick={() => handleClick()}
         disabled={disabled()}
       >
-        Run
+        {name === ALL ? 'Run All' : 'Run'}
       </button>
       <div data-testid="result" class={resultClass(result())}>
         {sign(result())}
