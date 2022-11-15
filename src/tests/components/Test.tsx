@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js'
-import state, { ALL } from 'tests/components/state'
+import state from 'tests/components/state'
+import { ALL } from 'tests/constants'
 import './Test.css'
 
 const sign = (result?: boolean) => (result === true ? '\u2713' : result === false ? '\u2716' : '')

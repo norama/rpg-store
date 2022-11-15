@@ -7,7 +7,7 @@ import {
 } from 'projects/rpg/tiles/stores/tiles'
 import M from 'pubsub/messages'
 
-const tiles: ITestConfig = {
+const tilesSuite: ITestSuite = {
   tests: [
     {
       name: 'lastActiveTileId',
@@ -35,4 +35,4 @@ const tiles: ITestConfig = {
   },
 }
 
-export default tiles
+export default tilesSuite

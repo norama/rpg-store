@@ -2,7 +2,7 @@ import PubSub from 'pubsub-js'
 import data from 'projects/rpg/tiles/business/data'
 import M from 'pubsub/messages'
 
-const tiles: ITestConfig = {
+const dataSuite: ITestSuite = {
   tests: [
     {
       name: 'lastActiveTileId',
@@ -19,4 +19,4 @@ const tiles: ITestConfig = {
   },
 }
 
-export default tiles
+export default dataSuite

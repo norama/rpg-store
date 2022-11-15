@@ -1,0 +1,20 @@
+.test .action {
+  width: 160px;
+  height: 36px;
+  background-color: lightgray;
+  border: 1px solid grey;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.test .action:disabled,
+.test .action:disabled:hover {
+  background-color: lightgray;
+  cursor: default;
+}
+.test .action:hover {
+  background-color: beige;
+  opacity: 1;
+}

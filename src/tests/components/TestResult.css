@@ -1,0 +1,21 @@
+.test .result {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background-color: beige;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.test .result.success {
+  color: green;
+  border: 2px solid green;
+}
+
+.test .result.failure {
+  color: red;
+  border: 2px solid red;
+}

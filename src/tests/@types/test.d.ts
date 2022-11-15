@@ -5,7 +5,7 @@ type ITest = {
   expect: () => boolean
 }
 
-type ITestConfig = {
+type ITestSuite = {
   tests: ITest[]
   beforeAll?: () => Promise<void>
   afterAll?: () => Promise<void>

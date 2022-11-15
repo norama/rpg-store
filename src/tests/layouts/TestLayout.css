@@ -1,0 +1,25 @@
+.test .label {
+  width: 100px;
+}
+
+.test {
+  padding: 1rem;
+  margin: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.test .name {
+  width: 200px;
+}
+
+.test .description {
+  width: 500px;
+  height: 36px;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}

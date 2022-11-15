@@ -1,0 +1,34 @@
+---
+import TestSuite from 'tests/components/TestSuite'
+import { ALL } from 'tests/constants'
+import MainTestLayout from 'tests/layouts/MainTestLayout.astro'
+import TestLayout from 'tests/layouts/TestLayout.astro'
+
+type Props = {
+  pageTitle: string
+  pageSuite: string
+  suite: ITestSuite
+}
+const { pageTitle, pageSuite, suite }: Props = Astro.props
+---
+
+<style>
+  .tests {
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 100%;
+  }
+</style>
+
+<MainTestLayout pageTitle={pageTitle}>
+  <TestSuite pageSuite={pageSuite} client:only="solid-js" />
+  <div class="tests">
+    {
+      suite.tests.map((test, index) => (
+        <TestLayout label={String(index + 1)} name={test.name} description={test.description} />
+      ))
+    }
+  </div>
+  <hr />
+  <TestLayout label="ALL" name={ALL} description="Run All Tests" />
+</MainTestLayout>

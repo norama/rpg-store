@@ -1,63 +1,37 @@
-import { onMount, onCleanup } from 'solid-js'
-import Tests from 'tests/components/Tests'
-
-const INTERVAL = 500
-const TIMEOUT = 5000
-
-const validate = (expect: () => boolean) => {
-  let t
-  return Promise.race([
-    new Promise<boolean>((resolve) => {
-      t = setInterval(() => {
-        if (expect()) {
-          clearInterval(t)
-          t = undefined
-          resolve(true)
-        }
-      }, INTERVAL)
-    }),
-    new Promise<boolean>((resolve) =>
-      setTimeout(() => {
-        if (t) {
-          clearInterval(t)
-          t = undefined
-        }
-        resolve(false)
-      }, TIMEOUT)
-    ),
-  ])
-}
+import { onCleanup, onMount } from 'solid-js'
+import { testSuiteAtom } from 'tests/stores/tests'
+import tilesSuite from 'tests/projects/rpg/tiles/stores/tiles'
+import dataSuite from 'tests/projects/rpg/tiles/business/data'
 
 type Props = {
-  suite: ITestConfig
+  pageSuite: string
 }
 
-const TestSuite = ({ suite }: Props) => {
+const TestSuite = ({ pageSuite }: Props) => {
+  const suite = toSuite(pageSuite)
+
   onMount(async () => {
     suite.beforeAll && (await suite.beforeAll())
+    testSuiteAtom.set(suite)
   })
 
   onCleanup(async () => {
     suite.afterAll && (await suite.afterAll())
+    testSuiteAtom.set(undefined)
   })
 
-  const tests = suite.tests.map((test) => ({
-    name: test.name,
-    description: test.description,
-    action: async () => {
-      suite.before && (await suite.before())
+  return null
+}
 
-      await test.run()
-
-      const result = await validate(test.expect)
-
-      suite.after && (await suite.after())
-
-      return result
-    },
-  }))
-
-  return <Tests tests={tests} />
+const toSuite = (pageSuite: string) => {
+  switch (pageSuite) {
+    case 'tests/projects/rpg/tiles/stores/tiles':
+      return tilesSuite
+    case 'tests/projects/rpg/tiles/business/data':
+      return dataSuite
+    default:
+      return undefined
+  }
 }
 
 export default TestSuite

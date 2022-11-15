@@ -1,0 +1,22 @@
+---
+import 'styles/global.css'
+import 'tests/layouts/TestLayout.css'
+import { ALL } from 'tests/constants'
+import TestAction from 'tests/components/TestAction'
+import TestResult from 'tests/components/TestResult'
+
+type Props = {
+  label: string
+  name: string
+  description: string
+}
+const { label, name, description }: Props = Astro.props
+---
+
+<div data-testid={name} data-test={name === ALL ? 'test-all' : 'test-item'} class="test">
+  <div class="label"><h2>{label}</h2></div>
+  <div class="name">{name === ALL ? 'All' : name}</div>
+  <div class="description">{description}</div>
+  <div><TestAction name={name} client:only="solid-js" /></div>
+  <div><TestResult name={name} client:only="solid-js" /></div>
+</div>
