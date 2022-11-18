@@ -2,7 +2,10 @@
 import TestSuite from 'tests/components/TestSuite'
 import { ALL } from 'tests/constants'
 import MainTestLayout from 'tests/layouts/MainTestLayout.astro'
+import TestInLayout from 'tests/layouts/TestInLayout.astro'
 import TestLayout from 'tests/layouts/TestLayout.astro'
+import TestAction from 'tests/components/TestAction'
+import TestResult from 'tests/components/TestResult'
 
 type Props = {
   pageTitle: string
@@ -25,10 +28,10 @@ const { pageTitle, pageSuite, suite }: Props = Astro.props
   <div class="tests">
     {
       suite.tests.map((test, index) => (
-        <TestLayout label={String(index + 1)} name={test.name} description={test.description} />
+        <TestInLayout label={String(index + 1)} name={test.name} description={test.description} />
       ))
     }
   </div>
   <hr />
-  <TestLayout label="ALL" name={ALL} description="Run All Tests" />
+  <TestInLayout label="ALL" name={ALL} description="Run All Tests" />
 </MainTestLayout>
