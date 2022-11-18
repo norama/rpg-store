@@ -1,4 +1,5 @@
 import { atom, map, computed } from 'nanostores'
+import { ALL } from 'tests/constants'
 
 const INTERVAL = 500
 const TIMEOUT = 5000
@@ -29,25 +30,43 @@ const validate = (expect: () => boolean) => {
 
 export const testSuiteAtom = atom<ITestSuite>()
 
-export const testsAtom = computed([testSuiteAtom], (testSuite) =>
-  (testSuite?.tests || []).reduce((acc, test) => {
-    acc[test.name] = {
-      name: test.name,
-      description: test.description,
-      action: async () => {
-        testSuite.before && (await testSuite.before())
+export const resultsAtom = map<Record<string, boolean>>()
 
-        await test.run()
+export const testActionsAtom = computed([testSuiteAtom], (testSuite) => {
+  const tests = testSuite?.tests || []
+  const actions = tests.reduce((acc, test) => {
+    acc[test.name] = async () => {
+      resultsAtom.setKey(test.name, undefined)
+      testSuite.before && (await testSuite.before())
 
-        const result = await validate(test.expect)
+      await test.run()
 
-        testSuite.after && (await testSuite.after())
+      const result = await validate(test.expect)
 
-        return result
-      },
+      testSuite.after && (await testSuite.after())
+      resultsAtom.setKey(test.name, result)
+
+      return result
     }
+
     return acc
   }, {})
-)
+  actions[ALL] = async () => {
+    resultsAtom.set({})
+    testSuite.beforeAll && (await testSuite.beforeAll())
 
-export const resultsAtom = map<Record<string, boolean>>()
+    let result = true
+
+    for (const test of tests) {
+      const action = actions[test.name]
+      const testResult = await action()
+      result = testResult && result
+    }
+
+    testSuite.afterAll && (await testSuite.afterAll())
+    resultsAtom.setKey(ALL, result)
+
+    return result
+  }
+  return actions as Record<string, () => Promise<boolean>>
+})
