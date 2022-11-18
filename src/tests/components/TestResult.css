@@ -9,6 +9,7 @@
   justify-content: center;
   font-weight: 800;
   font-size: 1.2rem;
+  border: 2px solid transparent;
 }
 
 .test .result.success {
