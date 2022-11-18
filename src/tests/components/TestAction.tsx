@@ -1,6 +1,6 @@
 import state from 'tests/components/state'
 import { ALL } from 'tests/constants'
-import { resultsAtom, testActionsAtom } from 'tests/stores/tests'
+import { testActionsAtom } from 'tests/stores/tests'
 import './TestAction.css'
 
 const { disabled, setDisabled } = state

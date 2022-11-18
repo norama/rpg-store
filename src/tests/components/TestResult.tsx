@@ -8,15 +8,17 @@ type Props = {
 }
 
 const TestResult = ({ name }: Props) => {
+  let ref: HTMLDivElement
   const results = useStore(resultsAtom)
   const [result, setResult] = createSignal<boolean>()
 
   createEffect(() => {
+    ref.scrollIntoView()
     setResult(results()[name])
   })
 
   return (
-    <div data-testid="result" class={resultClass(result())}>
+    <div data-testid="result" class={resultClass(result())} ref={ref}>
       {sign(result())}
     </div>
   )

@@ -1,6 +1,7 @@
 .test .result {
   width: 30px;
   height: 30px;
+  scroll-margin: 30px;
   border-radius: 4px;
   background-color: beige;
   display: flex;
