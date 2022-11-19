@@ -1,0 +1,16 @@
+---
+import 'styles/global.css'
+import TestLayout from 'tests/layouts/TestLayout.astro'
+import ProgressBar from 'tests/components/ProgressBar'
+import ProgressResultText from 'tests/components/ProgressResultText'
+---
+
+<TestLayout label="" name="" description="">
+  {' '}
+  <div slot="action">
+    <ProgressBar client:only="solid-js" />
+  </div>
+  <div slot="result">
+    <ProgressResultText client:only="solid-js" />
+  </div>
+</TestLayout>

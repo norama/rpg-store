@@ -1,0 +1,20 @@
+.allResult {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.allResult .processedCount {
+  width: 2rem;
+}
+
+.allResult .successCount {
+  width: 2rem;
+  color: green;
+}
+
+.allResult .failureCount {
+  width: 2rem;
+  color: red;
+}

@@ -11,7 +11,11 @@ type Props = {
 const { label, name, description }: Props = Astro.props
 ---
 
-<div data-testid={name} data-test={name === ALL ? 'test-all' : 'test-item'} class="test">
+<div
+  data-testid={name}
+  data-test={name === ALL || name === '' ? 'test-all' : 'test-item'}
+  class="test"
+>
   <div class="label"><h2>{label}</h2></div>
   <div class="name">{name === ALL ? 'All' : name}</div>
   <div class="description">{description}</div>

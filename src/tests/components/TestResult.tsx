@@ -1,5 +1,6 @@
 import { useStore } from '@nanostores/solid'
 import { createEffect, createSignal } from 'solid-js'
+import sign from 'tests/components/sign'
 import { resultsAtom } from 'tests/stores/tests'
 import './TestResult.css'
 
@@ -23,8 +24,6 @@ const TestResult = ({ name }: Props) => {
     </div>
   )
 }
-
-const sign = (result?: boolean) => (result === true ? '\u2713' : result === false ? '\u2716' : '')
 
 const resultClass = (result?: boolean) =>
   result === true ? 'result success' : result === false ? 'result failure' : 'result'
