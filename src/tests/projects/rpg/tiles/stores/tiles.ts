@@ -1,10 +1,5 @@
 import PubSub from 'pubsub-js'
-import data from 'projects/rpg/tiles/business/data'
-import {
-  setLastActive,
-  lastActiveTileIdAtom,
-  activeTileIdsAtom,
-} from 'projects/rpg/tiles/stores/tiles'
+import { lastActiveTileIdAtom, activeTileIdsAtom } from 'projects/rpg/tiles/stores/tiles'
 import M from 'pubsub/messages'
 
 const tilesSuite: ITestSuite = {
@@ -28,11 +23,17 @@ const tilesSuite: ITestSuite = {
     },
   ],
   beforeAll: async () => {
-    await data.init()
-    data.publish()
+    const tiles = [
+      { id: 'Race', name: 'My Race' },
+      { id: 'Occupation', name: 'My Occupation' },
+      { id: 'Abilities', name: 'My Abilities' },
+      { id: 'Symbols', name: 'My Symbols' },
+    ]
+    PubSub.publishSync(M.initTiles, tiles)
+    PubSub.publishSync(M.lastActiveTileId, 'Race')
   },
   before: async () => {
-    setLastActive('Race')
+    PubSub.publishSync(M.lastActiveTileId, 'Race')
   },
 }
 

@@ -10,13 +10,17 @@ class Data {
     this.subscribe()
   }
 
-  async init() {
+  async initServer() {
     this.tiles = [
       { id: 'Race', name: 'My Race' },
       { id: 'Occupation', name: 'My Occupation' },
       { id: 'Abilities', name: 'My Abilities' },
       { id: 'Symbols', name: 'My Symbols' },
     ]
+  }
+
+  async initClient() {
+    await this.initServer()
 
     this.lastActiveTileId = 'Race'
   }
