@@ -28,7 +28,8 @@ const tilesSuite: ITestSuite = {
     },
   ],
   beforeAll: async () => {
-    PubSub.publishSync(M.initTiles, data.tiles)
+    await data.init()
+    data.publish()
   },
   before: async () => {
     setLastActive('Race')

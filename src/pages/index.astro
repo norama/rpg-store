@@ -4,7 +4,8 @@ import TileLayout from 'projects/rpg/tiles/layouts/TileLayout.astro'
 import Tile from 'projects/rpg/tiles/components/Tile'
 import data from 'projects/rpg/tiles/business/data'
 
-const tileIds = data.tileIds
+await data.init()
+const tileIds = data.tileIds()
 ---
 
 <style>

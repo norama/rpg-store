@@ -2,19 +2,27 @@ import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 
 class Data {
-  tiles = [
-    { id: 'Race', name: 'My Race' },
-    { id: 'Occupation', name: 'My Occupation' },
-    { id: 'Abilities', name: 'My Abilities' },
-    { id: 'Symbols', name: 'My Symbols' },
-  ]
+  tiles: ITile[]
 
-  lastActiveTileId = 'Race'
-
-  tileIds = this.tiles.map((tile) => tile.id)
+  lastActiveTileId: string
 
   constructor() {
     this.subscribe()
+  }
+
+  async init() {
+    this.tiles = [
+      { id: 'Race', name: 'My Race' },
+      { id: 'Occupation', name: 'My Occupation' },
+      { id: 'Abilities', name: 'My Abilities' },
+      { id: 'Symbols', name: 'My Symbols' },
+    ]
+
+    this.lastActiveTileId = 'Race'
+  }
+
+  tileIds() {
+    return this.tiles.map((tile) => tile.id)
   }
 
   subscribe() {
