@@ -31,5 +31,8 @@ const tileIds = data.tileIds()
 </MainLayout>
 
 <script>
-  import 'projects/rpg/tiles/scripts/startup'
+  import loadMirage from 'projects/rpg/scripts/loadMirage'
+  console.log('loadMirage', loadMirage)
+  await loadMirage()
+  await import('projects/rpg/tiles/scripts/startup')
 </script>
