@@ -31,8 +31,18 @@ class Data {
   }
 
   subscribe() {
-    PubSub.subscribe(M.lastActiveTileId, (_msg: string, lastActiveTileId: string) => {
-      this.rpgCharacter.lastActiveTileId = lastActiveTileId
+    PubSub.subscribe(M.lastActiveTileId, async (_msg: string, lastActiveTileId: string) => {
+      if (this.rpgCharacter.lastActiveTileId !== lastActiveTileId) {
+        const API_URL = import.meta.env.PUBLIC_RPG_API_URL
+        this.rpgCharacter.lastActiveTileId = lastActiveTileId
+        await fetch(`${API_URL}/rpgCharacter.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.rpgCharacter),
+        })
+      }
     })
   }
 

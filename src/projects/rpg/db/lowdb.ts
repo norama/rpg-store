@@ -30,3 +30,8 @@ PubSub.subscribe(apiRequest(T.tiles), () => {
 PubSub.subscribe(apiRequest(T.rpgCharacter), () => {
   PubSub.publish(apiResponse(T.rpgCharacter), db.data.rpgCharacter)
 })
+
+PubSub.subscribe(apiRequest(T.storeRpgCharacter), (msg, rpgCharacter: IRpgCharacter) => {
+  db.data.rpgCharacter = { ...rpgCharacter }
+  PubSub.publish(apiResponse(T.storeRpgCharacter))
+})

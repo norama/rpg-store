@@ -12,6 +12,7 @@ export const apiResponse = (t: string) => TOPIC + '.' + API + '.response.' + t
 export const T = {
   tiles: 'tiles',
   rpgCharacter: 'rpgCharacter',
+  storeRpgCharacter: 'storeRpgCharacter',
 }
 
 const M = {
