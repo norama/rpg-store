@@ -5,6 +5,18 @@ body {
   font-weight: 400;
 }
 
+/* progress */
+
+progress::-moz-progress-bar {
+  background-color: #8168dc;
+}
+progress::-webkit-progress-value {
+  background-color: #8168dc;
+}
+progress {
+  background-color: #8168dc;
+}
+
 /* scrollbar */
 
 ::-webkit-scrollbar {

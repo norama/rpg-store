@@ -24,7 +24,6 @@
   "devDependencies": {
     "@playwright/test": "^1.28.0",
     "@types/pubsub-js": "^1.8.3",
-    "miragejs": "^0.1.46",
     "prettier": "^2.7.1",
     "prettier-plugin-astro": "^0.7.0"
   }

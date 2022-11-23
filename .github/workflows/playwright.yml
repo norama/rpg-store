@@ -5,8 +5,7 @@ on:
   pull_request:
     branches: [main, master]
 env:
-  PUBLIC_RPG_URL: https://rpg
-  PUBLIC_MIRAGE: true
+  PUBLIC_RPG_API_URL: /api/rpg
   PUBLIC_LOWDB: true
 jobs:
   test:

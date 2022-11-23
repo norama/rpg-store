@@ -19,7 +19,12 @@ const TestResult = ({ name }: Props) => {
   })
 
   return (
-    <div data-testid="result" class={resultClass(result())} ref={ref}>
+    <div
+      data-testid="result"
+      data-result={String(result())}
+      class={resultClass(result())}
+      ref={ref}
+    >
       {sign(result())}
     </div>
   )

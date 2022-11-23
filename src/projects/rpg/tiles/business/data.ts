@@ -21,9 +21,9 @@ class Data {
         PubSub.publish(M.apiGetTiles)
       })
     } else {
-      const API_URL = import.meta.env.PUBLIC_RPG_URL
-      console.log('FETCH', `${API_URL}/tiles`)
-      const response = await fetch(`${API_URL}/tiles`)
+      const API_URL = '/api/rpg' //import.meta.env.PUBLIC_RPG_API_URL
+      console.log('FETCH', `${API_URL}/tiles.json`)
+      const response = await fetch(`${API_URL}/tiles.json`)
       console.log('RESP', response)
       const data = await response.json()
       console.log('data', data)

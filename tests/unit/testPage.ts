@@ -14,9 +14,10 @@ const testPage =
     for (let i = 0; i < count; ++i) {
       const Test = await Tests.nth(i)
       const TestButton = await Test.getByTestId('action')
-      TestButton.click()
       const TestResult = await Test.getByTestId('result')
-      await expect(TestResult).toHaveClass(/success/)
+
+      TestButton.click()
+      await expect(TestResult).toHaveAttribute('data-result', 'true')
     }
   }
 
