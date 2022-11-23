@@ -4,6 +4,8 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+env:
+  PUBLIC_LOWDB: true
 jobs:
   test:
     timeout-minutes: 60
