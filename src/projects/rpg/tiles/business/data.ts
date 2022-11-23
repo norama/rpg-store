@@ -12,7 +12,7 @@ class Data {
   }
 
   async init(apiSource: ApiSource) {
-    if (apiSource === ApiSource.Server) {
+    if (import.meta.env.SSR) {
       await new Promise<void>((resolve) => {
         PubSub.subscribeOnce(M.apiTiles, (msg, tiles) => {
           this.tiles = tiles
