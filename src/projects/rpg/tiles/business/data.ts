@@ -13,12 +13,13 @@ class Data {
 
   async init(apiSource: ApiSource) {
     if (apiSource === ApiSource.Server) {
-      this.tiles = [
-        { id: 'Race', name: 'My Race' },
-        { id: 'Occupation', name: 'My Occupation' },
-        { id: 'Abilities', name: 'My Abilities' },
-        { id: 'Symbols', name: 'My Symbols' },
-      ]
+      await new Promise<void>((resolve) => {
+        PubSub.subscribeOnce(M.apiTiles, (msg, tiles) => {
+          this.tiles = tiles
+          resolve()
+        })
+        PubSub.publish(M.apiGetTiles)
+      })
     } else {
       const API_URL = import.meta.env.PUBLIC_RPG_URL
       console.log('FETCH', `${API_URL}/tiles`)
