@@ -21,6 +21,7 @@ class Data {
         PubSub.publish(M.apiGetTiles)
       })
     } else {
+      /*
       const API_URL = '/api/rpg' //import.meta.env.PUBLIC_RPG_API_URL
       console.log('FETCH', `${API_URL}/tiles.json`)
       const response = await fetch(`${API_URL}/tiles.json`)
@@ -28,6 +29,14 @@ class Data {
       const data = await response.json()
       console.log('data', data)
       this.tiles = data.tiles
+      */
+      console.log('tiles')
+      this.tiles = [
+        { id: 'Race', name: 'My Race' },
+        { id: 'Occupation', name: 'My Occupation' },
+        { id: 'Abilities', name: 'My Abilities' },
+        { id: 'Symbols', name: 'My Symbols' },
+      ]
     }
   }
 
