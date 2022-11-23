@@ -5,7 +5,7 @@ import M, { T } from 'pubsub/messages'
 class Data {
   tiles: ITile[]
 
-  lastActiveTileId: string
+  rpgCharacter: IRpgCharacter
 
   constructor() {
     this.subscribe()
@@ -17,12 +17,12 @@ class Data {
     } else {
       console.log('========== fetching tiles')
       const API_URL = import.meta.env.PUBLIC_RPG_API_URL
-      const response = await fetch(`${API_URL}/tiles.json`)
-      const data = await response.json()
 
-      this.tiles = data.tiles
+      let response = await fetch(`${API_URL}/tiles.json`)
+      this.tiles = await response.json()
 
-      this.lastActiveTileId = 'Race'
+      response = await fetch(`${API_URL}/rpgCharacter.json`)
+      this.rpgCharacter = await response.json()
     }
   }
 
@@ -32,7 +32,7 @@ class Data {
 
   subscribe() {
     PubSub.subscribe(M.lastActiveTileId, (_msg: string, lastActiveTileId: string) => {
-      this.lastActiveTileId = lastActiveTileId
+      this.rpgCharacter.lastActiveTileId = lastActiveTileId
     })
   }
 

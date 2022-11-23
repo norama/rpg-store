@@ -3,6 +3,11 @@ import { Low, Memory } from 'lowdb'
 import PubSub from 'pubsub-js'
 import { T, apiRequest, apiResponse } from 'pubsub/messages'
 
+type IDB = {
+  tiles: ITile[]
+  rpgCharacter: IRpgCharacter
+}
+
 const tiles = [
   { id: 'Race', name: 'My Race' },
   { id: 'Occupation', name: 'My Occupation' },
@@ -10,12 +15,18 @@ const tiles = [
   { id: 'Symbols', name: 'My Symbols' },
 ]
 
-const db = new Low(new Memory())
+const rpgCharacter = { lastActiveTileId: 'Race' }
 
-db.data = tiles
+const db = new Low<IDB>(new Memory<IDB>())
+
+db.data = { tiles, rpgCharacter }
 
 console.log('DATA', db.data)
 
 PubSub.subscribe(apiRequest(T.tiles), () => {
-  PubSub.publish(apiResponse(T.tiles), db.data)
+  PubSub.publish(apiResponse(T.tiles), db.data.tiles)
+})
+
+PubSub.subscribe(apiRequest(T.rpgCharacter), () => {
+  PubSub.publish(apiResponse(T.rpgCharacter), db.data.rpgCharacter)
 })

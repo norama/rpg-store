@@ -4,7 +4,7 @@ specifiers:
   '@astrojs/netlify': ^1.2.0
   '@astrojs/solid-js': ^1.2.2
   '@nanostores/solid': ^0.3.0
-  '@playwright/test': ^1.28.0
+  '@playwright/test': ^1.28.1
   '@types/pubsub-js': ^1.8.3
   astro: ^1.6.0
   lowdb: '4'
@@ -25,7 +25,7 @@ dependencies:
   solid-js: 1.6.2
 
 devDependencies:
-  '@playwright/test': 1.28.0
+  '@playwright/test': 1.28.1
   '@types/pubsub-js': 1.8.3
   prettier: 2.7.1
   prettier-plugin-astro: 0.7.0
@@ -529,13 +529,13 @@ packages:
       tiny-glob: 0.2.9
       tslib: 2.4.1
 
-  /@playwright/test/1.28.0:
-    resolution: {integrity: sha512-vrHs5DFTPwYox5SGKq/7TDn/S4q6RA1zArd7uhO6EyP9hj3XgZBBM12ktMbnDQNxh/fL1IUKsTNLxihmsU38lQ==}
+  /@playwright/test/1.28.1:
+    resolution: {integrity: sha512-xN6spdqrNlwSn9KabIhqfZR7IWjPpFK1835tFNgjrlysaSezuX8PYUwaz38V/yI8TJLG9PkAMEXoHRXYXlpTPQ==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 18.11.9
-      playwright-core: 1.28.0
+      playwright-core: 1.28.1
     dev: true
 
   /@polka/url/1.0.0-next.21:
@@ -2828,8 +2828,8 @@ packages:
       find-up: 4.1.0
     dev: false
 
-  /playwright-core/1.28.0:
-    resolution: {integrity: sha512-nJLknd28kPBiCNTbqpu6Wmkrh63OEqJSFw9xOfL9qxfNwody7h6/L3O2dZoWQ6Oxcm0VOHjWmGiCUGkc0X3VZA==}
+  /playwright-core/1.28.1:
+    resolution: {integrity: sha512-3PixLnGPno0E8rSBJjtwqTwJe3Yw72QwBBBxNoukIj3lEeBNXwbNiKrNuB1oyQgTBw5QHUhNO3SteEtHaMK6ag==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true

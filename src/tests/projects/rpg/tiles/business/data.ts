@@ -6,16 +6,16 @@ const dataSuite: ITestSuite = {
   tests: [
     {
       name: 'lastActiveTileId',
-      description: 'Last acrive tile ID',
+      description: 'Last active tile ID',
       run: async () => {
         PubSub.publish(M.lastActiveTileId, 'Occupation')
       },
-      expect: () => data.lastActiveTileId === 'Occupation',
+      expect: () => data.rpgCharacter.lastActiveTileId === 'Occupation',
     },
   ],
 
   before: async () => {
-    data.lastActiveTileId = 'Race'
+    data.rpgCharacter = { lastActiveTileId: 'Race' }
   },
 }
 

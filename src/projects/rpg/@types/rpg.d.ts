@@ -1,0 +1,3 @@
+type IRpgCharacter = {
+  lastActiveTileId: string
+}
