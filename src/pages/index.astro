@@ -8,7 +8,7 @@ if (import.meta.env.PUBLIC_LOWDB === 'true') {
   await import('projects/rpg/db/lowdb')
 }
 
-await data.initServer()
+await data.init()
 const tileIds = data.tileIds()
 ---
 

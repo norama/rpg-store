@@ -1,4 +1,3 @@
-import { ApiSource } from 'projects/rpg/tiles/business/api'
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 
@@ -11,7 +10,7 @@ class Data {
     this.subscribe()
   }
 
-  async init(apiSource: ApiSource) {
+  async init() {
     if (import.meta.env.SSR) {
       await new Promise<void>((resolve) => {
         PubSub.subscribeOnce(M.apiTiles, (msg, tiles) => {
@@ -28,17 +27,9 @@ class Data {
       const data = await response.json()
       console.log('data', data)
       this.tiles = data.tiles
+
+      this.lastActiveTileId = 'Race'
     }
-  }
-
-  async initServer() {
-    await this.init(ApiSource.Server)
-  }
-
-  async initClient() {
-    await this.init(ApiSource.Client)
-
-    this.lastActiveTileId = 'Race'
   }
 
   tileIds() {

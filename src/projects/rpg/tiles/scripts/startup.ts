@@ -7,6 +7,6 @@ if (import.meta.env.PUBLIC_LOCAL_STORAGE === 'true') {
 }
 
 import data from 'projects/rpg/tiles/business/data'
-await data.initClient()
+await data.init()
 import 'projects/rpg/tiles/stores/tiles'
 data.publish()
