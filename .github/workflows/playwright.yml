@@ -6,7 +6,7 @@ on:
     branches: [main, master]
 env:
   PUBLIC_RPG_API_URL: /api/rpg
-  PUBLIC_LOWDB: true
+  PUBLIC_DB: lowdb
 jobs:
   test:
     timeout-minutes: 60

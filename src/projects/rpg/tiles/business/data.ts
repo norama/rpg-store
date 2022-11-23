@@ -15,6 +15,7 @@ class Data {
     if (import.meta.env.SSR) {
       this.tiles = await query(T.tiles)
     } else {
+      console.log('========== fetching tiles')
       const API_URL = import.meta.env.PUBLIC_RPG_API_URL
       const response = await fetch(`${API_URL}/tiles.json`)
       const data = await response.json()

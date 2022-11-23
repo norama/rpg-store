@@ -1,7 +1,7 @@
 import { Low, Memory } from 'lowdb'
 
 import PubSub from 'pubsub-js'
-import M, { T, apiRequest, apiResponse } from 'pubsub/messages'
+import { T, apiRequest, apiResponse } from 'pubsub/messages'
 
 const tiles = [
   { id: 'Race', name: 'My Race' },

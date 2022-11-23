@@ -4,7 +4,7 @@ import TileLayout from 'projects/rpg/tiles/layouts/TileLayout.astro'
 import Tile from 'projects/rpg/tiles/components/Tile'
 import data from 'projects/rpg/tiles/business/data'
 
-if (import.meta.env.PUBLIC_LOWDB === 'true') {
+if (import.meta.env.PUBLIC_DB === 'lowdb') {
   await import('projects/rpg/db/lowdb')
 }
 

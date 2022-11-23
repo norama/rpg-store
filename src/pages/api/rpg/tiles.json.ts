@@ -1,12 +1,11 @@
-export const tiles = [
-  { id: 'Race', name: 'My Race' },
-  { id: 'Occupation', name: 'My Occupation' },
-  { id: 'Abilities', name: 'My Abilities' },
-  { id: 'Symbols', name: 'My Symbols' },
-]
+import query from 'projects/rpg/api/query'
+import initdb from 'projects/rpg/db/initdb'
+import { T } from 'pubsub/messages'
 
 export async function get() {
-  console.log('get tiles.json SSR', import.meta.env.SSR)
+  await initdb()
+
+  const tiles = await query(T.tiles)
 
   return new Response(JSON.stringify({ tiles }), {
     status: 200,
