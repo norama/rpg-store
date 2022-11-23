@@ -1,7 +1,7 @@
 import { Low, Memory } from 'lowdb'
 
 import PubSub from 'pubsub-js'
-import M from 'pubsub/messages'
+import M, { T, apiRequest, apiResponse } from 'pubsub/messages'
 
 const tiles = [
   { id: 'Race', name: 'My Race' },
@@ -16,6 +16,6 @@ db.data = tiles
 
 console.log('DATA', db.data)
 
-PubSub.subscribe(M.apiGetTiles, () => {
-  PubSub.publish(M.apiTiles, db.data)
+PubSub.subscribe(apiRequest(T.tiles), () => {
+  PubSub.publish(apiResponse(T.tiles), db.data)
 })

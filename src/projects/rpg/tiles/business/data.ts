@@ -1,5 +1,6 @@
+import query from 'projects/rpg/api/query'
 import PubSub from 'pubsub-js'
-import M from 'pubsub/messages'
+import M, { T } from 'pubsub/messages'
 
 class Data {
   tiles: ITile[]
@@ -12,20 +13,12 @@ class Data {
 
   async init() {
     if (import.meta.env.SSR) {
-      await new Promise<void>((resolve) => {
-        PubSub.subscribeOnce(M.apiTiles, (msg, tiles) => {
-          this.tiles = tiles
-          resolve()
-        })
-        PubSub.publish(M.apiGetTiles)
-      })
+      this.tiles = await query(T.tiles)
     } else {
       const API_URL = import.meta.env.PUBLIC_RPG_API_URL
-      console.log('FETCH', `${API_URL}/tiles.json`)
       const response = await fetch(`${API_URL}/tiles.json`)
-      console.log('RESP', response)
       const data = await response.json()
-      console.log('data', data)
+
       this.tiles = data.tiles
 
       this.lastActiveTileId = 'Race'
