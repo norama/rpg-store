@@ -63,4 +63,4 @@ class Daatbase {
   }
 }
 
-export default new Daatbase()
+export const db = new Daatbase()
