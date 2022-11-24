@@ -3,10 +3,9 @@ import MainLayout from 'projects/rpg/tiles/layouts/MainLayout.astro'
 import TileLayout from 'projects/rpg/tiles/layouts/TileLayout.astro'
 import Tile from 'projects/rpg/tiles/components/Tile'
 import data from 'projects/rpg/tiles/business/data'
+import initdb from 'projects/rpg/db/initdb'
 
-if (import.meta.env.PUBLIC_DB === 'lowdb') {
-  await import('projects/rpg/db/lowdb')
-}
+await initdb()
 
 await data.init()
 const tileIds = data.tileIds()

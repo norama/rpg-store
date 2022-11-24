@@ -22,35 +22,43 @@ const tiles = [
 const rpgCharacter = { lastActiveTileId: 'Race' }
 */
 
-console.log('import.meta.url', import.meta.url)
-
 // File path
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const file = join(__dirname, 'db.json')
 
-console.log('__dirname', __dirname)
+class Daatbase {
+  db: Low<IDB>
 
-// Configure lowdb to write to JSONFile
-const adapter = new JSONFile<IDB>(file)
-const db = new Low<IDB>(adapter)
+  constructor() {
+    this.subscribe()
+  }
 
-// Read data from JSON file, this will set db.data content
-await db.read()
+  async init() {
+    if (!this.db) {
+      const adapter = new JSONFile<IDB>(file)
+      this.db = new Low<IDB>(adapter)
 
-//db.data ||= { tiles, rpgCharacter }
+      // Read data from JSON file, this will set db.data content
+      await this.db.read()
+      console.log('DATA', this.db.data)
+    }
+  }
 
-console.log('DATA', db.data)
+  subscribe() {
+    PubSub.subscribe(apiRequest(T.tiles), () => {
+      PubSub.publish(apiResponse(T.tiles), [...this.db.data.tiles])
+    })
 
-PubSub.subscribe(apiRequest(T.tiles), () => {
-  PubSub.publish(apiResponse(T.tiles), db.data.tiles)
-})
+    PubSub.subscribe(apiRequest(T.rpgCharacter), () => {
+      PubSub.publish(apiResponse(T.rpgCharacter), { ...this.db.data.rpgCharacter })
+    })
 
-PubSub.subscribe(apiRequest(T.rpgCharacter), () => {
-  PubSub.publish(apiResponse(T.rpgCharacter), db.data.rpgCharacter)
-})
+    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
+      this.db.data.rpgCharacter = { ...rpgCharacter }
+      await this.db.write()
+      PubSub.publish(apiResponse(T.storeRpgCharacter))
+    })
+  }
+}
 
-PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
-  db.data.rpgCharacter = { ...rpgCharacter }
-  await db.write()
-  PubSub.publish(apiResponse(T.storeRpgCharacter))
-})
+export default new Daatbase()

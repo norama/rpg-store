@@ -4,7 +4,8 @@ const initdb = async () => {
   if (firstCall) {
     if (import.meta.env.PUBLIC_DB === 'lowdb') {
       console.log('------ initdb --------')
-      await import('projects/rpg/db/lowdb')
+      const { default: db } = await import('projects/rpg/db/lowdb')
+      await db.init()
     }
     firstCall = false
   }
