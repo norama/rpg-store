@@ -48,6 +48,7 @@ class Data {
 
   publish() {
     PubSub.publish(M.initTiles, this.tiles)
+    PubSub.publish(M.lastActiveTileId, this.rpgCharacter.lastActiveTileId)
   }
 }
 
