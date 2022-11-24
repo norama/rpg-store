@@ -11,7 +11,6 @@ type IDB = {
   rpgCharacter: IRpgCharacter
 }
 
-/*
 const tiles = [
   { id: 'Race', name: 'My Race' },
   { id: 'Occupation', name: 'My Occupation' },
@@ -20,7 +19,6 @@ const tiles = [
 ]
 
 const rpgCharacter = { lastActiveTileId: 'Race' }
-*/
 
 // File path
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -35,11 +33,13 @@ class Daatbase {
 
   async init() {
     if (!this.db) {
-      const adapter = new JSONFile<IDB>(file)
-      this.db = new Low<IDB>(adapter)
+      //const adapter = new JSONFile<IDB>(file)
+      //this.db = new Low<IDB>(adapter)
+      this.db = new Low<IDB>(new Memory<IDB>())
+      this.db.data = { tiles, rpgCharacter }
 
       // Read data from JSON file, this will set db.data content
-      await this.db.read()
+      //await this.db.read()
       console.log('DATA', this.db.data)
     }
   }
@@ -54,8 +54,10 @@ class Daatbase {
     })
 
     PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
+      console.log('lowdb rpgCharacter', rpgCharacter)
+
       this.db.data.rpgCharacter = { ...rpgCharacter }
-      await this.db.write()
+      //await this.db.write()
       PubSub.publish(apiResponse(T.storeRpgCharacter))
     })
   }

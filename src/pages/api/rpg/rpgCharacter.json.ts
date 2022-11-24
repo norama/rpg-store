@@ -4,6 +4,7 @@ import { T } from 'pubsub/messages'
 
 export async function get() {
   const rpgCharacter = await query<IRpgCharacter>(T.rpgCharacter)
+  console.log('page rpgCharacter', rpgCharacter)
 
   return new Response(JSON.stringify(rpgCharacter), {
     status: 200,
