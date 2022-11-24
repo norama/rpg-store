@@ -1,5 +1,5 @@
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+//import { join, dirname } from 'node:path'
+//import { fileURLToPath } from 'node:url'
 
 import { Low, Memory, JSONFile } from 'lowdb'
 
@@ -21,17 +21,18 @@ const tiles = [
 const rpgCharacter = { lastActiveTileId: 'Race' }
 
 // File path
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const file = join(__dirname, 'db.json')
+//const __dirname = dirname(fileURLToPath(import.meta.url))
+//const file = join(__dirname, 'db.json')
 
 class Daatbase {
   db: Low<IDB>
 
   constructor() {
+    this.init()
     this.subscribe()
   }
 
-  async init() {
+  init() {
     if (!this.db) {
       //const adapter = new JSONFile<IDB>(file)
       //this.db = new Low<IDB>(adapter)
