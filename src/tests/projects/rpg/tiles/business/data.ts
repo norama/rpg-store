@@ -13,7 +13,9 @@ const dataSuite: ITestSuite = {
       expect: () => data.rpgCharacter.lastActiveTileId === 'Occupation',
     },
   ],
-
+  beforeAll: async () => {
+    await data.init()
+  },
   before: async () => {
     data.rpgCharacter = { lastActiveTileId: 'Race' }
   },

@@ -24,7 +24,7 @@ const rpgCharacter = { lastActiveTileId: 'Race' }
 //const __dirname = dirname(fileURLToPath(import.meta.url))
 //const file = join(__dirname, 'db.json')
 
-class Daatbase {
+class Database {
   db: Low<IDB>
 
   constructor() {
@@ -64,4 +64,4 @@ class Daatbase {
   }
 }
 
-export const db = new Daatbase()
+export const db = new Database()

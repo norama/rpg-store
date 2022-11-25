@@ -7,10 +7,6 @@ class Data {
 
   rpgCharacter: IRpgCharacter
 
-  constructor() {
-    this.subscribe()
-  }
-
   async init() {
     if (import.meta.env.SSR) {
       this.tiles = await query(T.tiles)
@@ -24,6 +20,8 @@ class Data {
       response = await fetch(`${API_URL}/rpgCharacter.json`)
       this.rpgCharacter = await response.json()
     }
+
+    this.subscribe()
   }
 
   tileIds() {

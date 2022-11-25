@@ -2,9 +2,17 @@ let firstCall = true
 
 const initdb = async () => {
   if (firstCall) {
-    if (import.meta.env.PUBLIC_DB === 'lowdb') {
-      console.log('------ initdb --------')
-      await import('projects/rpg/db/lowdb')
+    switch (import.meta.env.DATABASE) {
+      case 'lowdb': {
+        console.log('------ init lowdb --------')
+        await import('projects/rpg/db/lowdb')
+        break
+      }
+      case 'supabase': {
+        console.log('------ init supabase --------')
+        await import('projects/rpg/db/supabase')
+        break
+      }
     }
     firstCall = false
   }
