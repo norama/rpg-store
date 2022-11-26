@@ -13,7 +13,10 @@ class Database {
 
   init() {
     if (!this.db) {
-      const { DATABASE_URL, SUPABASE_SERVICE_API_KEY } = import.meta.env
+      const DATABASE_URL = process.env.DATABASE_URL ?? import.meta.env.DATABASE_URL
+      const SUPABASE_SERVICE_API_KEY =
+        process.env.SUPABASE_SERVICE_API_KEY ?? import.meta.env.SUPABASE_SERVICE_API_KEY
+
       this.db = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY)
     }
   }
