@@ -17,7 +17,10 @@ class Database {
       const SUPABASE_SERVICE_API_KEY =
         process.env.SUPABASE_SERVICE_API_KEY ?? import.meta.env.SUPABASE_SERVICE_API_KEY
 
-      this.db = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY)
+      this.db = createClient(
+        'https://fwquxyatrztkypzlvnmp.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3cXV4eWF0cnp0a3lwemx2bm1wIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY2OTM5ODA2NywiZXhwIjoxOTg0OTc0MDY3fQ.S2NQpdIsZLfKJcpw3zlvQHQTJK7jlT7m9jdxvp5Z9sY'
+      )
     }
   }
 
