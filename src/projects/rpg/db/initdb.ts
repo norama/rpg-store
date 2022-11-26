@@ -8,7 +8,8 @@ const initdb = async () => {
         await import('projects/rpg/db/lowdb')
         break
       }
-      case 'supabase': {
+      case 'supabase':
+      default: {
         console.log('------ init supabase --------')
         await import('projects/rpg/db/supabase')
         break
