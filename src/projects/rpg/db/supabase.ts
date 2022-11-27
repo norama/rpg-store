@@ -7,16 +7,21 @@ class Database {
   db: SupabaseClient
 
   constructor() {
+    console.log('supabase constructor')
     this.init()
     this.subscribe()
   }
 
   init() {
+    console.log('supabase init')
     if (!this.db) {
+      console.log('supabase reading env')
       const { DATABASE_URL, SUPABASE_SERVICE_API_KEY } = import.meta.env
       console.log('DATABASE_URL', DATABASE_URL)
 
       this.db = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY)
+
+      console.log('database', this.db)
     }
   }
 
@@ -24,8 +29,9 @@ class Database {
     PubSub.subscribe(apiRequest(T.tiles), async () => {
       const { data: tiles, error } = await this.db.from('tiles').select('id, name, order')
       if (error) {
-        console.error('Error while reading tiles', error)
+        console.log('Error while reading tiles', error)
       }
+      console.log('tiles', tiles)
       PubSub.publish(
         apiResponse(T.tiles),
         tiles.sort((tile1, tile2) => tile1.order - tile2.order)
@@ -37,7 +43,7 @@ class Database {
         .from('rpgCharacter')
         .select('lastActiveTileId')
       if (error) {
-        console.error('Error while reading rpgCharacter', error)
+        console.log('Error while reading rpgCharacter', error)
       }
       PubSub.publish(apiResponse(T.rpgCharacter), rpgCharacters[0])
     })
@@ -48,7 +54,7 @@ class Database {
         .update({ ...rpgCharacter })
         .eq('id', 1)
       if (error) {
-        console.error('Error while storing rpgCharacter', error)
+        console.log('Error while storing rpgCharacter', error)
       }
       PubSub.publish(apiResponse(T.storeRpgCharacter))
     })
