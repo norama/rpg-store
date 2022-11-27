@@ -1,3 +1,5 @@
+import 'projects/rpg/db/supabase'
+
 let firstCall = true
 
 const initdb = async () => {
