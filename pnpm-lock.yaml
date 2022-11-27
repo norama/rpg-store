@@ -8,6 +8,7 @@ specifiers:
   '@supabase/supabase-js': ^2.1.1
   '@types/pubsub-js': ^1.8.3
   astro: ^1.6.0
+  bufferutil: ^4.0.7
   lowdb: '4'
   nanostores: ^0.7.0
   prettier: ^2.7.1
@@ -21,6 +22,7 @@ dependencies:
   '@nanostores/solid': 0.3.0_krmmgcs2xvbh5bldrnc2b2pynm
   '@supabase/supabase-js': 2.1.1
   astro: 1.6.10
+  bufferutil: 4.0.7
   lowdb: 4.0.1
   nanostores: 0.7.1
   pubsub-js: 1.9.4
