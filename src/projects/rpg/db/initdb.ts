@@ -1,4 +1,3 @@
-import buffferUtil from 'bufferutil'
 import { db } from 'projects/rpg/db/supabase'
 
 let firstCall = true

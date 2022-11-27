@@ -1,14 +1,14 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from 'astro/config'
 
 // https://astro.build/config
-import solidJs from '@astrojs/solid-js';
+import solidJs from '@astrojs/solid-js'
 
 // https://astro.build/config
-import netlify from "@astrojs/netlify/functions";
+import netlify from '@astrojs/netlify/edge-functions'
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [solidJs()],
   output: 'server',
-  adapter: netlify()
-});
+  adapter: netlify(),
+})
