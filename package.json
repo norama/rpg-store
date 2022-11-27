@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "pnpm dlx playwright test --project=chromium"
+    "test": "npx playwright test --project=chromium"
   },
   "dependencies": {
     "@astrojs/netlify": "^1.2.0",
