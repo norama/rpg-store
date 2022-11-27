@@ -9,7 +9,6 @@ class Database {
   constructor() {
     console.log('supabase constructor')
     this.init()
-    this.subscribe()
   }
 
   init() {
@@ -22,6 +21,8 @@ class Database {
       this.db = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY)
 
       console.log('database', this.db)
+
+      this.subscribe()
     }
   }
 

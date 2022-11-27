@@ -1,4 +1,4 @@
-import 'projects/rpg/db/supabase'
+import { db } from 'projects/rpg/db/supabase'
 
 let firstCall = true
 
@@ -13,7 +13,8 @@ const initdb = async () => {
       case 'supabase':
       default: {
         console.log('------ init supabase --------')
-        await import('projects/rpg/db/supabase')
+        db.init()
+        //await import('projects/rpg/db/supabase')
         break
       }
     }
