@@ -7,20 +7,14 @@ class Database {
   db: SupabaseClient
 
   constructor() {
-    console.log('supabase constructor')
     this.init()
   }
 
   init() {
-    console.log('supabase init')
     if (!this.db) {
-      console.log('supabase reading env')
       const { DATABASE_URL, SUPABASE_SERVICE_API_KEY } = import.meta.env
-      console.log('DATABASE_URL', DATABASE_URL)
 
       this.db = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY)
-
-      console.log('database', this.db)
 
       this.subscribe()
     }
@@ -32,7 +26,6 @@ class Database {
       if (error) {
         console.log('Error while reading tiles', error)
       }
-      console.log('tiles', tiles)
       PubSub.publish(
         apiResponse(T.tiles),
         tiles.sort((tile1, tile2) => tile1.order - tile2.order)
