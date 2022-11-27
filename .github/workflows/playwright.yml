@@ -6,7 +6,9 @@ on:
     branches: [main, master]
 env:
   PUBLIC_RPG_API_URL: /api/rpg
-  DATABASE: lowdb
+  DATABASE: supabase
+  DATABASE_URL: https://fwquxyatrztkypzlvnmp.supabase.co
+  SUPABASE_SERVICE_API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3cXV4eWF0cnp0a3lwemx2bm1wIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY2OTM5ODA2NywiZXhwIjoxOTg0OTc0MDY3fQ.S2NQpdIsZLfKJcpw3zlvQHQTJK7jlT7m9jdxvp5Z9sY
 jobs:
   test:
     timeout-minutes: 60
