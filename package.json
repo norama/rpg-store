@@ -21,7 +21,8 @@
     "lowdb": "4",
     "nanostores": "^0.7.0",
     "pubsub-js": "^1.9.4",
-    "solid-js": "^1.4.3"
+    "solid-js": "^1.4.3",
+    "utf-8-validate": "^5.0.10"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
