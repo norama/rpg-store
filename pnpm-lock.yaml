@@ -15,7 +15,6 @@ specifiers:
   prettier-plugin-astro: ^0.7.0
   pubsub-js: ^1.9.4
   solid-js: ^1.4.3
-  utf-8-validate: ^5.0.10
 
 dependencies:
   '@astrojs/netlify': 1.2.1
@@ -23,12 +22,13 @@ dependencies:
   '@nanostores/solid': 0.3.0_krmmgcs2xvbh5bldrnc2b2pynm
   '@supabase/supabase-js': 2.1.1
   astro: 1.6.10
-  bufferutil: 4.0.7
   lowdb: 4.0.1
   nanostores: 0.7.1
   pubsub-js: 1.9.4
   solid-js: 1.6.2
-  utf-8-validate: 5.0.10
+
+optionalDependencies:
+  bufferutil: 4.0.7
 
 devDependencies:
   '@playwright/test': 1.28.1

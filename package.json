@@ -17,17 +17,18 @@
     "@nanostores/solid": "^0.3.0",
     "@supabase/supabase-js": "^2.1.1",
     "astro": "^1.6.0",
-    "bufferutil": "^4.0.7",
     "lowdb": "4",
     "nanostores": "^0.7.0",
     "pubsub-js": "^1.9.4",
-    "solid-js": "^1.4.3",
-    "utf-8-validate": "^5.0.10"
+    "solid-js": "^1.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
     "@types/pubsub-js": "^1.8.3",
     "prettier": "^2.7.1",
     "prettier-plugin-astro": "^0.7.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7"
   }
 }
