@@ -9,6 +9,8 @@ await initdb()
 
 await data.init()
 const tileIds = data.tileIds()
+
+import { Content as Race } from 'projects/rpg/tiles/config/race.mdx'
 ---
 
 <style>
@@ -34,10 +36,9 @@ const tileIds = data.tileIds()
         tileIds.map((id) => (
           <TileLayout>
             <Tile id={id} client:only="solid-js">
-              Children from Astro on{' '}
-              <span class={import.meta.env.SSR ? 'server' : 'client'}>
-                {import.meta.env.SSR ? 'SERVER' : 'CLIENT'}
-              </span>
+              <div class={import.meta.env.SSR ? 'server' : 'client'}>
+                <Race />
+              </div>
             </Tile>
           </TileLayout>
         ))

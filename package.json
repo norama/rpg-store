@@ -12,6 +12,7 @@
     "test": "npx playwright test --project=chromium"
   },
   "dependencies": {
+    "@astrojs/mdx": "^0.12.0",
     "@astrojs/netlify": "^1.2.0",
     "@astrojs/solid-js": "^1.2.2",
     "@nanostores/solid": "^0.3.0",
