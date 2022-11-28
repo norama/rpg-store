@@ -1,10 +1,11 @@
+import { JSX } from 'solid-js'
 import { useStore } from '@nanostores/solid'
 import { activeTileIdsAtom, setLastActive, tilesMap } from 'projects/rpg/tiles/stores/tiles'
 import styles from './Tile.module.css'
 
-type Props = { id: string }
+type Props = { id: string; children?: JSX.Element }
 
-const Tile = ({ id }: Props) => {
+const Tile = ({ id, children }: Props) => {
   const tiles = useStore(tilesMap)
   const activeTileIds = useStore(activeTileIdsAtom)
 
@@ -14,7 +15,17 @@ const Tile = ({ id }: Props) => {
       class={tileClasses(id, activeTileIds())}
       onClick={() => setLastActive(id)}
     >
-      <h2>{tiles()[id] ? tiles()[id].name : ''}</h2>
+      <div class={styles.content}>
+        <h2>{tiles()[id] ? tiles()[id].name : ''}</h2>
+        <div>
+          Within SOLID on{' '}
+          <span class={import.meta.env.SSR ? styles.server : styles.client}>
+            {import.meta.env.SSR ? 'SERVER' : 'CLIENT'}
+          </span>
+        </div>
+        <hr />
+        <div>{children}</div>
+      </div>
     </div>
   )
 }

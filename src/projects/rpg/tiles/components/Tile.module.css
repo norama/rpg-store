@@ -10,6 +10,15 @@
   opacity: 0.6;
 }
 
+.tile h2 {
+  width: 100%;
+  text-align: center;
+}
+
+.content {
+  padding: 0.5rem;
+}
+
 .tile:global(.active) {
   cursor: pointer;
   opacity: 1;
@@ -21,5 +30,14 @@
 }
 
 .tile:global(.lastActive) {
-  border: 2px solid red;
+  border: 2px solid purple;
+}
+
+.server {
+  font-weight: 600;
+  color: darkred;
+}
+.client {
+  font-weight: 600;
+  color: darkgreen;
 }

@@ -16,6 +16,14 @@ const tileIds = data.tileIds()
     display: flex;
     flex-wrap: wrap;
   }
+  .server {
+    font-weight: 600;
+    color: darkred;
+  }
+  .client {
+    font-weight: 600;
+    color: darkgreen;
+  }
 </style>
 
 <MainLayout pageTitle="RPG Store">
@@ -25,7 +33,12 @@ const tileIds = data.tileIds()
       {
         tileIds.map((id) => (
           <TileLayout>
-            <Tile id={id} client:only="solid-js" />
+            <Tile id={id} client:only="solid-js">
+              Children from Astro on{' '}
+              <span class={import.meta.env.SSR ? 'server' : 'client'}>
+                {import.meta.env.SSR ? 'SERVER' : 'CLIENT'}
+              </span>
+            </Tile>
           </TileLayout>
         ))
       }
