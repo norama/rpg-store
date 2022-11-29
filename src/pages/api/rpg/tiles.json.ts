@@ -1,6 +1,6 @@
 import query from 'projects/rpg/api/query'
-import initdb from 'projects/rpg/db/initdb'
 import { T } from 'pubsub/messages'
+import initdb from 'projects/rpg/db/initdb'
 
 export async function get() {
   await initdb()

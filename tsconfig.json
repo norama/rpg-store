@@ -2,6 +2,10 @@
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
     "baseUrl": "./src",
+    "paths": {
+      "@widgets/*": ["projects/rpg/tiles/config/widgets/*"],
+      "@tiles/*": ["projects/rpg/tiles/config/tiles/*"]
+    },
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "typeRoots": [
