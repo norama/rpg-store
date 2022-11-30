@@ -1,5 +1,10 @@
 ---
 import 'styles/global.css'
+
+type Props = {
+  pageTitle: string
+}
+const { pageTitle }: Props = Astro.props
 ---
 
 <style>
@@ -17,9 +22,20 @@ import 'styles/global.css'
   }
 </style>
 
-<div class="header">
-  <slot name="header" />
-</div>
-<div class="content">
-  <slot name="content" />
-</div>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <div class="header">
+      <slot name="header" />
+    </div>
+    <div class="content">
+      <slot name="content" />
+    </div>
+  </body>
+</html>
