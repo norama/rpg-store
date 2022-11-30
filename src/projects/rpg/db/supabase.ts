@@ -32,6 +32,20 @@ class Database {
       )
     })
 
+    PubSub.subscribe(apiRequest(T.domains), async () => {
+      const { data: domains, error } = await this.db.from('rpgCharacter').select(`
+        id,
+        name,
+        points, 
+        rpgAdvantages(advantage, advantages(name, points)),
+        rpgEquipments(equipment, equipments(name, price, weight))
+      `)
+      if (error) {
+        console.log('Error while reading domains', error)
+      }
+      PubSub.publish(apiResponse(T.domains), domains)
+    })
+
     PubSub.subscribe(apiRequest(T.rpgCharacter), async () => {
       const { data: rpgCharacters, error } = await this.db
         .from('rpgCharacter')
