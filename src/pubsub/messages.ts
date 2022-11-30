@@ -11,8 +11,8 @@ export const apiResponse = (t: string) => TOPIC + '.' + API + '.response.' + t
 
 export const T = {
   tiles: 'tiles',
-  domains: 'domains',
   rpgCharacter: 'rpgCharacter',
+  rpgTiles: 'rpgTiles',
   storeRpgCharacter: 'storeRpgCharacter',
 }
 
@@ -20,6 +20,7 @@ const M = {
   tileIds: msg('tileIds'),
   lastActiveTileId: msg('lastActiveTileId'),
   initTiles: msg('initTiles'),
+  rpgCharacter: msg('rpgCharacter'),
 }
 
 export default M

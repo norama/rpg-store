@@ -5,7 +5,7 @@ import initdb from 'projects/rpg/db/initdb'
 export async function get() {
   await initdb()
 
-  const domains = await query(T.domains)
+  const domains = await query(T.rpgCharacter)
 
   return new Response(JSON.stringify(domains), {
     status: 200,

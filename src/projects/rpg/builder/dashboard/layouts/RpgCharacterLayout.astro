@@ -1,0 +1,22 @@
+---
+import initdb from 'projects/rpg/db/initdb'
+
+await initdb()
+---
+
+<style>
+  .tile {
+    padding: 1rem;
+    margin: 1rem;
+    background-color: rgb(0, 255, 213);
+    width: fit-content;
+  }
+</style>
+
+<div class="tile">
+  <slot />
+</div>
+
+<script>
+  import '@dashboard/scripts/startup'
+</script>

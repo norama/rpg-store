@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test('integration:index', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/tiles')
   await expect(page).toHaveTitle('RPG Store')
 
   const Race = page.getByTestId('Race')

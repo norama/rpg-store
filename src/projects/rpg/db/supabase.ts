@@ -32,8 +32,8 @@ class Database {
       )
     })
 
-    PubSub.subscribe(apiRequest(T.domains), async () => {
-      const { data: domains, error } = await this.db.from('rpgCharacter').select(`
+    PubSub.subscribe(apiRequest(T.rpgCharacter), async () => {
+      const { data: rpgCharacter, error } = await this.db.from('rpgCharacter').select(`
         id,
         name,
         points, 
@@ -43,20 +43,20 @@ class Database {
       if (error) {
         console.log('Error while reading domains', error)
       }
-      PubSub.publish(apiResponse(T.domains), domains)
+      PubSub.publish(apiResponse(T.rpgCharacter), { json: rpgCharacter })
     })
 
-    PubSub.subscribe(apiRequest(T.rpgCharacter), async () => {
+    PubSub.subscribe(apiRequest(T.rpgTiles), async () => {
       const { data: rpgCharacters, error } = await this.db
         .from('rpgCharacter')
         .select('lastActiveTileId')
       if (error) {
         console.log('Error while reading rpgCharacter', error)
       }
-      PubSub.publish(apiResponse(T.rpgCharacter), rpgCharacters[0])
+      PubSub.publish(apiResponse(T.rpgTiles), rpgCharacters[0])
     })
 
-    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
+    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgTiles) => {
       const { error } = await this.db
         .from('rpgCharacter')
         .update({ ...rpgCharacter })

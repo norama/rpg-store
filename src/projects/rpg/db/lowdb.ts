@@ -7,7 +7,7 @@ import PubSub from 'pubsub-js'
 import { T, apiRequest, apiResponse } from 'pubsub/messages'
 
 type IDB = {
-  tiles: ITile[]
+  tiles: IRpgTiles[]
   rpgCharacter: IRpgCharacter
 }
 
@@ -50,8 +50,8 @@ class Database {
       PubSub.publish(apiResponse(T.tiles), [...this.db.data.tiles])
     })
 
-    PubSub.subscribe(apiRequest(T.rpgCharacter), () => {
-      PubSub.publish(apiResponse(T.rpgCharacter), { ...this.db.data.rpgCharacter })
+    PubSub.subscribe(apiRequest(T.rpgTiles), () => {
+      PubSub.publish(apiResponse(T.rpgTiles), { ...this.db.data.rpgCharacter })
     })
 
     PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
