@@ -1,4 +1,3 @@
-import query from 'projects/rpg/api/query'
 import PubSub from 'pubsub-js'
 import M, { T } from 'pubsub/messages'
 

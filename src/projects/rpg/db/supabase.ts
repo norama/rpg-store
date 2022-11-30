@@ -32,20 +32,6 @@ class Database {
       )
     })
 
-    PubSub.subscribe(apiRequest(T.rpgCharacter), async () => {
-      const { data: rpgCharacter, error } = await this.db.from('rpgCharacter').select(`
-        id,
-        name,
-        points, 
-        rpgAdvantages(advantage, advantages(name, points)),
-        rpgEquipments(equipment, equipments(name, price, weight))
-      `)
-      if (error) {
-        console.log('Error while reading domains', error)
-      }
-      PubSub.publish(apiResponse(T.rpgCharacter), { json: rpgCharacter })
-    })
-
     PubSub.subscribe(apiRequest(T.rpgTiles), async () => {
       const { data: rpgCharacters, error } = await this.db
         .from('rpgCharacter')
@@ -65,6 +51,25 @@ class Database {
         console.log('Error while storing rpgCharacter', error)
       }
       PubSub.publish(apiResponse(T.storeRpgCharacter))
+    })
+
+    this.subscribeCharacter()
+  }
+
+  subscribeCharacter() {
+    PubSub.subscribe(apiRequest(T.rpgCharacter), async () => {
+      const { data: rpgCharacter, error } = await this.db.from('rpgCharacter').select(`
+        id,
+        name,
+        points, 
+        rpgRaces(race, races(name)),
+        rpgAdvantages(advantage, advantages(name, points)),
+        rpgEquipments(equipment, equipments(name, price, weight))
+      `)
+      if (error) {
+        console.log('Error while reading rpgCharacter', error)
+      }
+      PubSub.publish(apiResponse(T.rpgCharacter), { json: rpgCharacter })
     })
   }
 }

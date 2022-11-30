@@ -10,14 +10,14 @@ const dataSuite: ITestSuite = {
       run: async () => {
         PubSub.publish(M.lastActiveTileId, 'Occupation')
       },
-      expect: () => data.rpgCharacter.lastActiveTileId === 'Occupation',
+      expect: () => data.rpgTiles.lastActiveTileId === 'Occupation',
     },
   ],
   beforeAll: async () => {
     await data.init()
   },
   before: async () => {
-    data.rpgCharacter = { lastActiveTileId: 'Race' }
+    data.rpgTiles = { lastActiveTileId: 'Race' }
   },
 }
 

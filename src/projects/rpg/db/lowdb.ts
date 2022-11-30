@@ -7,8 +7,8 @@ import PubSub from 'pubsub-js'
 import { T, apiRequest, apiResponse } from 'pubsub/messages'
 
 type IDB = {
-  tiles: IRpgTiles[]
-  rpgCharacter: IRpgCharacter
+  tiles: ITile[]
+  rpgCharacter: IRpgTiles
 }
 
 const tiles = [
@@ -54,7 +54,7 @@ class Database {
       PubSub.publish(apiResponse(T.rpgTiles), { ...this.db.data.rpgCharacter })
     })
 
-    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
+    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgTiles) => {
       console.log('lowdb rpgCharacter', rpgCharacter)
 
       this.db.data.rpgCharacter = { ...rpgCharacter }
@@ -62,6 +62,8 @@ class Database {
       PubSub.publish(apiResponse(T.storeRpgCharacter))
     })
   }
+
+  subscribeCharacter() {}
 }
 
 export const db = new Database()

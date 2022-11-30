@@ -7,7 +7,7 @@ const API_URL = import.meta.env.PUBLIC_RPG_API_URL + '/tiles'
 class Data {
   tiles: ITile[]
 
-  rpgCharacter: IRpgTiles
+  rpgTiles: IRpgTiles
 
   async init() {
     if (import.meta.env.SSR) {
@@ -19,7 +19,7 @@ class Data {
       this.tiles = await response.json()
 
       response = await fetch(`${API_URL}/rpgTiles.json`)
-      this.rpgCharacter = await response.json()
+      this.rpgTiles = await response.json()
     }
 
     this.subscribe()
@@ -31,14 +31,14 @@ class Data {
 
   subscribe() {
     PubSub.subscribe(M.lastActiveTileId, async (_msg: string, lastActiveTileId: string) => {
-      if (this.rpgCharacter.lastActiveTileId !== lastActiveTileId) {
-        this.rpgCharacter.lastActiveTileId = lastActiveTileId
+      if (this.rpgTiles.lastActiveTileId !== lastActiveTileId) {
+        this.rpgTiles.lastActiveTileId = lastActiveTileId
         await fetch(`${API_URL}/rpgTiles.json`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(this.rpgCharacter),
+          body: JSON.stringify(this.rpgTiles),
         })
       }
     })
@@ -46,7 +46,7 @@ class Data {
 
   publish() {
     PubSub.publish(M.initTiles, this.tiles)
-    PubSub.publish(M.lastActiveTileId, this.rpgCharacter.lastActiveTileId)
+    PubSub.publish(M.lastActiveTileId, this.rpgTiles.lastActiveTileId)
   }
 }
 
