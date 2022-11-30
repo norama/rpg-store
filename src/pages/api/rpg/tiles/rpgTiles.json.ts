@@ -4,7 +4,6 @@ import { T } from 'pubsub/messages'
 
 export async function get() {
   const rpgTiles = await query<IRpgTiles>(T.rpgTiles)
-  console.log('page rpgCharacter', rpgTiles)
 
   return new Response(JSON.stringify(rpgTiles), {
     status: 200,

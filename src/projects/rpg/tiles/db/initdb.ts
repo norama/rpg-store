@@ -5,13 +5,13 @@ const initdb = async () => {
     switch (import.meta.env.DATABASE) {
       case 'lowdb': {
         console.log('------ init lowdb --------')
-        await import('projects/rpg/db/lowdb')
+        await import('./lowdb')
         break
       }
       case 'supabase':
       default: {
-        console.log('------ init supabase --------')
-        await import('projects/rpg/db/supabase')
+        console.log('------ TILES init supabase --------')
+        await import('./supabase')
         break
       }
     }
