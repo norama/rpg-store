@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@widgets/*": ["projects/rpg/builder/config/widgets/*"],
-      "@tiles/*": ["projects/rpg/builder/config/tiles/*"],
+      "@widgets/*": ["projects/rpg/builder/widgets/*"],
+      "@blocks/*": ["projects/rpg/builder/blocks/*"],
       "@dashboard/*": ["projects/rpg/builder/dashboard/*"]
     },
     "jsx": "preserve",
