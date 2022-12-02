@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
+      "@builder/*": ["projects/rpg/builder/*"],
       "@widgets/*": ["projects/rpg/builder/widgets/*"],
       "@blocks/*": ["projects/rpg/builder/blocks/*"],
       "@dashboard/*": ["projects/rpg/builder/dashboard/*"]

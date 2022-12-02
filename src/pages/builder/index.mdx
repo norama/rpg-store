@@ -1,9 +1,12 @@
 ---
-layout: '@dashboard/layouts/RpgCharacterLayout.astro'
+layout: '@builder/BuilderLayout.astro'
 ---
 
+import { Content as Header } from './header.mdx'
 import Dashboard from '@dashboard/components/Dashboard'
 
 # My RPG RpgCharacter
+
+<Header />
 
 <Dashboard client:only="solid-js" />

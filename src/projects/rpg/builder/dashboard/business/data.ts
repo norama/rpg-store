@@ -18,7 +18,7 @@ class Data {
   subscribe() {}
 
   publish() {
-    PubSub.publish(M.rpgCharacter, this.rpgCharacter.json)
+    PubSub.publish(M.rpgCharacter, this.rpgCharacter)
   }
 }
 

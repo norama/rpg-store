@@ -3,5 +3,7 @@ type IRpgTiles = {
 }
 
 type IRpgCharacter = {
-  json: Object
+  id: number
+  name: string
+  Object
 }

@@ -1,4 +1,4 @@
-export const TOPIC = 'tiles'
+export const TOPIC = 'rpg'
 export const API = 'api'
 export const REQUEST = 'request'
 export const RESPONSE = 'response'
@@ -21,6 +21,12 @@ const M = {
   lastActiveTileId: msg('lastActiveTileId'),
   initTiles: msg('initTiles'),
   rpgCharacter: msg('rpgCharacter'),
+  rpgStoreString: msg('rpgStoreString'),
+  rpgStoreNumber: msg('rpgStoreNumber'),
+  rpgResetProperties: msg('rpgResetProperties'),
+  rpgSaveProperties: msg('rpgSaveProperties'),
+  rpgFormSave: msg('rpgFormSave'),
+  rpgFormReset: msg('rpgFormReset'),
 }
 
 export default M

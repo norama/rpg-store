@@ -2,14 +2,14 @@
 layout: 'projects/rpg/tiles/layouts/MdxLayout.astro'
 ---
 
-import { Content as Race } from '@blocks/sample.mdx'
+import { Content as Sample } from '@blocks/sample.mdx'
 import StringInput from '@widgets/StringInput'
 
-<Race
+<Sample
   components={{
     Custom: () => (
       <div>
-        Custom: <StringInput name="Hmm" />
+        Custom: <StringInput name="name" />
       </div>
     ),
     Str: StringInput,

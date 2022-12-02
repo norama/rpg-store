@@ -1,0 +1,20 @@
+---
+import ResetButton from '@builder/widgets/form/ResetButton'
+import SaveButton from '@builder/widgets/form/SaveButton'
+---
+
+<style>
+  .buttons {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+  }
+</style>
+
+<div>
+  <slot />
+</div>
+<div class="buttons">
+  <ResetButton client:only="solid-js" />
+  <SaveButton client:only="solid-js" />
+</div>

@@ -33,7 +33,18 @@ class Database {
       if (error) {
         console.log('Error while reading rpgCharacter', error)
       }
-      PubSub.publish(apiResponse(T.rpgCharacter), { json: rpgCharacter })
+      PubSub.publish(apiResponse(T.rpgCharacter), rpgCharacter[0])
+    })
+
+    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgCharacter) => {
+      const { error } = await this.db
+        .from('rpgCharacter')
+        .update({ ...rpgCharacter })
+        .eq('id', 1)
+      if (error) {
+        console.log('Error while storing rpgCharacter', error)
+      }
+      PubSub.publish(apiResponse(T.storeRpgCharacter))
     })
   }
 }

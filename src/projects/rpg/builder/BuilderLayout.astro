@@ -5,7 +5,7 @@ await initdb()
 ---
 
 <style>
-  .tile {
+  .root {
     padding: 1rem;
     margin: 1rem;
     background-color: rgb(0, 255, 213);
@@ -13,10 +13,10 @@ await initdb()
   }
 </style>
 
-<div class="tile">
+<div class="root">
   <slot />
 </div>
 
 <script>
-  import '@dashboard/scripts/startup'
+  import '@builder/startup'
 </script>
