@@ -1,8 +1,8 @@
-import { query, send } from 'projects/rpg/api/proxy'
+import { select, update } from 'projects/rpg/api/proxy'
 import { T } from 'pubsub/messages'
 
 export async function get() {
-  const rpgTiles = await query<IRpgTiles>(T.rpgTiles)
+  const rpgTiles = await select<IRpgTiles>(T.rpgTiles)
 
   return new Response(JSON.stringify(rpgTiles), {
     status: 200,
@@ -16,7 +16,7 @@ export async function post({ request }) {
   if (request.headers.get('Content-Type') === 'application/json') {
     const rpgCharacter = await request.json()
 
-    await send<IRpgTiles>(T.storeRpgCharacter, rpgCharacter)
+    await update<IRpgTiles>(T.storeRpgCharacter, rpgCharacter)
 
     return new Response('', {
       status: 200,

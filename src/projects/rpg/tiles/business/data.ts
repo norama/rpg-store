@@ -1,4 +1,4 @@
-import { query } from 'projects/rpg/api/proxy'
+import { select } from 'projects/rpg/api/proxy'
 import PubSub from 'pubsub-js'
 import M, { T } from 'pubsub/messages'
 
@@ -11,7 +11,7 @@ class Data {
 
   async init() {
     if (import.meta.env.SSR) {
-      this.tiles = await query(T.tiles)
+      this.tiles = await select(T.tiles)
     } else {
       console.log('========== fetching tiles')
 
