@@ -46,8 +46,8 @@ class Database {
   }
 
   subscribe() {
-    PubSub.subscribe(msgRequest(T.tiles), () => {
-      PubSub.publish(msgResponse(T.tiles), [...this.db.data.tiles])
+    PubSub.subscribe(msgRequest(apiSelect(T.tiles)), () => {
+      PubSub.publish(msgResponse(apiSelect(T.tiles)), [...this.db.data.tiles])
     })
 
     PubSub.subscribe(msgRequest(apiSelect(T.rpgTiles)), () => {
