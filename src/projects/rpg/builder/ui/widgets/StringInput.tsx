@@ -18,7 +18,7 @@ const StringInput = ({ mode = 'write', name }: Props) => {
       }}
     >
       {mode === 'read' ? (
-        <>{values()['name'] ?? ''}</>
+        <>{values()[name] ?? ''}</>
       ) : (
         <>
           {name}:{' '}
@@ -26,7 +26,7 @@ const StringInput = ({ mode = 'write', name }: Props) => {
             type="text"
             id="name"
             name="name"
-            value={values()['name'] ?? ''}
+            value={values()[name] ?? ''}
             onKeyUp={(e) => {
               setStringValue(name, e.currentTarget.value)
             }}
