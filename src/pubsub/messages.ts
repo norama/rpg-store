@@ -2,18 +2,21 @@ export const TOPIC = 'rpg'
 export const API = 'api'
 export const REQUEST = 'request'
 export const RESPONSE = 'response'
+export const SELECT = 'select'
+export const UPDATE = 'update'
 
 const msg = (m: string) => TOPIC + '.' + m
 const api = (m: string) => TOPIC + '.' + API + '.' + m
 
-export const apiRequest = (t: string) => TOPIC + '.' + API + '.request.' + t
-export const apiResponse = (t: string) => TOPIC + '.' + API + '.response.' + t
+export const msgRequest = (t: string) => `${TOPIC}.${API}.${REQUEST}.${t}`
+export const msgResponse = (t: string) => `${TOPIC}.${API}.${RESPONSE}.${t}`
+export const apiSelect = (t: string) => `${SELECT}.${t}`
+export const apiUpdate = (t: string) => `${UPDATE}.${t}`
 
 export const T = {
   tiles: 'tiles',
   rpgCharacter: 'rpgCharacter',
   rpgTiles: 'rpgTiles',
-  storeRpgCharacter: 'storeRpgCharacter',
 }
 
 const M = {

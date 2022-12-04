@@ -4,7 +4,7 @@
 import { Low, Memory, JSONFile } from 'lowdb'
 
 import PubSub from 'pubsub-js'
-import { T, apiRequest, apiResponse } from 'pubsub/messages'
+import { T, msgRequest, msgResponse, apiSelect, apiUpdate } from 'pubsub/messages'
 
 type IDB = {
   tiles: ITile[]
@@ -46,21 +46,24 @@ class Database {
   }
 
   subscribe() {
-    PubSub.subscribe(apiRequest(T.tiles), () => {
-      PubSub.publish(apiResponse(T.tiles), [...this.db.data.tiles])
+    PubSub.subscribe(msgRequest(apiSelect(T.tiles)), () => {
+      PubSub.publish(msgResponse(apiSelect(T.tiles)), [...this.db.data.tiles])
     })
 
-    PubSub.subscribe(apiRequest(T.rpgTiles), () => {
-      PubSub.publish(apiResponse(T.rpgTiles), { ...this.db.data.rpgCharacter })
+    PubSub.subscribe(msgRequest(apiSelect(T.rpgTiles)), () => {
+      PubSub.publish(msgResponse(apiSelect(T.rpgTiles)), { ...this.db.data.rpgCharacter })
     })
 
-    PubSub.subscribe(apiRequest(T.storeRpgCharacter), async (msg, rpgCharacter: IRpgTiles) => {
-      console.log('lowdb rpgCharacter', rpgCharacter)
+    PubSub.subscribe(
+      msgRequest(apiUpdate(T.rpgCharacter)),
+      async (msg, rpgCharacter: IRpgTiles) => {
+        console.log('lowdb rpgCharacter', rpgCharacter)
 
-      this.db.data.rpgCharacter = { ...rpgCharacter }
-      //await this.db.write()
-      PubSub.publish(apiResponse(T.storeRpgCharacter))
-    })
+        this.db.data.rpgCharacter = { ...rpgCharacter }
+        //await this.db.write()
+        PubSub.publish(msgResponse(apiUpdate(T.rpgCharacter)))
+      }
+    )
   }
 
   subscribeCharacter() {}

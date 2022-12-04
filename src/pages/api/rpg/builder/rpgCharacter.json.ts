@@ -16,7 +16,7 @@ export async function post({ request }) {
   if (request.headers.get('Content-Type') === 'application/json') {
     const rpgCharacter = await request.json()
 
-    await update<IRpgCharacter>(T.storeRpgCharacter, rpgCharacter)
+    await update<IRpgCharacter>(T.rpgCharacter, rpgCharacter)
 
     return await get()
   } else {

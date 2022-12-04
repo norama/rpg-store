@@ -1,18 +1,18 @@
 import PubSub from 'pubsub-js'
-import { apiRequest, apiResponse } from 'pubsub/messages'
+import { msgRequest, msgResponse, apiSelect, apiUpdate } from 'pubsub/messages'
 
 export const select = <T>(target: string) =>
   new Promise<T>((resolve) => {
-    PubSub.subscribeOnce(apiResponse(target), (msg, data: T) => {
+    PubSub.subscribeOnce(msgResponse(apiSelect(target)), (msg, data: T) => {
       resolve(data)
     })
-    PubSub.publish(apiRequest(target))
+    PubSub.publish(msgRequest(apiSelect(target)))
   })
 
 export const update = <T>(target: string, data: T) =>
   new Promise<void>((resolve) => {
-    PubSub.subscribeOnce(apiResponse(target), () => {
+    PubSub.subscribeOnce(msgResponse(apiUpdate(target)), () => {
       resolve()
     })
-    PubSub.publish(apiRequest(target), data)
+    PubSub.publish(msgRequest(apiUpdate(target)), data)
   })

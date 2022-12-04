@@ -16,7 +16,7 @@ export async function post({ request }) {
   if (request.headers.get('Content-Type') === 'application/json') {
     const rpgCharacter = await request.json()
 
-    await update<IRpgTiles>(T.storeRpgCharacter, rpgCharacter)
+    await update<IRpgTiles>(T.rpgCharacter, rpgCharacter)
 
     return new Response('', {
       status: 200,
