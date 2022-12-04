@@ -3,7 +3,7 @@ import M, { T } from 'pubsub/messages'
 
 const API_URL = import.meta.env.PUBLIC_RPG_API_URL + '/builder'
 
-class Business {
+class Transport {
   rpgCharacter: IRpgCharacter
 
   async init() {
@@ -42,4 +42,4 @@ class Business {
   }
 }
 
-export default new Business()
+export default new Transport()

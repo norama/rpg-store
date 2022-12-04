@@ -4,7 +4,7 @@ if (import.meta.env.PUBLIC_LOGGING === 'true') {
 
 console.log('=== > startup')
 
-import business from '@builder/business'
-await business.init()
-import '@builder/store'
-business.publish()
+import transport from '@business/transport'
+await transport.init()
+import '@stores/store'
+transport.publish()

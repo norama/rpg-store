@@ -1,6 +1,5 @@
 import { useStore } from '@nanostores/solid'
-import { rpgStringValues, setStringValue } from '@builder/store'
-import { createSignal } from 'solid-js'
+import { rpgStringValues, setStringValue } from '@stores/store'
 
 type Props = {
   mode: IMode
@@ -28,7 +27,7 @@ const StringInput = ({ mode = 'write', name }: Props) => {
             id="name"
             name="name"
             value={values()['name'] ?? ''}
-            onKeyDown={(e) => {
+            onKeyUp={(e) => {
               setStringValue(name, e.currentTarget.value)
             }}
             required

@@ -1,3 +1,5 @@
+type IMode = 'read' | 'write' | 'disabled'
+
 type IDataItem = {
   key: string
 }
