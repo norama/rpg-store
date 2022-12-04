@@ -1,5 +1,4 @@
-import query from 'projects/rpg/api/query'
-import send from 'projects/rpg/api/send'
+import { query, send } from 'projects/rpg/api/proxy'
 import { T } from 'pubsub/messages'
 
 export async function get() {

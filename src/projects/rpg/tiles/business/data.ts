@@ -1,4 +1,4 @@
-import query from 'projects/rpg/api/query'
+import { query } from 'projects/rpg/api/proxy'
 import PubSub from 'pubsub-js'
 import M, { T } from 'pubsub/messages'
 
