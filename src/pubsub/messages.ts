@@ -15,6 +15,9 @@ export const apiUpdate = (t: string) => `${UPDATE}.${t}`
 
 export const T = {
   tiles: 'tiles',
+  rpgInfo: 'rogInfo',
+  rpgBlock: 'rpgBlock',
+  rpgProperties: 'rpgProperties',
   rpgCharacter: 'rpgCharacter',
   rpgTiles: 'rpgTiles',
 }
@@ -30,6 +33,7 @@ const M = {
   rpgSaveProperties: msg('rpgSaveProperties'),
   rpgFormSave: msg('rpgFormSave'),
   rpgFormReset: msg('rpgFormReset'),
+  rpgFormBlock: msg('rpgFormBlock'),
 }
 
 export default M

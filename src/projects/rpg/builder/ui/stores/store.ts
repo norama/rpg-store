@@ -1,6 +1,8 @@
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
-import { map } from 'nanostores'
+import { atom, map } from 'nanostores'
+
+const rpgBlock = atom<string>()
 
 export const rpgStringValues = map<Record<string, string>>({})
 export const rpgNumberValues = map<Record<string, number>>({})
@@ -14,7 +16,6 @@ PubSub.subscribe(M.rpgStoreNumber, (_msg: string, { key, value }: IDataNumber) =
 })
 
 export const setStringValue = (key: string, value: string) => {
-  console.log('SETTING: ' + key + ': ' + value)
   rpgStringValues.setKey(key, value)
 }
 
@@ -32,3 +33,5 @@ export const reset = () => {
 
 PubSub.subscribe(M.rpgFormSave, () => save())
 PubSub.subscribe(M.rpgFormReset, () => reset())
+
+PubSub.subscribe(M.rpgFormBlock, (_msg, block: string) => rpgBlock.set(block))

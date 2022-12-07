@@ -1,6 +1,14 @@
 ---
 import ResetButton from '@widgets/form/ResetButton'
 import SaveButton from '@widgets/form/SaveButton'
+
+const { frontmatter } = Astro.props
+console.log('-- frontmatter --', frontmatter)
+
+import Path from 'path'
+const basename = Path.basename(frontmatter.url)
+const block = Path.parse(basename).name
+console.log('-- block --', block)
 ---
 
 <style>
@@ -11,10 +19,25 @@ import SaveButton from '@widgets/form/SaveButton'
   }
 </style>
 
-<div>
+<h2>{frontmatter.title}</h2>
+
+<div id="form" data-block={block}>
   <slot />
 </div>
 <div class="buttons">
   <ResetButton client:only="solid-js" />
   <SaveButton client:only="solid-js" />
 </div>
+
+<script>
+  const form = document.getElementById('form')
+  const block = form.dataset.block
+  console.log('BLOCK', block)
+
+  import '@scripts/startup'
+
+  import PubSub from 'pubsub-js'
+  import M from 'pubsub/messages'
+
+  PubSub.publish(M.rpgFormBlock, block)
+</script>

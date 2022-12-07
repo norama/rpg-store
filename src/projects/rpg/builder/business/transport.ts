@@ -17,14 +17,14 @@ class Transport {
 
   subscribe() {
     PubSub.subscribe(M.rpgSaveProperties, async (_msg, values) => {
-      const response = await fetch(`${API_URL}/rpgCharacter.json`, {
+      const response = await fetch(`${API_URL}/properties.json`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: values.name }),
+        body: JSON.stringify(values),
       })
-      this.rpgCharacter = await response.json()
+      this.rpgCharacter.properties = await response.json()
       this.publish()
     })
 
@@ -37,7 +37,7 @@ class Transport {
     PubSub.publish(M.rpgCharacter, this.rpgCharacter)
     PubSub.publish(M.rpgStoreString, {
       key: 'name',
-      value: this.rpgCharacter.name,
+      value: this.rpgCharacter.properties.name,
     })
   }
 }
