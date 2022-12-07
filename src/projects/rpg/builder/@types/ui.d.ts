@@ -5,3 +5,8 @@ type IRpgBlock = {
   data: Record<string, IValue>
   properties?: Record<string, IValue>
 }
+
+interface IBlockPage {
+  init: () => Promise<void>
+  publish: () => void
+}

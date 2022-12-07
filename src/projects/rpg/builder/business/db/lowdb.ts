@@ -54,16 +54,13 @@ class Database {
       PubSub.publish(msgResponse(apiSelect(T.rpgTiles)), { ...this.db.data.rpgCharacter })
     })
 
-    PubSub.subscribe(
-      msgRequest(apiUpdate(T.rpgCharacter)),
-      async (msg, rpgCharacter: IRpgTiles) => {
-        console.log('lowdb rpgCharacter', rpgCharacter)
+    PubSub.subscribe(msgRequest(apiUpdate(T.rpgTarget)), async (msg, rpgCharacter: IRpgTiles) => {
+      console.log('lowdb rpgCharacter', rpgCharacter)
 
-        this.db.data.rpgCharacter = { ...rpgCharacter }
-        //await this.db.write()
-        PubSub.publish(msgResponse(apiUpdate(T.rpgCharacter)))
-      }
-    )
+      this.db.data.rpgCharacter = { ...rpgCharacter }
+      //await this.db.write()
+      PubSub.publish(msgResponse(apiUpdate(T.rpgTarget)))
+    })
   }
 
   subscribeCharacter() {}

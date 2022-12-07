@@ -42,19 +42,16 @@ class Database {
       PubSub.publish(msgResponse(apiSelect(T.rpgTiles)), rpgCharacters[0])
     })
 
-    PubSub.subscribe(
-      msgRequest(apiUpdate(T.rpgCharacter)),
-      async (msg, rpgCharacter: IRpgTiles) => {
-        const { error } = await this.db
-          .from('rpgCharacter')
-          .update({ ...rpgCharacter })
-          .eq('id', 1)
-        if (error) {
-          console.log('Error while storing rpgCharacter', error)
-        }
-        PubSub.publish(msgResponse(apiUpdate(T.rpgCharacter)))
+    PubSub.subscribe(msgRequest(apiUpdate(T.rpgTarget)), async (msg, rpgCharacter: IRpgTiles) => {
+      const { error } = await this.db
+        .from('rpgCharacter')
+        .update({ ...rpgCharacter })
+        .eq('id', 1)
+      if (error) {
+        console.log('Error while storing rpgCharacter', error)
       }
-    )
+      PubSub.publish(msgResponse(apiUpdate(T.rpgTarget)))
+    })
   }
 }
 

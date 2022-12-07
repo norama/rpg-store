@@ -1,10 +1,10 @@
-import { rpgCharacterAtom } from '@dashboard/stores/dashboard'
+import { rpgTargetAtom } from '@stores/store'
 import { useStore } from '@nanostores/solid'
 
 const Dashboard = () => {
-  const rpgCharacter = useStore(rpgCharacterAtom)
+  const rpgTarget = useStore(rpgTargetAtom)
 
-  return <div>{JSON.stringify(rpgCharacter())}</div>
+  return <div>{JSON.stringify(rpgTarget())}</div>
 }
 
 export default Dashboard

@@ -6,6 +6,7 @@
       "@builder/*": ["projects/rpg/builder/*"],
       "@scripts/*": ["projects/rpg/builder/scripts/*"],
       "@business/*": ["projects/rpg/builder/business/*"],
+      "@transport/*": ["projects/rpg/builder/business/transport/*"],
       "@layouts/*": ["projects/rpg/builder/layouts/*"],
       "@widgets/*": ["projects/rpg/builder/ui/widgets/*"],
       "@stores/*": ["projects/rpg/builder/ui/stores/*"],

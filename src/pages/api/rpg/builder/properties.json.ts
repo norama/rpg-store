@@ -18,7 +18,14 @@ export async function post({ request }) {
 
     await update<IProperties>(T.rpgProperties, properties)
 
-    return await get()
+    const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
+
+    return new Response(JSON.stringify(rpgCharacter), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
   } else {
     return new Response(null, { status: 400 })
   }

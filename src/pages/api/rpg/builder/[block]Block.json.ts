@@ -27,13 +27,16 @@ export async function post({ params, request }) {
   if (request.headers.get('Content-Type') === 'application/json') {
     const data = await request.json()
 
-    await update<IRpgBlock>(T.rpgBlock, { type: block, ...data })
+    await update<IRpgBlock>(T.rpgBlock, { type: block, ...data } as IRpgBlock)
 
-    return {
-      type: block,
-      data: await get({ params: { block } }),
-      properties: await select<IProperties>(T.rpgProperties),
-    }
+    const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
+
+    return new Response(JSON.stringify(rpgCharacter), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
   } else {
     return new Response(null, { status: 400 })
   }

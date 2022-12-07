@@ -1,4 +1,6 @@
 ---
+import 'styles/global.css'
+
 import ResetButton from '@widgets/form/ResetButton'
 import SaveButton from '@widgets/form/SaveButton'
 
@@ -34,10 +36,6 @@ console.log('-- block --', block)
   const block = form.dataset.block
   console.log('BLOCK', block)
 
-  import '@scripts/startup'
-
-  import PubSub from 'pubsub-js'
-  import M from 'pubsub/messages'
-
-  PubSub.publish(M.rpgFormBlock, block)
+  import startup from '@scripts/startup'
+  startup(block)
 </script>

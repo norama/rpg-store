@@ -2,7 +2,7 @@ import { select, update } from 'projects/rpg/api/proxy'
 import { T } from 'pubsub/messages'
 
 export async function get() {
-  const rpgCharacter = await select<IRpgCharacter>(T.rpgCharacter)
+  const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
 
   return new Response(JSON.stringify(rpgCharacter), {
     status: 200,
@@ -16,7 +16,7 @@ export async function post({ request }) {
   if (request.headers.get('Content-Type') === 'application/json') {
     const rpgCharacter = await request.json()
 
-    await update<IRpgCharacter>(T.rpgCharacter, rpgCharacter)
+    await update<IRpgCharacter>(T.rpgTarget, rpgCharacter)
 
     return await get()
   } else {

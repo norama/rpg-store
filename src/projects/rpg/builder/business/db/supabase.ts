@@ -74,7 +74,7 @@ class Database {
   }
 
   subscribe() {
-    PubSub.subscribe(msgRequest(apiSelect(T.rpgCharacter)), async () => {
+    PubSub.subscribe(msgRequest(apiSelect(T.rpgTarget)), async () => {
       const { data: rpgCharacter, error } = await this.db
         .from('rpgCharacter')
         .select(
@@ -92,11 +92,11 @@ class Database {
       if (error) {
         console.log('Error while reading rpgCharacter', error)
       }
-      PubSub.publish(msgResponse(apiSelect(T.rpgCharacter)), uiRpgCharacter(rpgCharacter[0]))
+      PubSub.publish(msgResponse(apiSelect(T.rpgTarget)), uiRpgCharacter(rpgCharacter[0]))
     })
 
     PubSub.subscribe(
-      msgRequest(apiUpdate(T.rpgCharacter)),
+      msgRequest(apiUpdate(T.rpgTarget)),
       async (msg, rpgCharacter: IRpgCharacter) => {
         const { error } = await this.db
           .from('rpgCharacter')
@@ -105,7 +105,7 @@ class Database {
         if (error) {
           console.log('Error while storing rpgCharacter', error)
         }
-        PubSub.publish(msgResponse(apiUpdate(T.rpgCharacter)))
+        PubSub.publish(msgResponse(apiUpdate(T.rpgTarget)))
       }
     )
 

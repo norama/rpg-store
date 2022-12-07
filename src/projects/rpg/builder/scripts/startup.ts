@@ -1,10 +1,21 @@
-if (import.meta.env.PUBLIC_LOGGING === 'true') {
-  await import('pubsub/log')
+const startup = async (page: string) => {
+  if (import.meta.env.PUBLIC_LOGGING === 'true') {
+    await import('pubsub/log')
+  }
+
+  let transport: IBlockPage
+
+  switch (page) {
+    case 'properties':
+    default: {
+      const { default: Properties } = await import('@transport/properties')
+      transport = new Properties()
+      console.log('=== > properties')
+    }
+  }
+
+  await import('@stores/store')
+  await transport.init()
 }
 
-console.log('=== > startup')
-
-import transport from '@business/transport'
-await transport.init()
-import '@stores/store'
-transport.publish()
+export default startup
