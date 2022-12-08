@@ -15,7 +15,7 @@ const startup = async (page: string) => {
   }
 
   await import('@stores/store')
-  await import('@stores/target')
+  await import('@builder/ui/stores/business/rpgTarget')
   await transport.init()
 }
 

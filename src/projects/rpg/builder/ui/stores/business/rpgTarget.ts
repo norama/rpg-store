@@ -3,11 +3,11 @@ import M from 'pubsub/messages'
 
 import { atom } from 'nanostores'
 
-const targetAtom = atom<IRpgCharacter>()
+const rpgTargetAtom = atom<IRpgCharacter>()
 
 PubSub.subscribe(M.rpgTarget, (_msg: string, target: IRpgCharacter) => {
   console.log('--> Target', target)
-  targetAtom.set(target)
+  rpgTargetAtom.set(target)
 })
 
-export default targetAtom
+export default rpgTargetAtom

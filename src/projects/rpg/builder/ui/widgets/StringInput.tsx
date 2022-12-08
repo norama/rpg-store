@@ -2,7 +2,7 @@ import { useStore } from '@nanostores/solid'
 import { rpgStringValues, setStringValue } from '@stores/store'
 
 type Props = {
-  mode: IMode
+  mode?: IMode
   name: string
 }
 
@@ -24,16 +24,16 @@ const StringInput = ({ mode = 'write', name }: Props) => {
           {name}:{' '}
           <input
             type="text"
-            id="name"
-            name="name"
+            id={name}
+            name={name}
             value={values()[name] ?? ''}
             onKeyUp={(e) => {
               setStringValue(name, e.currentTarget.value)
             }}
             required
-            minlength="4"
-            maxlength="18"
-            size="10"
+            minlength={3}
+            maxlength={30}
+            size={20}
             disabled={mode === 'disabled'}
           />
         </>
