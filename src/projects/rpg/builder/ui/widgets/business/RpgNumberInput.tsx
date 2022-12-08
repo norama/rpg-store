@@ -13,7 +13,11 @@ const RpgNumberInput = ({ mode, name, min, max }: Props) => {
   const target = useStore(rpgTargetAtom)
 
   return (
-    <NumberInput<IRpgCharacter> mode={mode} name={name} min={min} max={max} target={target()} />
+    <>
+      {target() ? (
+        <NumberInput<IRpgCharacter> mode={mode} name={name} min={min} max={max} target={target} />
+      ) : null}
+    </>
   )
 }
 

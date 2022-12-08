@@ -4,7 +4,13 @@ const MoneyInput = () => {
   return (
     <RpgNumberInput
       name="money"
-      min={({ strval }) => (strval('name', '').startsWith('x') ? 1 : 2)}
+      min={({ strval, target }) =>
+        strval('name', '').startsWith('x')
+          ? 1
+          : target().advantages.advantages.includes('laziness')
+          ? 3
+          : 2
+      }
     />
   )
 }

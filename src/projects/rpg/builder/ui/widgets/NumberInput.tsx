@@ -5,13 +5,13 @@ import { createMemo } from 'solid-js'
 export type NumberInputFuncArgs<T> = {
   strval: (key: string, defval?: string) => string
   numval: (key: string, defval?: number) => number
-  target: T
+  target: () => T
 }
 
 export type NumberInputProps<T> = {
   mode?: IMode
   name: string
-  target: T
+  target: () => T
   min?: (args: NumberInputFuncArgs<T>) => number
   max?: (args: NumberInputFuncArgs<T>) => number
 }
