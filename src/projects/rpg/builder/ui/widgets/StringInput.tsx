@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/solid'
-import { rpgStringValues, setStringValue } from '@stores/store'
+import { stringValuesMap, setStringValue } from '@stores/store'
 
 type Props = {
   mode?: IMode
@@ -7,7 +7,7 @@ type Props = {
 }
 
 const StringInput = ({ mode = 'write', name }: Props) => {
-  const values = useStore(rpgStringValues)
+  const values = useStore(stringValuesMap)
 
   return (
     <p

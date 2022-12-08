@@ -12,7 +12,9 @@ export type Props = {
 const RpgNumberInput = ({ mode, name, min, max }: Props) => {
   const target = useStore(rpgTargetAtom)
 
-  return <NumberInput<IRpgCharacter> mode={mode} name={name} min={min} max={max} target={target} />
+  return (
+    <NumberInput<IRpgCharacter> mode={mode} name={name} min={min} max={max} target={target()} />
+  )
 }
 
 export default RpgNumberInput

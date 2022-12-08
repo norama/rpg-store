@@ -4,7 +4,7 @@ const MoneyInput = () => {
   return (
     <RpgNumberInput
       name="money"
-      min={({ strval }) => (strval()['name'] && strval()['name'].startsWith('x') ? 1 : 2)}
+      min={({ strval }) => (strval('name', '').startsWith('x') ? 1 : 2)}
     />
   )
 }

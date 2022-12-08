@@ -1,23 +1,35 @@
 import { useStore } from '@nanostores/solid'
-import { rpgNumberValues, setNumberValue, rpgStringValues } from '@stores/store'
+import { numberValuesMap, setNumberValue, stringValuesMap } from '@stores/store'
+import { createMemo } from 'solid-js'
 
 export type NumberInputFuncArgs<T> = {
-  strval: () => Record<string, string>
-  numval: () => Record<string, number>
-  target: () => T
+  strval: (key: string, defval?: string) => string
+  numval: (key: string, defval?: number) => number
+  target: T
 }
 
 export type NumberInputProps<T> = {
   mode?: IMode
   name: string
-  target: () => T
+  target: T
   min?: (args: NumberInputFuncArgs<T>) => number
   max?: (args: NumberInputFuncArgs<T>) => number
 }
 
 const NumberInput = <T,>({ mode = 'write', name, target, min, max }: NumberInputProps<T>) => {
-  const numval = useStore(rpgNumberValues)
-  const strval = useStore(rpgStringValues)
+  const numberValues = useStore(numberValuesMap)
+  const stringValues = useStore(stringValuesMap)
+
+  const numval = createMemo(
+    () =>
+      (key: string, defval = 0) =>
+        numberValues()[key] ?? defval
+  )
+  const strval = createMemo(
+    () =>
+      (key: string, defval = '') =>
+        stringValues()[key] ?? defval
+  )
 
   return (
     <p
@@ -28,7 +40,7 @@ const NumberInput = <T,>({ mode = 'write', name, target, min, max }: NumberInput
       }}
     >
       {mode === 'read' ? (
-        <>{numval()[name] ?? ''}</>
+        <>{numval()(name)}</>
       ) : (
         <>
           {name}:{' '}
@@ -36,13 +48,13 @@ const NumberInput = <T,>({ mode = 'write', name, target, min, max }: NumberInput
             type="number"
             id={name}
             name={name}
-            value={numval()[name] ?? ''}
+            value={numval()(name)}
             onKeyUp={(e) => {
               setNumberValue(name, Number(e.currentTarget.value))
             }}
             required
-            min={min ? min({ strval, numval, target }) : undefined}
-            max={max ? max({ strval, numval, target }) : undefined}
+            min={min ? min({ strval: strval(), numval: numval(), target }) : undefined}
+            max={max ? max({ strval: strval(), numval: numval(), target }) : undefined}
             minlength={3}
             maxlength={30}
             size={20}
