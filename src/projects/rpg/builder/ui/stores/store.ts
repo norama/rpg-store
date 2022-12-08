@@ -2,13 +2,6 @@ import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 import { atom, map } from 'nanostores'
 
-export const rpgTargetAtom = atom<Object>()
-
-PubSub.subscribe(M.rpgTarget, (_msg: string, rpgTarget: Object) => {
-  console.log('--> rpgTarget', rpgTarget)
-  rpgTargetAtom.set(rpgTarget)
-})
-
 const rpgBlockAtom = atom<string>()
 
 export const rpgStringValues = map<Record<string, string>>({})

@@ -1,8 +1,8 @@
-import { rpgTargetAtom } from '@stores/store'
+import targetAtom from '@stores/target'
 import { useStore } from '@nanostores/solid'
 
 const Dashboard = () => {
-  const rpgTarget = useStore(rpgTargetAtom)
+  const rpgTarget = useStore(targetAtom)
 
   return <div>{JSON.stringify(rpgTarget())}</div>
 }
