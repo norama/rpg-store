@@ -14,9 +14,9 @@ const RpgNumberInput = ({ mode, name, min, max }: Props) => {
 
   return (
     <>
-      {target() ? (
+      {target() && (
         <NumberInput<IRpgCharacter> mode={mode} name={name} min={min} max={max} target={target} />
-      ) : null}
+      )}
     </>
   )
 }
