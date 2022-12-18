@@ -1,5 +1,5 @@
 import rpgTargetAtom from '@builder/ui/stores/business/rpgTarget'
-import { numberValuesMap } from '@builder/ui/stores/store'
+import { numberValuesMap } from '@builder/ui/stores/blockAtom'
 import { useStore } from '@nanostores/solid'
 
 const MoneyDisplay = () => {

@@ -33,11 +33,14 @@ const M = {
   uiNumber: msg('uiNumber'),
   uiStringArray: msg('uiStringArray'),
   uiNumberArray: msg('uiNumberArray'),
-  rpgReset: msg('rpgReset'),
-  rpgSave: msg('rpgSave'),
-  rpgFormSave: msg('rpgFormSave'),
-  rpgFormReset: msg('rpgFormReset'),
-  rpgFormBlock: msg('rpgFormBlock'),
+  uiBlockData: msg('uiBlockData'),
+  uiBlockInfo: msg('uiBlockInfo'),
+  uiTarget: msg('uiTarget'),
+  uiProperties: msg('uiProperties'),
+  uiReset: msg('uiReset'),
+  uiSave: msg('uiSave'),
+  uiSaveAction: msg('uiSaveAction'),
+  uiBlockType: msg('uiBlockType'),
 }
 
 export default M

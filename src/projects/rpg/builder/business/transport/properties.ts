@@ -14,16 +14,16 @@ class Properties implements IBlockPage {
 
     this.subscribe()
 
-    PubSub.publish(M.rpgFormBlock, 'properties')
+    PubSub.publish(M.uiBlockType, 'properties')
     this.publish()
   }
 
-  rpgProperties(properties: Record<string, IValue>) {
+  rpgProperties(properties: Partial<IProperties>) {
     return { ...this.rpgCharacter.properties, ...properties }
   }
 
   subscribe() {
-    PubSub.subscribe(M.rpgSave, async (_msg, properties: Record<string, IValue>) => {
+    PubSub.subscribe(M.uiSave, async (_msg, properties: Partial<IProperties>) => {
       const response = await fetch(`${API_URL}/properties.json`, {
         method: 'POST',
         headers: {
@@ -35,27 +35,16 @@ class Properties implements IBlockPage {
       this.publish()
     })
 
-    PubSub.subscribe(M.rpgReset, () => {
+    PubSub.subscribe(M.uiReset, () => {
       this.publish()
     })
   }
 
   publish() {
-    PubSub.publish(M.rpgTarget, this.rpgCharacter)
+    PubSub.publish(M.uiTarget, this.rpgCharacter)
 
     const properties = this.rpgCharacter.properties
-    PubSub.publish(M.uiString, {
-      key: 'name',
-      value: properties.name,
-    })
-    PubSub.publish(M.uiNumber, {
-      key: 'points',
-      value: properties.points,
-    })
-    PubSub.publish(M.uiNumber, {
-      key: 'money',
-      value: properties.money,
-    })
+    PubSub.publish(M.uiProperties, { ...properties })
   }
 }
 

@@ -10,10 +10,7 @@ class Equipments extends Block<IBlockEquipments, IInfoEquipments> {
   publish() {
     super.publish()
     const block = this.rpgCharacter.equipments
-    PubSub.publish(M.uiStringArray, {
-      key: 'equipments',
-      value: [...block.equipments],
-    })
+    PubSub.publish(M.uiBlockData, { ...block })
   }
 }
 

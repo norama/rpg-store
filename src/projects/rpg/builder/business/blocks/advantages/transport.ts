@@ -10,10 +10,7 @@ class Advantages extends Block<IBlockAdvantages, IInfoAdvantages> {
   publish() {
     super.publish()
     const block = this.rpgCharacter.advantages
-    PubSub.publish(M.uiStringArray, {
-      key: 'advantages',
-      value: [...block.advantages],
-    })
+    PubSub.publish(M.uiBlockData, { ...block })
   }
 }
 

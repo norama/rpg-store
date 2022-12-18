@@ -10,10 +10,7 @@ class Races extends Block<IBlockRaces, IInfoRaces> {
   publish() {
     super.publish()
     const block = this.rpgCharacter.races
-    PubSub.publish(M.uiStringArray, {
-      key: 'races',
-      value: [...block.races],
-    })
+    PubSub.publish(M.uiBlockData, { ...block })
   }
 }
 

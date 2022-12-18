@@ -16,13 +16,13 @@ class Transport {
   }
 
   subscribe() {
-    PubSub.subscribe(M.rpgReset, () => {
+    PubSub.subscribe(M.uiReset, () => {
       this.publish()
     })
   }
 
   publish() {
-    PubSub.publish(M.rpgTarget, this.rpgCharacter)
+    PubSub.publish(M.uiTarget, this.rpgCharacter)
   }
 }
 

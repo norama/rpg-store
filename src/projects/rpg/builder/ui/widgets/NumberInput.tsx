@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/solid'
-import { numberValuesMap, setNumberValue, stringValuesMap } from '@stores/store'
+import { numberValuesMap, setNumberValue, stringValuesMap } from '@builder/ui/stores/blockAtom'
 import { createMemo } from 'solid-js'
 
 export type NumberInputFuncArgs<T> = {

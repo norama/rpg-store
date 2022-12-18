@@ -23,42 +23,48 @@ class Block<B, I> implements IBlockPage {
 
     this.subscribe()
 
-    PubSub.publish(M.rpgFormBlock, this.type)
+    PubSub.publish(M.uiBlockType, this.type)
     this.publish()
   }
 
-  rpgProperties(properties: Record<string, IValue>) {
+  rpgProperties(properties: Partial<IProperties>) {
     return { ...this.rpgCharacter.properties, ...properties }
   }
 
-  rpgBlock(block: Record<string, IValue>, properties?: Record<string, IValue>) {
+  rpgBlock(block: Partial<B>, properties?: Partial<IProperties>) {
     return {
       data: { ...this.rpgCharacter[this.type], ...block } as B,
-      properties: properties ?? ({ ...this.rpgCharacter.properties, ...properties } as IProperties),
+      properties: properties ?? { ...this.rpgCharacter.properties, ...properties },
     }
   }
 
   subscribe() {
-    PubSub.subscribe(M.rpgSave, async (_msg, { block, properties }) => {
-      const response = await fetch(`${API_URL}/${this.type}Block.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.rpgBlock(block, properties)),
-      })
-      this.rpgCharacter = await response.json()
-      this.publish()
-    })
+    PubSub.subscribe(
+      M.uiSave,
+      async (
+        _msg,
+        { block, properties }: { block: Partial<B>; properties?: Partial<IProperties> }
+      ) => {
+        const response = await fetch(`${API_URL}/${this.type}Block.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.rpgBlock(block, properties)),
+        })
+        this.rpgCharacter = await response.json()
+        this.publish()
+      }
+    )
 
-    PubSub.subscribe(M.rpgReset, () => {
+    PubSub.subscribe(M.uiReset, () => {
       this.publish()
     })
   }
 
   publish() {
-    PubSub.publish(M.rpgTarget, this.rpgCharacter)
-    PubSub.publish(M.rpgInfo, this.info)
+    PubSub.publish(M.uiTarget, this.rpgCharacter)
+    PubSub.publish(M.uiBlockInfo, this.info)
   }
 }
 

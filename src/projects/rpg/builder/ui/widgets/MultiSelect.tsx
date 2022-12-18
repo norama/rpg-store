@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/solid'
-import { stringArraysMap, setStringArray } from '@stores/store'
+import { stringArraysMap, setStringArray } from '@builder/ui/stores/blockAtom'
 
 type Props = {
   mode?: IMode

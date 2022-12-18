@@ -3,35 +3,40 @@ const startup = async (page: string) => {
     await import('pubsub/log')
   }
 
+  await import('@business/store/target')
+  await import('@business/store/properties')
+
   let transport: IBlockPage
 
   switch (page) {
     case 'races':
-      const { default: Races } = await import('@transport/blocks/races')
+      await import('@business/blocks/races/store')
+      const { default: Races } = await import('@business/blocks/races/transport')
       transport = new Races()
       console.log('=== > races')
       break
     case 'equipments':
-      const { default: Equipments } = await import('@transport/blocks/equipments')
+      await import('@business/blocks/equipments/store')
+      const { default: Equipments } = await import('@business/blocks/equipments/transport')
       transport = new Equipments()
       console.log('=== > equipments')
       break
     case 'advantages':
-      const { default: Advantages } = await import('@transport/blocks/advantages')
+      await import('@business/blocks/advantages/store')
+      const { default: Advantages } = await import('@business/blocks/advantages/transport')
       transport = new Advantages()
       console.log('=== > advantages')
       break
     case 'properties':
     default: {
+      await import('@business/blocks/properties/store')
       const { default: Properties } = await import('@transport/properties')
       transport = new Properties()
       console.log('=== > properties')
     }
   }
 
-  await import('@stores/store')
-  await import('@stores/business/rpgTarget')
-  await import('@stores/business/rpgInfo')
+  await import('@builder/ui/stores/blockAtom')
   await transport.init()
 }
 
