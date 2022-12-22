@@ -5,8 +5,6 @@ import { useStore } from '@nanostores/solid'
 const NameInput = () => {
   const properties = useStore(propertiesMap)
 
-  console.log('props', properties())
-
   return (
     <>
       {properties().name}

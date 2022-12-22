@@ -63,6 +63,9 @@ class Block<B, I> implements IBlockPage {
   }
 
   publish() {
+    const properties = this.rpgCharacter.properties
+    PubSub.publish(M.uiProperties, { ...properties })
+
     PubSub.publish(M.uiTarget, this.rpgCharacter)
     PubSub.publish(M.uiBlockInfo, this.info)
   }
