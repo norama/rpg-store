@@ -8,7 +8,6 @@ export class ResourceAtom<T> {
 
   constructor(resource: string) {
     PubSub.subscribe(resource, (_msg: string, target: T) => {
-      console.log('--> Target', target)
       this.atom.set(target)
     })
   }
@@ -20,7 +19,6 @@ export class FormData<D extends Object> {
 
   constructor(resource: string) {
     PubSub.subscribe(resource, (_msg: string, data: D) => {
-      console.log('--> Data', data)
       this.map.set(data)
     })
   }

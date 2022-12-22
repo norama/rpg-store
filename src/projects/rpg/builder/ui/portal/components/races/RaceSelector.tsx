@@ -12,7 +12,7 @@ const RaceSelector = () => {
   return (
     <MultiSelect
       name="races"
-      options={() => (info() ? Object.keys(info()).sort() : [])}
+      options={() => Object.keys(info()).sort()}
       values={() => block().races}
       texts={(option) => (info() ? info()[option].name : '')}
       onChange={(races) => blockMap.setKey('races', races)}
