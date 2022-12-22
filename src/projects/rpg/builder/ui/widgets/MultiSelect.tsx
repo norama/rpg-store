@@ -1,15 +1,13 @@
-import { useStore } from '@nanostores/solid'
-import { stringArraysMap, setStringArray } from '@builder/ui/stores/blockAtom'
-
 type Props = {
   mode?: IMode
   name: string
   options: string[]
+  values: string[]
+  texts?: Record<string, string>
+  onChange: (values: string[]) => void
 }
 
-const MultiSelect = ({ mode = 'write', name, options }: Props) => {
-  const values = useStore(stringArraysMap)
-
+const MultiSelect = ({ mode = 'write', name, options, values, texts = {}, onChange }: Props) => {
   return (
     <p
       style={{
@@ -19,7 +17,7 @@ const MultiSelect = ({ mode = 'write', name, options }: Props) => {
       }}
     >
       {mode === 'read' ? (
-        <>{JSON.stringify(values()[name]) ?? ''}</>
+        <>{JSON.stringify(values) ?? ''}</>
       ) : (
         <>
           {name}:{' '}
@@ -28,15 +26,15 @@ const MultiSelect = ({ mode = 'write', name, options }: Props) => {
             id={name}
             name={name}
             onChange={(e) => {
-              const values = Array.from(e.currentTarget.selectedOptions).map((o) => o.value)
-              setStringArray(name, values)
+              const newValues = Array.from(e.currentTarget.selectedOptions).map((o) => o.value)
+              onChange(newValues)
             }}
             size={8}
             disabled={mode === 'disabled'}
           >
             {options.map((option) => (
-              <option value={option} selected={values()[name] && values()[name].includes(option)}>
-                {option}
+              <option value={option} selected={values.includes(option)}>
+                {texts[option] ?? option}
               </option>
             ))}
           </select>

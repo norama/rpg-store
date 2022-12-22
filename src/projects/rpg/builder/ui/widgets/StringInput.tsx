@@ -1,44 +1,47 @@
-import { useStore } from '@nanostores/solid'
-import { stringValuesMap, setStringValue } from '@builder/ui/stores/blockAtom'
+import { createEffect } from 'solid-js'
 
 type Props = {
   mode?: IMode
   name: string
+  value: () => string
+  onChange: (value: string) => void
 }
 
-const StringInput = ({ mode = 'write', name }: Props) => {
-  const values = useStore(stringValuesMap)
-
+const StringInput = ({ mode = 'write', name, value, onChange }: Props) => {
   return (
-    <p
-      style={{
-        color: import.meta.env.SSR ? 'red' : 'green',
-        'font-weight': 700,
-        'font-size': '1.5rem',
-      }}
-    >
-      {mode === 'read' ? (
-        <>{values()[name] ?? ''}</>
-      ) : (
-        <>
-          {name}:{' '}
-          <input
-            type="text"
-            id={name}
-            name={name}
-            value={values()[name] ?? ''}
-            onKeyUp={(e) => {
-              setStringValue(name, e.currentTarget.value)
-            }}
-            required
-            minlength={3}
-            maxlength={30}
-            size={20}
-            disabled={mode === 'disabled'}
-          />
-        </>
+    <>
+      {value() && (
+        <p
+          style={{
+            color: import.meta.env.SSR ? 'red' : 'green',
+            'font-weight': 700,
+            'font-size': '1.5rem',
+          }}
+        >
+          {mode === 'read' ? (
+            <>{value()}</>
+          ) : (
+            <>
+              {name}:{' '}
+              <input
+                type="text"
+                id={name}
+                name={name}
+                value={value()}
+                onKeyUp={(e) => {
+                  onChange(e.currentTarget.value)
+                }}
+                required
+                minlength={3}
+                maxlength={30}
+                size={20}
+                disabled={mode === 'disabled'}
+              />
+            </>
+          )}
+        </p>
       )}
-    </p>
+    </>
   )
 }
 

@@ -1,0 +1,14 @@
+---
+layout: '@layouts/FormLayout.astro'
+title: 'Character Properties'
+---
+
+import NameInput from '@portal/components/properties/NameInput'
+import MoneyDisplay from '@portal/components/MoneyDisplay'
+import TargetDisplay from '@portal/components/TargetDisplay'
+
+<NameInput client:only="solid-js" />
+
+<MoneyDisplay client:only="solid-js" />
+
+<TargetDisplay client:only="solid-js" />

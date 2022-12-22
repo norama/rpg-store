@@ -1,13 +1,10 @@
-import rpgTargetAtom from '@builder/ui/stores/business/rpgTarget'
-import { numberValuesMap } from '@builder/ui/stores/blockAtom'
+import { propertiesMap } from '@builder/business/store/properties'
 import { useStore } from '@nanostores/solid'
 
 const MoneyDisplay = () => {
-  const target = useStore(rpgTargetAtom)
-  const numval = useStore(numberValuesMap)
-  console.log('numval', numval())
+  const properties = useStore(propertiesMap)
 
-  return <h2>{target() && target().properties.money}</h2>
+  return <h2>{properties().money}</h2>
 }
 
 export default MoneyDisplay

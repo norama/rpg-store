@@ -2,11 +2,8 @@
 layout: '@layouts/BuilderLayout.astro'
 ---
 
-import { Content as Properties } from '@portal/properties.mdx'
-import Dashboard from '@portal/components/Dashboard'
+import { Content as Properties } from '@portal/blocks/properties.mdx'
 
 # My RPG RpgCharacter
 
 <Properties />
-
-<Dashboard client:only="solid-js" />

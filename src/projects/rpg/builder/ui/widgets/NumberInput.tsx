@@ -1,36 +1,20 @@
-import { useStore } from '@nanostores/solid'
-import { numberValuesMap, setNumberValue, stringValuesMap } from '@builder/ui/stores/blockAtom'
-import { createMemo } from 'solid-js'
-
-export type NumberInputFuncArgs<T> = {
-  strval: (key: string, defval?: string) => string
-  numval: (key: string, defval?: number) => number
-  target: () => T
-}
-
 export type NumberInputProps<T> = {
   mode?: IMode
   name: string
-  target: () => T
-  min?: (args: NumberInputFuncArgs<T>) => number
-  max?: (args: NumberInputFuncArgs<T>) => number
+  value: number
+  onChange: (value: number) => void
+  min?: number
+  max?: number
 }
 
-const NumberInput = <T,>({ mode = 'write', name, target, min, max }: NumberInputProps<T>) => {
-  const numberValues = useStore(numberValuesMap)
-  const stringValues = useStore(stringValuesMap)
-
-  const numval = createMemo(
-    () =>
-      (key: string, defval = 0) =>
-        numberValues()[key] ?? defval
-  )
-  const strval = createMemo(
-    () =>
-      (key: string, defval = '') =>
-        stringValues()[key] ?? defval
-  )
-
+const NumberInput = <T,>({
+  mode = 'write',
+  name,
+  value,
+  onChange,
+  min,
+  max,
+}: NumberInputProps<T>) => {
   return (
     <p
       style={{
@@ -40,7 +24,7 @@ const NumberInput = <T,>({ mode = 'write', name, target, min, max }: NumberInput
       }}
     >
       {mode === 'read' ? (
-        <>{numval()(name)}</>
+        <>{value}</>
       ) : (
         <>
           {name}:{' '}
@@ -48,13 +32,13 @@ const NumberInput = <T,>({ mode = 'write', name, target, min, max }: NumberInput
             type="number"
             id={name}
             name={name}
-            value={numval()(name)}
+            value={value}
             onKeyUp={(e) => {
-              setNumberValue(name, Number(e.currentTarget.value))
+              onChange(Number(e.currentTarget.value))
             }}
             required
-            min={min ? min({ strval: strval(), numval: numval(), target }) : undefined}
-            max={max ? max({ strval: strval(), numval: numval(), target }) : undefined}
+            min={min}
+            max={max}
             minlength={3}
             maxlength={30}
             size={20}
