@@ -6,14 +6,11 @@ const NameInput = () => {
   const properties = useStore(propertiesMap)
 
   return (
-    <>
-      {properties().name}
-      <StringInput
-        name="name"
-        value={() => properties().name}
-        onChange={(name) => propertiesMap.setKey('name', name)}
-      />
-    </>
+    <StringInput
+      name="name"
+      value={() => properties().name}
+      onChange={(name) => propertiesMap.setKey('name', name)}
+    />
   )
 }
 
