@@ -2,10 +2,6 @@
 import initdb from '@builder/business/db/initdb'
 
 await initdb()
-
-const blocks = await Astro.glob('/src/pages/builder/blocks/*.mdx')
-
-console.log('BuilderLayout blocks', blocks)
 ---
 
 <style>
@@ -19,15 +15,4 @@ console.log('BuilderLayout blocks', blocks)
 
 <div class="root">
   <slot />
-  <ul>
-    {
-      blocks
-        .sort((a, b) => a.frontmatter.order - b.frontmatter.order)
-        .map((block) => (
-          <li>
-            <a href={block.url}>{block.frontmatter.title}</a>
-          </li>
-        ))
-    }
-  </ul>
 </div>

@@ -1,0 +1,17 @@
+---
+const blocks = [
+  { url: '/builder/blocks/races', title: 'Races' },
+  { url: '/builder/blocks/equipments', title: 'Equipments' },
+  { url: '/builder/blocks/advantages', title: 'Advantages' },
+]
+---
+
+<ul>
+  {
+    blocks.map((block) => (
+      <li>
+        <a href={block.url}>{block.title}</a>
+      </li>
+    ))
+  }
+</ul>
