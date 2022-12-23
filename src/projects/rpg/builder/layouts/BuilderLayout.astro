@@ -4,6 +4,8 @@ import initdb from '@builder/business/db/initdb'
 await initdb()
 
 const blocks = await Astro.glob('/src/pages/builder/blocks/*.mdx')
+
+console.log('BuilderLayout blocks', blocks)
 ---
 
 <style>
