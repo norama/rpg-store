@@ -4,9 +4,7 @@ type IRace = {
   strength: number
 }
 
-type IInfoRaces = {
-  races: Record<string, IRace>
-}
+type IInfoRaces = Record<string, IRace>
 
 type IBlockRaces = {
   races: string[]

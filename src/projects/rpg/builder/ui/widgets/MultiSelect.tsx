@@ -3,7 +3,8 @@ type Props = {
   name: string
   options: () => string[]
   values: () => string[]
-  texts?: (options: string) => string
+  texts?: (option: string) => string
+  disabled?: (option: string) => boolean
   onChange: (values: string[]) => void
 }
 
@@ -13,6 +14,7 @@ const MultiSelect = ({
   options,
   values,
   texts = (option) => option,
+  disabled = () => false,
   onChange,
 }: Props) => {
   return (
@@ -42,7 +44,11 @@ const MultiSelect = ({
                 disabled={mode === 'disabled'}
               >
                 {options().map((option) => (
-                  <option value={option} selected={values().includes(option)}>
+                  <option
+                    value={option}
+                    selected={values().includes(option)}
+                    disabled={disabled(option)}
+                  >
                     {texts(option)}
                   </option>
                 ))}
