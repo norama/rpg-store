@@ -3,11 +3,16 @@ export interface Props {
   isRed: boolean
 }
 const { isRed } = Astro.props
+
+import theme from 'styles/theme'
+
+const style = {
+  padding: theme.spaces[5],
+}
 ---
 
 <style>
   .box {
-    padding: 5px;
     border: 1px solid blue;
   }
   .red {
@@ -15,7 +20,7 @@ const { isRed } = Astro.props
   }
 </style>
 
-<div class:list={['box', { red: isRed }]}>
+<div class:list={['box', { red: isRed }]} style={style}>
   <div>QUOTE START</div>
   <pre><slot /></pre>
   <div>QUOTE END</div>

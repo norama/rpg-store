@@ -1,4 +1,5 @@
 const theme = {
+  spaces: ['0px', '4px', '8px', '16px', '32px', '64px', '128px', '256px', '512px'],
   colors: {
     text: '#fff',
     background: '#060606',
@@ -14,7 +15,7 @@ const theme = {
     heading: 'inherit',
     monospace: 'Menlo, monospace',
   },
-  fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],
+  fontSizes: ['12px', '14px', '16px', '20px', '24px', '32px', '48px', '64px', '72px'],
   fontWeights: {
     body: 400,
     heading: 700,

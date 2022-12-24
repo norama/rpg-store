@@ -1,11 +1,11 @@
 const theme = {
-  space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
+  spaces: ['0px', '4px', '8px', '16px', '32px', '64px', '128px', '256px', '512px'],
   fonts: {
     body: 'Roboto, system-ui, sans-serif',
     heading: 'Roboto, system-ui, sans-serif',
     monospace: '"Roboto Mono", monospace',
   },
-  fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
+  fontSizes: ['12px', '14px', '16px', '20px', '24px', '32px', '48px', '64px', '96px'],
   fontWeights: {
     body: 400,
     heading: 600,
@@ -17,13 +17,15 @@ const theme = {
   },
   colors: {
     text: '#202124',
-    background: '#fff',
+    background: '#debe6f',
     primary: '#1a73e8',
     secondary: '#9c27b0',
     muted: '#f1f3f4',
   },
   styles: {
     root: {
+      backgroundColor: 'background',
+      padding: 5,
       fontFamily: 'body',
       lineHeight: 'body',
       fontWeight: 'body',

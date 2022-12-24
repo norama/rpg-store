@@ -1,4 +1,5 @@
 const theme = {
+  spaces: ['0px', '4px', '8px', '16px', '32px', '64px', '128px', '256px', '512px'],
   breakpoints: ['576px', '768px', '992px', '1200px'],
   colors: {
     white: '#fff',

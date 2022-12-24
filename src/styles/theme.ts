@@ -1,3 +1,3 @@
-import theme from './themes/bootstrap'
+import theme from './themes/roboto'
 
 export default theme
