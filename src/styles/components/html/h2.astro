@@ -1,0 +1,13 @@
+---
+const props = Astro.props
+
+import theme from 'styles/theme'
+---
+
+<h2 style={{ color: theme.colors.purple }}>
+  <div>H2 START</div>
+
+  <slot />
+
+  <div>H2 END</div>
+</h2>

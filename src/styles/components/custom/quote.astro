@@ -1,0 +1,22 @@
+---
+export interface Props {
+  isRed: boolean
+}
+const { isRed } = Astro.props
+---
+
+<style>
+  .box {
+    padding: 5px;
+    border: 1px solid blue;
+  }
+  .red {
+    border-color: red;
+  }
+</style>
+
+<div class:list={['box', { red: isRed }]}>
+  <div>QUOTE START</div>
+  <pre><slot /></pre>
+  <div>QUOTE END</div>
+</div>

@@ -3,11 +3,15 @@ layout: '@layouts/FormLayout.astro'
 title: 'Races'
 ---
 
+## H2 H2
+
 Bla Bla Bla
 Info text races
 
-import PointDisplay from '@portal/components/PointDisplay'
+<Quote isRed={true}>This is a quote</Quote>
+
 import RaceSelector from '@portal/components/races/RaceSelector'
+import PointDisplay from '@portal/components/PointDisplay'
 import TargetDisplay from '@portal/components/TargetDisplay'
 
 <PointDisplay client:only="solid-js" />

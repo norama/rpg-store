@@ -5,8 +5,42 @@ layout: '@layouts/BuilderLayout.astro'
 import { Content as Properties } from '@portal/blocks/properties.mdx'
 import BlockList from './BlockList.astro'
 
+import { components } from 'styles/components/index.mdx'
+
+export { components }
+
 # My RPG RpgCharacter
 
-<Properties />
+<div style={{ height: '400px '}}>
+
+<Properties components={components} />
 
 <BlockList />
+
+</div>
+
+# GFM
+
+## Autolink literals
+
+www.example.com, https://example.com, and contact@example.com.
+
+## Footnote
+
+A note[^1]
+
+[^1]: Big note.
+
+## Strikethrough
+
+~one~ or ~~two~~ tildes.
+
+## Table
+
+| a   | b   |   c |  d  |
+| --- | :-- | --: | :-: |
+
+## Tasklist
+
+- [ ] to do
+- [x] done
