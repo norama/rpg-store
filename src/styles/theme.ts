@@ -8,6 +8,10 @@ export type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
 let theme = 'roboto'
 
 export const setTheme = (newTheme: ITheme) => {
+  console.log(
+    '==========================================> setTheme server: ' + import.meta.env.SSR,
+    newTheme
+  )
   theme = newTheme
 }
 
