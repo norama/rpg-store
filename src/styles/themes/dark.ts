@@ -48,6 +48,9 @@ const theme = {
       fontFamily: 'body',
       lineHeight: 'body',
       fontWeight: 'body',
+      color: 'text',
+      background: 'background',
+      padding: 4,
     },
     h1: {
       variant: 'text.display',

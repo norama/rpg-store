@@ -4,6 +4,6 @@ const props = Astro.props
 import style from 'styles/style'
 ---
 
-<div style={style('root')}>
+<div style={style('root', { minHeight: '100vh' })}>
   <slot />
 </div>
