@@ -10,20 +10,23 @@ const themeKey = (attr: string) => {
       return 'colors'
     case 'padding':
     case 'margin':
+    case 'width':
+    case 'height':
       return 'spaces'
     default:
       return attr + 's'
   }
 }
 
-const style = (tag: string) => {
-  const baseStyle = theme.styles[tag]
+const style = (tag = '', customStyle = {}) => {
+  const themeStyle = theme.styles[tag] ?? {}
+  const baseStyle = { ...themeStyle, ...customStyle }
   const derivedStyle = {}
 
   Object.keys(baseStyle).forEach((attr) => {
     const key = themeKey(attr)
     if (theme[key]) {
-      derivedStyle[attr] = theme[key][baseStyle[attr]]
+      derivedStyle[attr] = theme[key][baseStyle[attr]] ?? baseStyle[attr]
     }
   })
 
