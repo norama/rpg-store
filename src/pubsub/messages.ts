@@ -41,6 +41,8 @@ const M = {
   uiSave: msg('uiSave'),
   uiSaveAction: msg('uiSaveAction'),
   uiBlockType: msg('uiBlockType'),
+  uiTheme: msg('uiTheme'),
+  uiThemeChanged: msg('uiThemeChanged'),
 }
 
 export default M

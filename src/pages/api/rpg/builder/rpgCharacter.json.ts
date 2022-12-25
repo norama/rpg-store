@@ -1,15 +1,11 @@
+import { jsonResponse } from 'http/util/response'
 import { select, update } from 'projects/rpg/api/proxy'
 import { T } from 'pubsub/messages'
 
 export async function get() {
   const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
 
-  return new Response(JSON.stringify(rpgCharacter), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+  return jsonResponse(rpgCharacter)
 }
 
 export async function post({ request }) {

@@ -1,3 +1,4 @@
+import { jsonRequest } from 'http/util/request'
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 
@@ -45,13 +46,10 @@ class Block<B, I> implements IBlockPage {
         _msg,
         { block, properties }: { block: Partial<B>; properties?: Partial<IProperties> }
       ) => {
-        const response = await fetch(`${API_URL}/${this.type}Block.json`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.rpgBlock(block, properties)),
-        })
+        const response = await fetch(
+          `${API_URL}/${this.type}Block.json`,
+          jsonRequest(this.rpgBlock(block, properties))
+        )
         this.rpgCharacter = await response.json()
         this.publish()
       }

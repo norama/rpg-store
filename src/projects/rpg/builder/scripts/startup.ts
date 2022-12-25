@@ -36,6 +36,7 @@ const startup = async (page: string) => {
     }
   }
 
+  await import('@transport/theme')
   await import('@builder/ui/stores/blockAtom')
   await transport.init()
 }

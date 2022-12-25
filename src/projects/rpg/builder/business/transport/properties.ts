@@ -1,3 +1,4 @@
+import { jsonRequest } from 'http/util/request'
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 
@@ -24,13 +25,10 @@ class Properties implements IBlockPage {
 
   subscribe() {
     PubSub.subscribe(M.uiSave, async (_msg, properties: Partial<IProperties>) => {
-      const response = await fetch(`${API_URL}/properties.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.rpgProperties(properties)),
-      })
+      const response = await fetch(
+        `${API_URL}/properties.json`,
+        jsonRequest(this.rpgProperties(properties))
+      )
       this.rpgCharacter = await response.json()
       this.publish()
     })

@@ -1,3 +1,4 @@
+import { jsonResponse } from 'http/util/response'
 import { select, update } from 'projects/rpg/api/proxy'
 import { T } from 'pubsub/messages'
 
@@ -8,12 +9,7 @@ export async function get({ params }) {
     block
   )
 
-  return new Response(JSON.stringify(rpgBlock), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+  return jsonResponse(rpgBlock)
 }
 
 export async function post({ params, request }) {
@@ -25,12 +21,7 @@ export async function post({ params, request }) {
 
     const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
 
-    return new Response(JSON.stringify(rpgCharacter), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    return jsonResponse(rpgCharacter)
   } else {
     return new Response(null, { status: 400 })
   }

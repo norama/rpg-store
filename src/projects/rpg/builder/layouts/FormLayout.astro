@@ -1,6 +1,7 @@
 ---
 import 'styles/global.css'
 
+import ThemeSelector from '@widgets/form/ThemeSelector'
 import ResetButton from '@widgets/form/ResetButton'
 import SaveButton from '@widgets/form/SaveButton'
 
@@ -19,9 +20,19 @@ console.log('-- block --', block)
     width: 100%;
     justify-content: end;
   }
+
+  .themeSelector {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+  }
 </style>
 
 <h2>{frontmatter.title}</h2>
+
+<div class="themeSelector">
+  <ThemeSelector client:only="solid-js" />
+</div>
 
 <div id="form" data-block={block}>
   <slot />
