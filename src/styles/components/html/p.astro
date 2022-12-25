@@ -1,0 +1,9 @@
+---
+const props = Astro.props
+
+import style from 'styles/style'
+---
+
+<p style={style('p', props)}>
+  <slot />
+</p>

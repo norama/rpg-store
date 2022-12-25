@@ -1,4 +1,5 @@
-import { createEffect } from 'solid-js'
+import { Input, Text } from '@hope-ui/core'
+import style from 'styles/style'
 
 type Props = {
   mode?: IMode
@@ -11,31 +12,21 @@ const StringInput = ({ mode = 'write', name, value, onChange }: Props) => {
   return (
     <>
       {value() && (
-        <p
-          style={{
-            color: import.meta.env.SSR ? 'red' : 'green',
-            'font-weight': 700,
-            'font-size': '1.5rem',
-          }}
-        >
+        <p>
           {mode === 'read' ? (
             <>{value()}</>
           ) : (
             <>
-              {name}:{' '}
-              <input
-                type="text"
-                id={name}
-                name={name}
+              <Text sx={style('text', { fontWeight: 'heading' })}>{name}</Text>
+              <Input
                 value={value()}
-                onKeyUp={(e) => {
+                onInput={(e) => {
                   onChange(e.currentTarget.value)
                 }}
-                required
-                minlength={3}
-                maxlength={30}
-                size={20}
-                disabled={mode === 'disabled'}
+                size="sm"
+                isRequired
+                isDisabled={mode === 'disabled'}
+                sx={style('input')}
               />
             </>
           )}

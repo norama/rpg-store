@@ -3,7 +3,7 @@ import bootstrap from './themes/bootstrap'
 import dark from './themes/dark'
 import roboto from './themes/roboto'
 
-type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
+export type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
 
 let theme = 'roboto'
 

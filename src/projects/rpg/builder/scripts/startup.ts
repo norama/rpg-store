@@ -1,3 +1,7 @@
+import ThemeTransport from '@transport/theme'
+
+new ThemeTransport().init()
+
 const startup = async (page: string) => {
   if (import.meta.env.PUBLIC_LOGGING === 'true') {
     await import('pubsub/log')
@@ -36,7 +40,6 @@ const startup = async (page: string) => {
     }
   }
 
-  await import('@transport/theme')
   await import('@builder/ui/stores/blockAtom')
   await transport.init()
 }

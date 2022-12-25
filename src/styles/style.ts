@@ -7,6 +7,7 @@ const themeKey = (attr: string) => {
       return 'fonts'
     case 'background':
     case 'backgroundColor':
+    case 'borderColor':
       return 'colors'
     case 'padding':
     case 'margin':
