@@ -1,5 +1,5 @@
 import { jsonResponse } from 'http/util/response'
-import { setTheme } from 'styles/theme'
+import themeHolder from 'styles/theme'
 
 export async function post({ request }) {
   if (request.headers.get('Content-Type') === 'application/json') {
@@ -7,7 +7,7 @@ export async function post({ request }) {
 
     console.log('setting theme', theme)
 
-    setTheme(theme)
+    themeHolder.setTheme(theme)
 
     return jsonResponse({ theme })
   } else {

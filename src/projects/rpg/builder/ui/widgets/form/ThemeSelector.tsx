@@ -4,7 +4,7 @@ import { useStore } from '@nanostores/solid'
 
 import { persistentAtom } from '@nanostores/persistent'
 import { onMount, onCleanup } from 'solid-js'
-import { ITheme, setTheme } from 'styles/theme'
+import themeHolder, { ITheme } from 'styles/theme'
 
 export const themeAtom = persistentAtom<ITheme>('theme', 'roboto')
 const themeInProgressAtom = persistentAtom<string>('themeInProgress', 'false')
@@ -27,7 +27,7 @@ const ThemeSelector = () => {
         PubSub.publish(M.uiTheme, themeValue)
       } else {
         themeInProgressAtom.set('false')
-        setTheme(themeValue)
+        themeHolder.setTheme(themeValue)
       }
     })
   })

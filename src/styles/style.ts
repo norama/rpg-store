@@ -1,4 +1,4 @@
-import getTheme from 'styles/theme'
+import themeHolder from 'styles/theme'
 
 // e.g. 'fontSize' -> 'fontSizes' in theme
 const themeKey = (attr: string) => {
@@ -20,7 +20,7 @@ const themeKey = (attr: string) => {
 }
 
 const style = (tag = '', customStyle = {}) => {
-  const theme = getTheme()
+  const theme = themeHolder.getTheme()
   const themeStyle = theme.styles[tag] ?? {}
   const baseStyle = { ...themeStyle, ...customStyle }
   const derivedStyle = {}

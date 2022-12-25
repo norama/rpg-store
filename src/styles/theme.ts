@@ -5,30 +5,29 @@ import roboto from './themes/roboto'
 
 export type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
 
-let theme = 'roboto'
+class Theme {
+  theme = 'roboto'
 
-export const setTheme = (newTheme: ITheme) => {
-  console.log(
-    '==========================================> setTheme server: ' + import.meta.env.SSR,
-    newTheme
-  )
-  theme = newTheme
-}
+  setTheme(newTheme: ITheme) {
+    console.log('========> setTheme server: ' + import.meta.env.SSR, newTheme)
+    this.theme = newTheme
+  }
 
-const getTheme = () => {
-  console.log('=============> server: ' + import.meta.env.SSR + ' theme: ' + theme)
+  getTheme() {
+    console.log('=============> server: ' + import.meta.env.SSR + ' theme: ' + this.theme)
 
-  switch (theme) {
-    case 'base':
-      return base
-    case 'bootstrap':
-      return bootstrap
-    case 'dark':
-      return dark
-    case 'roboto':
-    default:
-      return roboto
+    switch (this.theme) {
+      case 'base':
+        return base
+      case 'bootstrap':
+        return bootstrap
+      case 'dark':
+        return dark
+      case 'roboto':
+      default:
+        return roboto
+    }
   }
 }
 
-export default getTheme
+export default new Theme()
