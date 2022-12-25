@@ -16,6 +16,8 @@ export const setTheme = (newTheme: ITheme) => {
 }
 
 const getTheme = () => {
+  console.log('=============> server: ' + import.meta.env.SSR + ' theme: ' + theme)
+
   switch (theme) {
     case 'base':
       return base

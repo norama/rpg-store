@@ -21,7 +21,6 @@ const themeKey = (attr: string) => {
 
 const style = (tag = '', customStyle = {}) => {
   const theme = getTheme()
-  console.log('=============> server: ' + import.meta.env.SSR + 'tag: ' + tag + ' theme: ' + theme)
   const themeStyle = theme.styles[tag] ?? {}
   const baseStyle = { ...themeStyle, ...customStyle }
   const derivedStyle = {}
