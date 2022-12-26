@@ -1,4 +1,4 @@
-import { Input, Text } from '@hope-ui/core'
+import { Input, InputLabel } from '@suid/material'
 import style from 'styles/style'
 
 type Props = {
@@ -13,23 +13,16 @@ const StringInput = ({ mode = 'write', name, value, onChange }: Props) => {
     <>
       {value() && (
         <p>
-          {mode === 'read' ? (
-            <>{value()}</>
-          ) : (
-            <>
-              <Text sx={style('text', { fontWeight: 'heading' })}>{name}</Text>
-              <Input
-                value={value()}
-                onInput={(e) => {
-                  onChange(e.currentTarget.value)
-                }}
-                size="sm"
-                isRequired
-                isDisabled={mode === 'disabled'}
-                sx={style('input')}
-              />
-            </>
-          )}
+          <InputLabel sx={style('text')}>{name}</InputLabel>
+          <Input
+            value={value()}
+            onChange={(_e, value) => {
+              onChange(value)
+            }}
+            required
+            disabled={mode === 'disabled' || mode === 'read'}
+            sx={style('input')}
+          />
         </p>
       )}
     </>

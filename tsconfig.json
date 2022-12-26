@@ -14,8 +14,16 @@
       "@blocks/*": ["projects/rpg/builder/ui/portal/blocks/*"],
       "@dashboard/*": ["projects/rpg/builder/ui/portal/dashboard/*"]
     },
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
+    "types": ["vite/client"],
+    "noEmit": true,
+    "isolatedModules": true,
     "typeRoots": [
       "./node_modules/@types",
       "src/projects/rpg/@types",

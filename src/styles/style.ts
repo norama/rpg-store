@@ -32,6 +32,8 @@ const style = (tag = '', customStyle = {}) => {
     }
   })
 
+  console.log(tag, { ...baseStyle, ...derivedStyle })
+
   return { ...baseStyle, ...derivedStyle }
 }
 

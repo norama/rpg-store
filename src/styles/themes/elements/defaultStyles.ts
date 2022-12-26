@@ -87,9 +87,6 @@ const defaultStyles = {
   input: {
     color: 'text',
     backgroundColor: 'muted',
-    border: '1px solid transparent',
-    borderColor: 'text',
-    borderRadius: '5px',
     padding: '5px',
     width: '400px',
   },
