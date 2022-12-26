@@ -96,6 +96,11 @@ const defaultStyles = {
   box: {
     color: 'text',
   },
+  chip: {
+    color: 'text',
+    paddingLeft: '10px',
+    fontSize: 3,
+  },
 }
 
 export default defaultStyles

@@ -23,6 +23,7 @@ const theme = {
     primary: '#1a73e8',
     secondary: '#9c27b0',
     muted: '#f1f3f4',
+    highlight: '#6244db',
   },
   styles: { ...defaultStyles },
 }
