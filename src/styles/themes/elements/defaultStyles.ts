@@ -93,6 +93,9 @@ const defaultStyles = {
   text: {
     color: 'text',
   },
+  box: {
+    color: 'text',
+  },
 }
 
 export default defaultStyles

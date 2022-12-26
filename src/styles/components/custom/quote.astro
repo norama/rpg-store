@@ -4,11 +4,8 @@ export interface Props {
 }
 const { isRed } = Astro.props
 
-import theme from 'styles/theme'
-
-const style = {
-  padding: theme().spaces[5],
-}
+import Box from './box.astro'
+import themeHolder from 'styles/theme'
 ---
 
 <style>
@@ -20,8 +17,10 @@ const style = {
   }
 </style>
 
-<div class:list={['box', { red: isRed }]} style={style}>
-  <div>QUOTE START</div>
-  <pre><slot /></pre>
-  <div>QUOTE END</div>
+<div class:list={['box', { red: isRed }]}>
+  <Box padding={themeHolder.getTheme().spaces[5]}>
+    <div>QUOTE START</div>
+    <pre><slot /></pre>
+    <div>QUOTE END</div>
+  </Box>
 </div>
