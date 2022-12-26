@@ -7,9 +7,11 @@ const NameInput = () => {
 
   return (
     <StringInput
-      name="name"
+      label="Name"
       value={() => properties().name}
       onChange={(name) => propertiesMap.setKey('name', name)}
+      inputProps={{ placeholder: 'Enter character name' }}
+      customStyle={{ width: '600px' }}
     />
   )
 }
