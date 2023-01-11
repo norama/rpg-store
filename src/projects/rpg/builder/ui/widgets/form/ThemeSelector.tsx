@@ -5,7 +5,7 @@ import { useStore } from '@nanostores/solid'
 import { persistentAtom } from '@nanostores/persistent'
 import { onMount } from 'solid-js'
 
-const themeInProgressAtom = persistentAtom<string>('themeInProgress', 'false')
+const themeInProgressAtom = persistentAtom<string>('themeInProgress', '0')
 
 const themes = ['roboto', 'bootstrap', 'dark', 'base']
 
@@ -15,9 +15,7 @@ const ThemeSelector = () => {
   onMount(() => {
     if (themeInProgressAtom.get() === 'true') {
       themeInProgressAtom.set('false')
-      setTimeout(() => {
-        location.reload()
-      }, 500)
+      location.reload()
     }
   })
 
