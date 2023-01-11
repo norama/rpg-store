@@ -5,12 +5,9 @@ import ThemeSelector from '@widgets/form/ThemeSelector'
 import ResetButton from '@widgets/form/ResetButton'
 import SaveButton from '@widgets/form/SaveButton'
 
-import { select } from 'projects/rpg/api/proxy'
-import { T } from 'pubsub/messages'
-import Theme, { ITheme } from 'styles/theme'
+import initTheme from '@layouts/initTheme'
 
-const theme = await select<ITheme>(T.uiTheme)
-Theme.setTheme(theme)
+await initTheme()
 
 const { frontmatter } = Astro.props
 
