@@ -13,8 +13,12 @@ const ThemeSelector = () => {
   const theme = useStore(Theme.theme)
 
   onMount(() => {
-    if (themeInProgressAtom.get() === 'true') {
-      themeInProgressAtom.set('false')
+    if (themeInProgressAtom.get() === '1') {
+      themeInProgressAtom.set('2')
+      location.reload()
+    }
+    if (themeInProgressAtom.get() === '2') {
+      themeInProgressAtom.set('0')
       location.reload()
     }
   })
@@ -25,7 +29,7 @@ const ThemeSelector = () => {
       <select
         onChange={(e) => {
           PubSub.subscribeOnce(M.uiThemeStored, () => {
-            themeInProgressAtom.set('true')
+            themeInProgressAtom.set('1')
             location.reload()
           })
           PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)

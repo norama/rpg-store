@@ -8,7 +8,6 @@ class Theme {
   async init() {
     const response = await fetch(`${API_URL}/theme.json`)
     const { theme } = await response.json()
-    console.log('TRANSPORT THEME', theme)
     this.publish(theme)
 
     this.subscribe()
