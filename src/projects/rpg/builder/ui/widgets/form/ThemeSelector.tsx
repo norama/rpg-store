@@ -13,11 +13,11 @@ const ThemeSelector = () => {
   const theme = useStore(Theme.theme)
 
   onMount(() => {
-    if (themeInProgressAtom.get() === '1') {
+    const progress = themeInProgressAtom.get()
+    if (progress === '1') {
       themeInProgressAtom.set('2')
       location.reload()
-    }
-    if (themeInProgressAtom.get() === '2') {
+    } else if (progress === '2') {
       themeInProgressAtom.set('0')
       location.reload()
     }
