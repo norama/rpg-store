@@ -1,5 +1,6 @@
 const defaultStyles = {
   root: {
+    color: 'text',
     backgroundColor: 'background',
     padding: 5,
     fontFamily: 'body',

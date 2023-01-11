@@ -1,11 +1,12 @@
 import ThemeTransport from '@transport/theme'
-
-new ThemeTransport().init()
+import 'styles/theme'
 
 const startup = async (page: string) => {
   if (import.meta.env.PUBLIC_LOGGING === 'true') {
     await import('pubsub/log')
   }
+
+  await new ThemeTransport().init()
 
   await import('@business/store/target')
   await import('@business/store/properties')

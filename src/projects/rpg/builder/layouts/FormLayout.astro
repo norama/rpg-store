@@ -5,13 +5,18 @@ import ThemeSelector from '@widgets/form/ThemeSelector'
 import ResetButton from '@widgets/form/ResetButton'
 import SaveButton from '@widgets/form/SaveButton'
 
+import { select } from 'projects/rpg/api/proxy'
+import { T } from 'pubsub/messages'
+import Theme, { ITheme } from 'styles/theme'
+
+const theme = await select<ITheme>(T.uiTheme)
+Theme.setTheme(theme)
+
 const { frontmatter } = Astro.props
-console.log('-- frontmatter --', frontmatter)
 
 import Path from 'path'
 const basename = Path.basename(frontmatter.url)
 const block = Path.parse(basename).name
-console.log('-- block --', block)
 ---
 
 <style>

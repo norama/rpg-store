@@ -20,6 +20,7 @@ export const T = {
   rpgProperties: 'rpgProperties',
   rpgTarget: 'rpgTarget',
   rpgTiles: 'rpgTiles',
+  uiTheme: 'uiTheme',
 }
 
 const M = {
@@ -43,6 +44,7 @@ const M = {
   uiBlockType: msg('uiBlockType'),
   uiTheme: msg('uiTheme'),
   uiThemeChanged: msg('uiThemeChanged'),
+  uiThemeStored: msg('uiThemeStored'),
 }
 
 export default M

@@ -9,7 +9,7 @@ class Transport {
   async init() {
     console.log('========== fetching target')
 
-    let response = await fetch(`${API_URL}/rpgCharacter.json`)
+    const response = await fetch(`${API_URL}/rpgCharacter.json`)
     this.rpgCharacter = await response.json()
 
     this.subscribe()

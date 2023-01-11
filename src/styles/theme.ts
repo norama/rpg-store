@@ -2,21 +2,36 @@ import base from './themes/base'
 import bootstrap from './themes/bootstrap'
 import dark from './themes/dark'
 import roboto from './themes/roboto'
+import M from 'pubsub/messages'
+import PubSub from 'pubsub-js'
+import { atom } from 'nanostores'
 
 export type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
 
 class Theme {
-  theme = 'roboto'
+  theme = atom<ITheme>('roboto')
+
+  constructor() {
+    this.subscribe()
+  }
+
+  subscribe() {
+    PubSub.subscribe(M.uiTheme, async (_msg, theme: ITheme) => {
+      console.log('SETTING theme', theme)
+      this.setTheme(theme)
+    })
+  }
 
   setTheme(newTheme: ITheme) {
-    console.log('========> setTheme server: ' + import.meta.env.SSR, newTheme)
-    this.theme = newTheme
+    if (this.theme.get() === newTheme) {
+      return false
+    }
+    this.theme.set(newTheme)
+    return true
   }
 
   getTheme() {
-    console.log('=============> server: ' + import.meta.env.SSR + ' theme: ' + this.theme)
-
-    switch (this.theme) {
+    switch (this.theme.get()) {
       case 'base':
         return base
       case 'bootstrap':

@@ -1,40 +1,22 @@
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
+import Theme, { ITheme } from 'styles/theme'
 import { useStore } from '@nanostores/solid'
-
 import { persistentAtom } from '@nanostores/persistent'
-import { onMount, onCleanup } from 'solid-js'
-import themeHolder, { ITheme } from 'styles/theme'
+import { onMount } from 'solid-js'
 
-export const themeAtom = persistentAtom<ITheme>('theme', 'roboto')
 const themeInProgressAtom = persistentAtom<string>('themeInProgress', 'false')
 
 const themes = ['roboto', 'bootstrap', 'dark', 'base']
 
 const ThemeSelector = () => {
-  const theme = useStore(themeAtom)
-  let themeAtomUnsub
+  const theme = useStore(Theme.theme)
 
   onMount(() => {
-    themeAtomUnsub = themeAtom.subscribe((themeValue) => {
-      console.log('themeInProgressAtom', themeInProgressAtom.get())
-      if (themeInProgressAtom.get() === 'false') {
-        PubSub.subscribeOnce(M.uiThemeChanged, () => {
-          themeInProgressAtom.set('true')
-          location.reload()
-        })
-
-        PubSub.publish(M.uiTheme, themeValue)
-      } else {
-        themeInProgressAtom.set('false')
-        themeHolder.setTheme(themeValue)
-      }
-    })
-  })
-
-  onCleanup(() => {
-    console.log('CCCCCCCCCC CLEANUP')
-    themeAtomUnsub()
+    if (themeInProgressAtom.get() === 'true') {
+      themeInProgressAtom.set('false')
+      location.reload()
+    }
   })
 
   return (
@@ -42,7 +24,11 @@ const ThemeSelector = () => {
       theme:
       <select
         onChange={(e) => {
-          themeAtom.set(e.currentTarget.value as ITheme)
+          PubSub.subscribeOnce(M.uiThemeStored, () => {
+            themeInProgressAtom.set('true')
+            location.reload()
+          })
+          PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)
         }}
         value={theme()}
       >

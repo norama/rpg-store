@@ -5,19 +5,24 @@ import M from 'pubsub/messages'
 const API_URL = import.meta.env.PUBLIC_BUILDER_API_URL
 
 class Theme {
-  init() {
+  async init() {
+    const response = await fetch(`${API_URL}/theme.json`)
+    const { theme } = await response.json()
+    console.log('TRANSPORT THEME', theme)
+    this.publish(theme)
+
     this.subscribe()
   }
 
   subscribe() {
-    PubSub.subscribe(M.uiTheme, async (_msg, theme: string) => {
+    PubSub.subscribe(M.uiThemeChanged, async (_msg, theme: string) => {
       await fetch(`${API_URL}/theme.json`, jsonRequest({ theme }, { cache: 'no-store' }))
-      this.publish(theme)
+      PubSub.publish(M.uiThemeStored)
     })
   }
 
   publish(theme: string) {
-    PubSub.publish(M.uiThemeChanged, theme)
+    PubSub.publish(M.uiTheme, theme)
   }
 }
 

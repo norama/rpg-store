@@ -2,6 +2,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 import PubSub from 'pubsub-js'
 import { T, msgRequest, msgResponse, apiSelect, apiUpdate } from 'pubsub/messages'
+import { ITheme } from 'styles/theme'
 
 const blockValueTable = (type: IBlockType) => {
   switch (type) {
@@ -135,6 +136,30 @@ class Database {
     PubSub.subscribe(msgRequest(apiSelect(T.rpgInfo)), async (_msg, block: IBlockType) => {
       const rpgInfo = await this.selectInfo(block)
       PubSub.publish(msgResponse(apiSelect(T.rpgInfo)), rpgInfo)
+    })
+
+    PubSub.subscribe(msgRequest(apiSelect(T.uiTheme)), async () => {
+      const { data: uiTheme, error } = await this.db
+        .from('uiTheme')
+        .select(
+          `
+          id,
+          theme
+        `
+        )
+        .eq('id', 1)
+      if (error) {
+        console.log('Error while reading uiTheme', error)
+      }
+      PubSub.publish(msgResponse(apiSelect(T.uiTheme)), uiTheme[0].theme)
+    })
+
+    PubSub.subscribe(msgRequest(apiUpdate(T.uiTheme)), async (msg, theme: ITheme) => {
+      const { error } = await this.db.from('uiTheme').update({ theme }).eq('id', 1)
+      if (error) {
+        console.log('Error while storing uiTheme', error)
+      }
+      PubSub.publish(msgResponse(apiUpdate(T.uiTheme)))
     })
   }
 

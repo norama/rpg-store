@@ -55,8 +55,6 @@ class Database {
     })
 
     PubSub.subscribe(msgRequest(apiUpdate(T.rpgTarget)), async (msg, rpgCharacter: IRpgTiles) => {
-      console.log('lowdb rpgCharacter', rpgCharacter)
-
       this.db.data.rpgCharacter = { ...rpgCharacter }
       //await this.db.write()
       PubSub.publish(msgResponse(apiUpdate(T.rpgTarget)))

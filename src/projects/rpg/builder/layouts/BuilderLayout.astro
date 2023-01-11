@@ -2,6 +2,13 @@
 import initdb from '@builder/business/db/initdb'
 
 await initdb()
+
+import { select } from 'projects/rpg/api/proxy'
+import { T } from 'pubsub/messages'
+import Theme, { ITheme } from 'styles/theme'
+
+const theme = await select<ITheme>(T.uiTheme)
+Theme.setTheme(theme)
 ---
 
 <style>
