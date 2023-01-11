@@ -15,7 +15,9 @@ const ThemeSelector = () => {
   onMount(() => {
     if (themeInProgressAtom.get() === 'true') {
       themeInProgressAtom.set('false')
-      location.reload()
+      setTimeout(() => {
+        location.reload()
+      }, 500)
     }
   })
 
