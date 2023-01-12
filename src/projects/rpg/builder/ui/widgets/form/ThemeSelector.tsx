@@ -4,6 +4,7 @@ import Theme, { ITheme } from 'styles/theme'
 import { useStore } from '@nanostores/solid'
 import { persistentAtom } from '@nanostores/persistent'
 import { onMount } from 'solid-js'
+import styles from './ThemeSelector.module.css'
 
 const themeInProgressAtom = persistentAtom<string>('themeInProgress', '0')
 
@@ -25,21 +26,25 @@ const ThemeSelector = () => {
 
   return (
     <>
-      theme:
-      <select
-        onChange={(e) => {
-          PubSub.subscribeOnce(M.uiThemeStored, () => {
-            themeInProgressAtom.set('1')
-            location.reload()
-          })
-          PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)
-        }}
-        value={theme()}
-      >
-        {themes.map((option) => (
-          <option value={option}>{option}</option>
-        ))}
-      </select>
+      {theme() && (
+        <div class={styles.themeSelector}>
+          <div class={styles.themeLabel}>theme:</div>
+          <select
+            onChange={(e) => {
+              PubSub.subscribeOnce(M.uiThemeStored, () => {
+                themeInProgressAtom.set('1')
+                location.reload()
+              })
+              PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)
+            }}
+            value={theme()}
+          >
+            {themes.map((option) => (
+              <option value={option}>{option}</option>
+            ))}
+          </select>
+        </div>
+      )}
     </>
   )
 }

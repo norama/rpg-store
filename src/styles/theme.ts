@@ -9,7 +9,7 @@ import { atom } from 'nanostores'
 export type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
 
 class Theme {
-  theme = atom<ITheme>('roboto')
+  theme = atom<ITheme>()
 
   constructor() {
     this.subscribe()
