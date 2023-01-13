@@ -8,7 +8,10 @@ import styles from './ThemeSelector.module.css'
 
 const themeInProgressAtom = persistentAtom<string>('themeInProgress', '0')
 
-const themes = ['roboto', 'bootstrap', 'dark', 'base']
+const themes = [
+  { value: 'light', label: 'světlý' },
+  { value: 'dark', label: 'tmavý' },
+]
 
 const ThemeSelector = () => {
   const theme = useStore(Theme.theme)
@@ -28,7 +31,7 @@ const ThemeSelector = () => {
     <>
       {theme() && (
         <div class={styles.themeSelector}>
-          <div class={styles.themeLabel}>theme:</div>
+          <div class={styles.themeLabel}>vzhled:</div>
           <select
             onChange={(e) => {
               PubSub.subscribeOnce(M.uiThemeStored, () => {
@@ -40,7 +43,7 @@ const ThemeSelector = () => {
             value={theme()}
           >
             {themes.map((option) => (
-              <option value={option}>{option}</option>
+              <option value={option.value}>{option.label}</option>
             ))}
           </select>
         </div>

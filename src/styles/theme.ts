@@ -1,12 +1,12 @@
 import base from './themes/base'
 import bootstrap from './themes/bootstrap'
 import dark from './themes/dark'
-import roboto from './themes/roboto'
+import light from './themes/light'
 import M from 'pubsub/messages'
 import PubSub from 'pubsub-js'
 import { atom } from 'nanostores'
 
-export type ITheme = 'base' | 'bootstrap' | 'dark' | 'roboto'
+export type ITheme = 'base' | 'bootstrap' | 'dark' | 'light'
 
 class Theme {
   theme = atom<ITheme>()
@@ -38,9 +38,9 @@ class Theme {
         return bootstrap
       case 'dark':
         return dark
-      case 'roboto':
+      case 'light':
       default:
-        return roboto
+        return light
     }
   }
 }
