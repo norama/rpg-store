@@ -1,0 +1,9 @@
+---
+const { href, ...props } = Astro.props
+
+import style from 'styles/style'
+---
+
+<a href={href} style={style('a', props)}>
+  <slot />
+</a>

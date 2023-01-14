@@ -5,6 +5,10 @@ body {
   font-weight: 400;
 }
 
+a:hover {
+  filter: brightness(125%);
+}
+
 /* progress */
 
 progress::-moz-progress-bar {

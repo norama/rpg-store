@@ -11,6 +11,7 @@ const theme = {
     highlight: '#e0f',
     gray: '#999',
     purple: '#c0f',
+    link: '#65b0db',
   },
   fonts: {
     body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',

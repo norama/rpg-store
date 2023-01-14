@@ -24,6 +24,7 @@ const theme = {
     secondary: '#9c27b0',
     muted: '#f1f3f4',
     highlight: '#6244db',
+    link: '#0a6ba3',
   },
   styles: { ...defaultStyles },
 }
