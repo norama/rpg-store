@@ -3,11 +3,11 @@ import defaultStyles from 'styles/themes/elements/defaultStyles'
 const theme = {
   spaces: ['0px', '4px', '8px', '16px', '32px', '64px', '128px', '256px', '512px'],
   colors: {
-    text: '#fff',
-    background: '#060606',
+    text: '#debe6f',
+    background: '#202124',
     primary: '#3cf',
     secondary: '#e0f',
-    muted: '#191919',
+    muted: '#4a4a4a',
     highlight: '#e0f',
     gray: '#999',
     purple: '#c0f',

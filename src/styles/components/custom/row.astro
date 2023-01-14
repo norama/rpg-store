@@ -1,0 +1,9 @@
+---
+import Box from './box.astro'
+
+const { display = 'flex', flexWrap = 'wrap', rowGap = 3, columnGap = 3, ...props } = Astro.props
+---
+
+<Box display={display} flexWrap={flexWrap} rowGap={rowGap} columnGap={columnGap} {...props}>
+  <slot />
+</Box>

@@ -7,11 +7,11 @@ const NameInput = () => {
 
   return (
     <StringInput
-      label="Name"
+      label="Název"
       value={() => properties().name}
       onChange={(name) => propertiesMap.setKey('name', name)}
       inputProps={{ placeholder: 'Enter character name' }}
-      customStyle={{ width: '600px' }}
+      customStyle={{ width: 'calc(100% - 30px)' }}
     />
   )
 }

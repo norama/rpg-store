@@ -17,7 +17,6 @@ class Theme {
 
   subscribe() {
     PubSub.subscribe(M.uiTheme, async (_msg, theme: ITheme) => {
-      console.log('SETTING theme', theme)
       this.setTheme(theme)
     })
   }

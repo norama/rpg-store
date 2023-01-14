@@ -4,17 +4,25 @@ import style from 'styles/style'
 
 type Props = {
   label?: string
+  title?: string
   value: () => string | number
   chipProps?: ChipProps
   customStyle?: object
 }
 
-const ChipDisplay = ({ label = '', value, chipProps = {}, customStyle = {} }: Props) => {
+const ChipDisplay = ({
+  label = '',
+  title = '',
+  value,
+  chipProps = {},
+  customStyle = {},
+}: Props) => {
   return (
     <>
       {value() !== undefined && (
         <Chip
           {...chipProps}
+          title={title}
           label={value()}
           avatar={label ?? <Avatar>{label}</Avatar>}
           sx={style('chip', customStyle)}
