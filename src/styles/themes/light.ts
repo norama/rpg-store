@@ -18,6 +18,8 @@ const theme = {
     heading: 1.125,
   },
   colors: {
+    ...defaultStyles.colors,
+    sharp: 'black',
     text: '#202124',
     background: '#debe6f',
     primary: '#1a73e8',

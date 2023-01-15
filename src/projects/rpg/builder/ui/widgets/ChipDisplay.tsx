@@ -25,11 +25,19 @@ const ChipDisplay = ({
           title={title}
           label={value()}
           avatar={label ?? <Avatar>{label}</Avatar>}
-          sx={style('chip', customStyle)}
+          sx={{ ...style('chip', customStyle), paddingLeft: label ? '10px' : '0' }}
         />
       )}
     </>
   )
 }
+
+export const SmallChipDisplay = (props: Props) => (
+  <ChipDisplay
+    {...props}
+    chipProps={{ ...props.chipProps, size: 'small' }}
+    customStyle={{ ...props.customStyle, fontSize: 1 }}
+  />
+)
 
 export default ChipDisplay

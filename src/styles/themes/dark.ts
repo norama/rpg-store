@@ -3,6 +3,8 @@ import defaultStyles from 'styles/themes/elements/defaultStyles'
 const theme = {
   spaces: ['0px', '4px', '8px', '16px', '32px', '64px', '128px', '256px', '512px'],
   colors: {
+    ...defaultStyles.colors,
+    sharp: 'white',
     text: '#debe6f',
     background: '#202124',
     primary: '#3cf',

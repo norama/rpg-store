@@ -1,17 +1,39 @@
 ---
+import Row from 'styles/components/custom/row.astro'
+import CardLink from '@widgets/CardLink'
+import BlockDisplay from '@components/BlockDisplay'
+
 const blocks = [
-  { url: '/builder/blocks/races', title: 'Races' },
-  { url: '/builder/blocks/equipments', title: 'Equipments' },
-  { url: '/builder/blocks/advantages', title: 'Advantages' },
+  { url: '/builder/blocks/races', header: 'Races', action: 'Set races', type: 'races' },
+  {
+    url: '/builder/blocks/equipments',
+    header: 'Equipments',
+    action: 'Set equipments',
+    type: 'equipments',
+  },
+  {
+    url: '/builder/blocks/advantages',
+    header: 'Advantages',
+    action: 'Set advantages',
+    type: 'advantages',
+  },
 ]
 ---
 
-<ul>
+<Row>
   {
     blocks.map((block) => (
-      <li>
-        <a href={block.url}>{block.title}</a>
-      </li>
+      <CardLink
+        href={block.url}
+        header={block.header}
+        action={block.action}
+        customStyle={{ minWidth: '300px', color: 'background' }}
+        client:only="solid-js"
+      >
+        <Row marginTop={3}>
+          <BlockDisplay type={block.type} client:only="solid-js" />
+        </Row>
+      </CardLink>
     ))
   }
-</ul>
+</Row>

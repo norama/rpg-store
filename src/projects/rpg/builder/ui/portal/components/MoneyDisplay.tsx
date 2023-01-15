@@ -3,7 +3,7 @@ import ChipDisplay from '@builder/ui/widgets/ChipDisplay'
 import { useStore } from '@nanostores/solid'
 
 type Props = {
-  title: string
+  title?: string
 }
 
 const MoneyDisplay = ({ title = 'Prachy' }: Props) => {

@@ -10,7 +10,15 @@ const themeKey = (attr: string) => {
     case 'borderColor':
       return 'colors'
     case 'padding':
+    case 'paddingLeft':
+    case 'paddingRight':
+    case 'paddingTop':
+    case 'paddingBottom':
     case 'margin':
+    case 'marginLeft':
+    case 'marginRight':
+    case 'marginTop':
+    case 'marginBottom':
     case 'width':
     case 'height':
     case 'gap':

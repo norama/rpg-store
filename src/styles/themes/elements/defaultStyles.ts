@@ -98,9 +98,13 @@ const defaultStyles = {
     color: 'text',
   },
   chip: {
-    color: 'text',
-    paddingLeft: '10px',
+    color: 'sharp',
     fontSize: 3,
+  },
+  colors: {
+    race: 'red',
+    advantage: 'orange',
+    equipment: '#08cc00',
   },
 }
 
