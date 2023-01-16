@@ -43,6 +43,7 @@ const startup = async (page: string) => {
 
   await import('@builder/ui/stores/blockAtom')
   await transport.init()
+  transport.publish()
 }
 
 export default startup
