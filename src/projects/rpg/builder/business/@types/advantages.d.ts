@@ -3,9 +3,7 @@ type IAdvantage = {
   points: number
 }
 
-type IInfoAdvantages = {
-  advantages: Record<string, IAdvantage>
-}
+type IInfoAdvantages = Record<string, IAdvantage>
 
 type IBlockAdvantages = {
   advantages: string[]

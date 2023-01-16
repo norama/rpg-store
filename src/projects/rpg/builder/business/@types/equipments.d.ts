@@ -4,9 +4,7 @@ type IEquipment = {
   weight: number
 }
 
-type IInfoEquipments = {
-  equipments: Record<string, IEquipment>
-}
+type IInfoEquipments = Record<string, IEquipment>
 
 type IBlockEquipments = {
   equipments: string[]

@@ -6,7 +6,7 @@ export const SELECT = 'select'
 export const UPDATE = 'update'
 
 const msg = (m: string) => TOPIC + '.' + m
-const api = (m: string) => TOPIC + '.' + API + '.' + m
+export const blockInfo = (type: string) => M.uiBlockInfo + '.' + type
 
 export const msgRequest = (t: string) => `${TOPIC}.${API}.${REQUEST}.${t}`
 export const msgResponse = (t: string) => `${TOPIC}.${API}.${RESPONSE}.${t}`

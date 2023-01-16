@@ -1,5 +1,5 @@
 import PubSub from 'pubsub-js'
-import M from 'pubsub/messages'
+import { blockInfo } from 'pubsub/messages'
 
 const API_URL = import.meta.env.PUBLIC_BUILDER_API_URL
 
@@ -21,7 +21,7 @@ class Info<I> implements IBlockPage {
   }
 
   publish() {
-    PubSub.publish(M.uiBlockInfo + '.' + this.type, this.info)
+    PubSub.publish(blockInfo(this.type), this.info)
   }
 }
 
