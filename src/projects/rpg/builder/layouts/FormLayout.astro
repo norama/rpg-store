@@ -2,8 +2,7 @@
 import 'styles/global.css'
 
 import ThemeSelector from '@widgets/form/ThemeSelector'
-import ResetButton from '@widgets/form/ResetButton'
-import SaveButton from '@widgets/form/SaveButton'
+import FormControls from '@widgets/form/FormControls'
 
 import initTheme from '@layouts/initTheme'
 
@@ -17,12 +16,6 @@ const block = Path.parse(basename).name
 ---
 
 <style>
-  .buttons {
-    display: flex;
-    width: 100%;
-    justify-content: end;
-  }
-
   .themeSelector {
     position: fixed;
     top: 30px;
@@ -37,10 +30,7 @@ const block = Path.parse(basename).name
 <div id="form" data-block={block}>
   <slot />
 </div>
-<div class="buttons">
-  <ResetButton client:only="solid-js" />
-  <SaveButton client:only="solid-js" />
-</div>
+<FormControls client:only="solid-js" />
 
 <script>
   const form = document.getElementById('form')

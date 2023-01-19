@@ -6,6 +6,7 @@ const defaultStyles = {
     fontFamily: 'body',
     lineHeight: 'body',
     fontWeight: 'body',
+    height: '100%',
   },
   h1: {
     color: 'text',

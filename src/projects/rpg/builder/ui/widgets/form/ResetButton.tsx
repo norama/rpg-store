@@ -1,10 +1,12 @@
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 
+import { Button } from '@suid/material'
+
 const ResetButton = () => (
-  <button type="reset" onClick={() => PubSub.publish(M.uiReset)}>
-    Reset
-  </button>
+  <Button color="error" variant="outlined" type="reset" onClick={() => PubSub.publish(M.uiReset)}>
+    ✖
+  </Button>
 )
 
 export default ResetButton

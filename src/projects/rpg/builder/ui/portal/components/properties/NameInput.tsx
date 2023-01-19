@@ -11,7 +11,7 @@ const NameInput = () => {
       value={() => properties().name}
       onChange={(name) => propertiesMap.setKey('name', name)}
       inputProps={{ placeholder: 'Enter character name' }}
-      customStyle={{ width: 'calc(100% - 30px)' }}
+      customStyle={{ width: '100%' }}
     />
   )
 }

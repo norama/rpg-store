@@ -1,10 +1,17 @@
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 
+import { Button } from '@suid/material'
+
 const SaveButton = () => (
-  <button type="submit" onClick={() => PubSub.publish(M.uiSaveAction)}>
-    Save
-  </button>
+  <Button
+    color="success"
+    variant="contained"
+    type="submit"
+    onClick={() => PubSub.publish(M.uiSaveAction)}
+  >
+    ✓
+  </Button>
 )
 
 export default SaveButton
