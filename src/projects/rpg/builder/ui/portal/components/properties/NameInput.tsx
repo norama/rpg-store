@@ -1,5 +1,5 @@
 import { propertiesMap } from '@builder/business/store/properties'
-import StringInput from '@builder/ui/widgets/StringInput'
+import StringInput from '@input/StringInput'
 import { useStore } from '@nanostores/solid'
 
 const NameInput = () => {

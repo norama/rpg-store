@@ -10,3 +10,5 @@ interface IBlockPage {
   init: () => Promise<void>
   publish: () => void
 }
+
+type IState = 'idle' | 'dirty' | 'saving'

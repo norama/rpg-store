@@ -46,11 +46,18 @@ class Block<B, I> implements IBlockPage {
         _msg,
         { block, properties }: { block: Partial<B>; properties?: Partial<IProperties> }
       ) => {
-        const response = await fetch(
-          `${API_URL}/${this.type}Block.json`,
-          jsonRequest(this.rpgBlock(block, properties))
-        )
-        this.rpgCharacter = await response.json()
+        try {
+          const response = await fetch(
+            `${API_URL}/${this.type}Block.json`,
+            jsonRequest(this.rpgBlock(block, properties))
+          )
+          this.rpgCharacter = await response.json()
+        } catch (e) {
+          console.error('Error while saving data', e)
+          PubSub.publish(M.uiSaveError, e)
+          return
+        }
+
         this.publish()
       }
     )

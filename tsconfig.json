@@ -9,6 +9,7 @@
       "@transport/*": ["projects/rpg/builder/business/transport/*"],
       "@components/*": ["projects/rpg/builder/ui/portal/components/*"],
       "@widgets/*": ["projects/rpg/builder/ui/widgets/*"],
+      "@input/*": ["projects/rpg/builder/ui/widgets/form/input/*"],
       "@layouts/*": ["projects/rpg/builder/layouts/*"],
       "@stores/*": ["projects/rpg/builder/ui/stores/*"],
       "@portal/*": ["projects/rpg/builder/ui/portal/*"],

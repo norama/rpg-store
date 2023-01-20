@@ -35,11 +35,18 @@ class Properties implements IBlockPage {
 
   subscribe() {
     PubSub.subscribe(M.uiSave, async (_msg, properties: Partial<IProperties>) => {
-      const response = await fetch(
-        `${API_URL}/properties.json`,
-        jsonRequest(this.rpgProperties(properties))
-      )
-      this.rpgCharacter = await response.json()
+      try {
+        const response = await fetch(
+          `${API_URL}/properties.json`,
+          jsonRequest(this.rpgProperties(properties))
+        )
+        this.rpgCharacter = await response.json()
+      } catch (e) {
+        console.error('Error while saving properties', e)
+        PubSub.publish(M.uiSaveError, e)
+        return
+      }
+
       this.publish()
     })
 

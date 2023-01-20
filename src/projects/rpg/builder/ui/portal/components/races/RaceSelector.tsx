@@ -1,5 +1,5 @@
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/races/store'
-import MultiSelect from '@builder/ui/widgets/MultiSelect'
+import MultiSelect from '@input/MultiSelect'
 import { useStore } from '@nanostores/solid'
 
 const RaceSelector = () => {

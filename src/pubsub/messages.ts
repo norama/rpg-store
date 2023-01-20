@@ -41,6 +41,8 @@ const M = {
   uiReset: msg('uiReset'),
   uiSave: msg('uiSave'),
   uiSaveAction: msg('uiSaveAction'),
+  uiSaveError: msg('uiSaveError'),
+  uiDirty: msg('uiDirty'),
   uiBlockType: msg('uiBlockType'),
   uiTheme: msg('uiTheme'),
   uiThemeChanged: msg('uiThemeChanged'),
