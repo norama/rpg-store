@@ -2,6 +2,7 @@ import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 import { atom } from 'nanostores'
 import toast from 'solid-toast'
+import style from 'styles/style'
 
 const stateAtom = atom<IState>()
 
@@ -17,7 +18,7 @@ PubSub.subscribe(M.uiSaveError, (_msg, error) => {
   setTimeout(() => {
     errorAtom.set(null)
   }, 5000)
-  toast.error('Chyba při uložení!')
+  toast.error('Chyba při uložení!', { style: style('error') })
 })
 
 export default stateAtom

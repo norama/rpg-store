@@ -13,6 +13,7 @@ const ResetButton = () => {
       variant="outlined"
       type="reset"
       disabled={state() !== 'dirty'}
+      sx={state() !== 'dirty' ? { color: '#B82D2E !important' } : {}}
       onClick={() => PubSub.publish(M.uiReset)}
     >
       ✖

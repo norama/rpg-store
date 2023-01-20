@@ -10,6 +10,10 @@ a:hover {
   filter: brightness(125%);
 }
 
+.Mui-disabled {
+  opacity: 0.6;
+}
+
 /* progress */
 
 progress::-moz-progress-bar {

@@ -5,6 +5,8 @@ const theme = {
   colors: {
     ...defaultStyles.colors,
     sharp: 'white',
+    card: '#ebdcb9',
+    errorbg: 'white',
     text: '#debe6f',
     background: '#202124',
     primary: '#3cf',
@@ -14,6 +16,7 @@ const theme = {
     gray: '#999',
     purple: '#c0f',
     link: '#65b0db',
+    linkButton: 'darkblue',
   },
   fonts: {
     body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',

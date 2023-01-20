@@ -13,9 +13,14 @@ const SaveButton = () => {
       variant="contained"
       type="submit"
       disabled={state() !== 'dirty'}
+      sx={
+        state() !== 'dirty'
+          ? { backgroundColor: 'green !important', color: 'white !important' }
+          : {}
+      }
       onClick={() => PubSub.publish(M.uiSaveAction)}
     >
-      {state() === 'saving' ? <CircularProgress color="inherit" size={1} /> : <span>✓</span>}
+      {state() === 'saving' ? <CircularProgress color="inherit" size="1.5rem" /> : <>✓</>}
     </Button>
   )
 }

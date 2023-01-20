@@ -102,6 +102,19 @@ const defaultStyles = {
     color: 'sharp',
     fontSize: 3,
   },
+  card: {
+    color: 'sharp',
+    backgroundColor: 'card',
+    fontSize: 3,
+  },
+  linkButton: {
+    color: 'linkButton',
+    borderColor: 'linkButton',
+  },
+  error: {
+    background: 'errorbg',
+    color: 'red',
+  },
   colors: {
     race: 'red',
     advantage: 'orange',

@@ -20,6 +20,8 @@ const theme = {
   colors: {
     ...defaultStyles.colors,
     sharp: 'black',
+    card: '#2f3136',
+    errorbg: '#d4d0c7',
     text: '#202124',
     background: '#debe6f',
     primary: '#1a73e8',
@@ -27,6 +29,7 @@ const theme = {
     muted: '#f1f3f4',
     highlight: '#6244db',
     link: '#0a6ba3',
+    linkButton: '#1976d2',
   },
   styles: { ...defaultStyles },
 }
