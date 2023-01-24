@@ -8,14 +8,18 @@ const NameInput = () => {
   const state = useStore(stateAtom)
 
   return (
-    <StringInput
-      label="Jméno"
-      value={() => properties().name}
-      disabled={state() === 'saving'}
-      onChange={(name) => propertiesMap.setKey('name', name)}
-      inputProps={{ placeholder: 'Enter character name' }}
-      customStyle={{ width: '100%' }}
-    />
+    <>
+      {properties().name !== undefined && (
+        <StringInput
+          label="Jméno"
+          value={() => properties().name}
+          disabled={state() === 'saving'}
+          onChange={(name) => propertiesMap.setKey('name', name)}
+          inputProps={{ placeholder: 'Enter character name' }}
+          customStyle={{ width: '100%' }}
+        />
+      )}
+    </>
   )
 }
 

@@ -1,7 +1,7 @@
 import PubSub from 'pubsub-js'
+import M from 'pubsub/messages'
 
 import { atom, map } from 'nanostores'
-import M from 'pubsub/messages'
 
 // read-only target, block info
 export class ResourceAtom<T> {

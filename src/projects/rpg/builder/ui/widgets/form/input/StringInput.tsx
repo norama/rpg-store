@@ -20,23 +20,19 @@ const StringInput = ({
   customStyle = {},
 }: Props) => {
   return (
-    <>
-      {value() !== undefined && (
-        <p>
-          {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
-          <Input
-            {...inputProps}
-            value={value()}
-            onChange={(_e, value) => {
-              onChange(value)
-            }}
-            required
-            disabled={disabled}
-            sx={style('input', customStyle)}
-          />
-        </p>
-      )}
-    </>
+    <p>
+      {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
+      <Input
+        {...inputProps}
+        value={value()}
+        onChange={(_e, value) => {
+          onChange(value)
+        }}
+        required
+        disabled={disabled}
+        sx={style('input', customStyle)}
+      />
+    </p>
   )
 }
 
