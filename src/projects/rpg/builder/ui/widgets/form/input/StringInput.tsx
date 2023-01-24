@@ -3,7 +3,7 @@ import { InputProps } from '@suid/material/Input'
 import style from 'styles/style'
 
 type Props = {
-  mode?: IMode
+  disabled?: boolean
   label?: string
   value: () => string
   onChange: (value: string) => void
@@ -12,7 +12,7 @@ type Props = {
 }
 
 const StringInput = ({
-  mode = 'write',
+  disabled,
   label,
   value,
   onChange,
@@ -31,7 +31,7 @@ const StringInput = ({
               onChange(value)
             }}
             required
-            disabled={mode === 'disabled' || mode === 'read'}
+            disabled={disabled}
             sx={style('input', customStyle)}
           />
         </p>
