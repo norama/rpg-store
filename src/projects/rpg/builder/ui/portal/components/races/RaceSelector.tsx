@@ -1,5 +1,5 @@
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/races/store'
-import MultiSelect from '@input/MultiSelect'
+import SingleSelect from '@input/SingleSelect'
 import { useStore } from '@nanostores/solid'
 
 const RaceSelector = () => {
@@ -7,28 +7,22 @@ const RaceSelector = () => {
   const block = useStore(blockMap)
   const info = useStore(infoAtom)
 
-  const text = (race: string) => info()[race].name + ' (' + info()[race].points + ')'
+  const text = (race: string) => info()[race].name + ' (' + -info()[race].points + ')'
 
-  const points = (races: string[]) => races.reduce((sum, race) => sum + info()[race].points, 0)
+  const updateRace = (race: string) => {
+    const newPoints = properties().points + info()[block().races[0]].points - info()[race].points
 
-  const updateRaces = (races: string[]) => {
-    const newPoints = properties().points - points(block().races) + points(races)
-
-    blockMap.setKey('races', races)
+    blockMap.setKey('races', [race])
     propertiesMap.setKey('points', newPoints)
   }
 
-  const disabled = (race: string) =>
-    !block().races.includes(race) && properties().points + info()[race].points < 0
-
   return (
-    <MultiSelect
-      name="races"
+    <SingleSelect
+      name="Rasa"
       options={() => Object.keys(info()).sort()}
       values={() => block().races}
       texts={(race) => (info() ? text(race) : '')}
-      disabled={disabled}
-      onChange={updateRaces}
+      onChange={updateRace}
     />
   )
 }

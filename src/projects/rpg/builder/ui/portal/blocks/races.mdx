@@ -3,17 +3,21 @@ layout: '@layouts/FormLayout.astro'
 title: 'Races'
 ---
 
-## H2 H2
+## Rasa
 
-Bla Bla Bla
-Info text races
+Na Odrii žije mnoho ras inteligentních tvorů. Lidi jsou lidi a na Odrii nepatří k nějakým otloukánkům, ale stejnětak můžete vyzkoušet hrát třeba elfa či trpaslíka. V základním přehledu ras jsou uvedeny nejběžnější hráčské rasy. Není to úplný výčet možných ras. Ty které uvedeny nejsou, jsou obvykle takové, které jsou komplikovanější a většinou mocnější než ty uvedené a proto by nebylo fér je zařadit po bok ostatních - zvláště pokud hra začíná na nižších úrovních.
+Při hře zkušených hráčů však není problém aby byla hráčská postava třeba lykantrop anebo drak. Kromě čistých ras je možné aby postava byla míšencem. Pro míšence obvykle neexistují konkrétní pravidla, takže jejich konkrétní parametry je třeba určit buďto zprůměrováním anebo jiným vybalancováním - případně poradou s PJ.
 
-<Quote isRed={true}>This is a quote</Quote>
+Zvolená rasa určuje základní počet bodů, které bude mít hráč k dispozici na tvorbu postavy, případně kolik bude muset zaplatit z jiných zdrojů.
+
+[Základní rasy](http://odria.eu/wiki/index.php/Kategorie:Základní_rasy)
+
+Je jasné, že např. krollové bývají silnější než hobiti a že elfové jsou obvykle chytřejší než zrovna krollové. Tvůj hrdina však může být ten výjimečný a je jen na tobě jak její body rozdělíš, a proto spíše než na obvyklou výši vlastností u dané rasy bych doporučil se zaměřit na to, jak která rasa žije a jak zapadá do settingu, který se bude hrát. Z toho plyne jaké bude mít postava zázemí, jak na ní budou pohlížet apod. Řeknete, ale trpaslík má do začátku infravizi, a elf talent na magii. Inu pokud je to to, co je pro vás ve hře důležité, tak i takové věci se dají za body přikoupit u rasy, která takovéto schopnosti běžně nemá.
+Podle typu hry může PJ dát hráči na tvorbu postavy body navíc, pokud chce aby postavy byly mocnější, například pokud se začíná na vyšší úrovni. Při tvorbě začátečnické postavy se obvykle body navíc nedávají.
 
 import RaceSelector from '@portal/components/races/RaceSelector'
 import PointDisplay from '@portal/components/PointDisplay'
-import TargetDisplay from '@portal/components/TargetDisplay'
-
-<PointDisplay client:only="solid-js" />
 
 <RaceSelector client:only="solid-js" />
+
+<PointDisplay client:only="solid-js" />
