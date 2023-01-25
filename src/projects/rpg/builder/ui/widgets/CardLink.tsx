@@ -1,4 +1,5 @@
 import { Button, Card, CardActions, CardContent } from '@suid/material'
+import { JSXElement } from 'solid-js'
 import style from 'styles/style'
 
 type Props = {
@@ -6,7 +7,7 @@ type Props = {
   action: string
   href: string
   customStyle?: object
-  children: Node
+  children: JSXElement
 }
 
 const CardLink = ({ header, action, href, customStyle, children }: Props) => {

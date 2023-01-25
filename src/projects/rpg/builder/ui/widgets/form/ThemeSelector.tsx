@@ -1,9 +1,9 @@
 import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
-import Theme, { ITheme } from 'styles/theme'
+import themeHolder, { ITheme } from 'styles/theme'
 import { useStore } from '@nanostores/solid'
 import { persistentAtom } from '@nanostores/persistent'
-import { onMount } from 'solid-js'
+import { Show, onMount } from 'solid-js'
 import styles from './ThemeSelector.module.css'
 
 const themeInProgressAtom = persistentAtom<string>('themeInProgress', '0')
@@ -14,7 +14,7 @@ const themes = [
 ]
 
 const ThemeSelector = () => {
-  const theme = useStore(Theme.theme)
+  const theme = useStore(themeHolder.atom)
 
   onMount(() => {
     const progress = themeInProgressAtom.get()
@@ -28,27 +28,25 @@ const ThemeSelector = () => {
   })
 
   return (
-    <>
-      {theme() && (
-        <div class={styles.themeSelector}>
-          <div class={styles.themeLabel}>vzhled:</div>
-          <select
-            onChange={(e) => {
-              PubSub.subscribeOnce(M.uiThemeStored, () => {
-                themeInProgressAtom.set('1')
-                location.reload()
-              })
-              PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)
-            }}
-            value={theme()}
-          >
-            {themes.map((option) => (
-              <option value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </div>
-      )}
-    </>
+    <Show when={theme()}>
+      <div class={styles.themeSelector}>
+        <div class={styles.themeLabel}>vzhled:</div>
+        <select
+          onChange={(e) => {
+            PubSub.subscribeOnce(M.uiThemeStored, () => {
+              themeInProgressAtom.set('1')
+              location.reload()
+            })
+            PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)
+          }}
+          value={theme()}
+        >
+          {themes.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </div>
+    </Show>
   )
 }
 

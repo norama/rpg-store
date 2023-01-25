@@ -9,7 +9,7 @@ import { atom } from 'nanostores'
 export type ITheme = 'base' | 'bootstrap' | 'dark' | 'light'
 
 class Theme {
-  theme = atom<ITheme>()
+  atom = atom<ITheme>()
 
   constructor() {
     this.subscribe()
@@ -22,15 +22,15 @@ class Theme {
   }
 
   setTheme(newTheme: ITheme) {
-    if (this.theme.get() === newTheme) {
+    if (this.atom.get() === newTheme) {
       return false
     }
-    this.theme.set(newTheme)
+    this.atom.set(newTheme)
     return true
   }
 
   getTheme() {
-    switch (this.theme.get()) {
+    switch (this.atom.get()) {
       case 'base':
         return base
       case 'bootstrap':
@@ -38,8 +38,9 @@ class Theme {
       case 'dark':
         return dark
       case 'light':
-      default:
         return light
+      default:
+        return undefined
     }
   }
 }
