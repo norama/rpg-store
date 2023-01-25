@@ -6,13 +6,10 @@ await initdb()
 import initTheme from '@layouts/initTheme'
 
 await initTheme()
+
+import style from 'styles/style'
 ---
 
-<style>
-  .root {
-  }
-</style>
-
-<div class="root">
+<div style={style('body')}>
   <slot />
 </div>

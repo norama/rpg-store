@@ -1,12 +1,12 @@
 const defaultStyles = {
-  root: {
+  body: {
     color: 'text',
     backgroundColor: 'background',
     padding: 5,
     fontFamily: 'body',
     lineHeight: 'body',
     fontWeight: 'body',
-    height: '100%',
+    minHeight: '100%',
   },
   h1: {
     color: 'text',

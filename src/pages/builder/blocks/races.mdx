@@ -1,4 +1,5 @@
 ---
+layout: '@layouts/BuilderLayout.astro'
 title: 'Races'
 ---
 
@@ -8,6 +9,4 @@ export { components }
 
 import { Content as Races } from '@blocks/races.mdx'
 
-<Root>
-  <Races components={components} />
-</Root>
+<Races components={components} />

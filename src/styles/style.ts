@@ -32,9 +32,6 @@ const themeKey = (attr: string) => {
 
 const style = (tag = '', customStyle = {}) => {
   const theme = themeHolder.getTheme()
-  if (!theme) {
-    return { display: 'none' }
-  }
   const themeStyle = theme.styles[tag] ?? {}
   const baseStyle = { ...themeStyle, ...customStyle }
   const derivedStyle = {}
