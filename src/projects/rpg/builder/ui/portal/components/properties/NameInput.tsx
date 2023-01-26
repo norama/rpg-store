@@ -1,9 +1,9 @@
 import { propertiesMap } from '@builder/business/store/properties'
-import stateAtom from '@builder/ui/stores/stateAtom'
 import StringInput from '@input/StringInput'
 import { useStore } from '@nanostores/solid'
 import { Show } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
+import stateAtom from '@builder/ui/stores/stateAtom'
 
 const NameInput = () => {
   const properties = useStore(propertiesMap)
@@ -14,10 +14,7 @@ const NameInput = () => {
     <Show when={ready()}>
       <StringInput
         label="Jméno"
-        value={() => {
-          console.log('properties().name', properties().name)
-          return properties().name
-        }}
+        value={() => properties().name}
         disabled={state() === 'saving'}
         onChange={(name) => propertiesMap.setKey('name', name)}
         inputProps={{ placeholder: 'Zadejte název postavy' }}

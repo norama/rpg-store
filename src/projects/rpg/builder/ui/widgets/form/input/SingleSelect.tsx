@@ -1,62 +1,44 @@
+import { NativeSelect, InputLabel } from '@suid/material'
+import { NativeSelectProps } from '@suid/material/NativeSelect'
+import style from 'styles/style'
+
 type Props = {
-  mode?: IMode
-  name: string
+  disabled?: boolean
+  label: string
   options: () => string[]
-  values: () => string[]
   texts?: (option: string) => string
-  disabled?: (option: string) => boolean
+  value: () => string
   onChange: (value: string) => void
+  selectProps?: NativeSelectProps
+  customStyle?: object
 }
 
 const SingleSelect = ({
-  mode = 'write',
-  name,
+  disabled,
+  label,
   options,
-  values,
   texts = (option) => option,
-  disabled = () => false,
+  value,
   onChange,
+  selectProps = {},
+  customStyle = {},
 }: Props) => {
   return (
-    <>
-      {values() && options() && (
-        <p
-          style={{
-            color: import.meta.env.SSR ? 'red' : 'green',
-            'font-weight': 700,
-            'font-size': '1.5rem',
-          }}
-        >
-          {mode === 'read' ? (
-            <>{JSON.stringify(values) ?? ''}</>
-          ) : (
-            <>
-              {name}:{' '}
-              <select
-                id={name}
-                name={name}
-                onChange={(e) => {
-                  const newValues = Array.from(e.currentTarget.selectedOptions).map((o) => o.value)
-                  onChange(newValues[0])
-                }}
-                size={8}
-                disabled={mode === 'disabled'}
-              >
-                {options().map((option) => (
-                  <option
-                    value={option}
-                    selected={values().includes(option)}
-                    disabled={disabled(option)}
-                  >
-                    {texts(option)}
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
-        </p>
-      )}
-    </>
+    <p>
+      {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
+      <NativeSelect
+        {...selectProps}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        sx={style('select', customStyle)}
+      >
+        {options().map((option) => (
+          <option value={option} selected={option === value()}>
+            {texts(option)}
+          </option>
+        ))}
+      </NativeSelect>
+    </p>
   )
 }
 

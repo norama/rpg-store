@@ -92,6 +92,12 @@ const defaultStyles = {
     padding: '5px',
     width: '400px',
   },
+  select: {
+    color: 'text',
+    backgroundColor: 'muted',
+    padding: '5px',
+    width: '400px',
+  },
   text: {
     color: 'text',
   },
