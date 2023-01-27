@@ -33,7 +33,7 @@ const SingleSelect = ({
         sx={style('select', customStyle)}
       >
         {options().map((option) => (
-          <option value={option} selected={option === value()}>
+          <option value={option} selected={option === value()} style={style('option', customStyle)}>
             {texts(option)}
           </option>
         ))}

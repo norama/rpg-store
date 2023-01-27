@@ -94,9 +94,14 @@ const defaultStyles = {
   },
   select: {
     color: 'text',
-    backgroundColor: 'muted',
+    background: 'muted',
     padding: '5px',
     width: '400px',
+  },
+  option: {
+    color: 'text',
+    background: 'muted',
+    cursor: 'pointer',
   },
   text: {
     color: 'text',
