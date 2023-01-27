@@ -1,6 +1,8 @@
-import { NativeSelect, InputLabel } from '@suid/material'
-import { NativeSelectProps } from '@suid/material/NativeSelect'
+import { InputLabel } from '@suid/material'
 import style from 'styles/style'
+import MultiSelect, { IMultiSelectProps } from '@digichanges/solid-multiselect'
+import { onMount } from 'solid-js'
+import { Component } from 'solid-js/types/render'
 
 type Props = {
   disabled?: boolean
@@ -9,8 +11,9 @@ type Props = {
   texts?: (option: string) => string
   value: () => string
   onChange: (value: string) => void
-  selectProps?: NativeSelectProps
-  customStyle?: object
+  customSelectStyle?: object
+  customOptionStyle?: object
+  customOptionsStyle?: object
 }
 
 const SingleSelect = ({
@@ -20,24 +23,41 @@ const SingleSelect = ({
   texts = (option) => option,
   value,
   onChange,
-  selectProps = {},
-  customStyle = {},
+  customSelectStyle = {},
+  customOptionStyle = {},
+  customOptionsStyle = {},
 }: Props) => {
   return (
     <p>
       {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
-      <NativeSelect
-        {...selectProps}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        sx={style('select', customStyle)}
-      >
-        {options().map((option) => (
-          <option value={option} selected={option === value()} style={style('option', customStyle)}>
-            {texts(option)}
-          </option>
-        ))}
-      </NativeSelect>
+      <MultiSelect
+        singleSelect
+        isObject
+        placeholder="Vyberte rasu"
+        displayValue="label"
+        onSelect={(data) => {
+          console.log('SEL', data[0]['id'])
+          onChange(data[0]['id'])
+        }}
+        onRemove={(data) => {
+          console.log('REMOVE', data)
+        }}
+        onSearch={(search) => {
+          console.log('search', search)
+          if (search.trim() === '') {
+            onChange(value())
+          }
+        }}
+        disable={disabled}
+        style={{
+          multiSelectContainer: style('select', customSelectStyle),
+          optionContainer: style('options', customOptionsStyle),
+          option: style('option', customOptionStyle),
+        }}
+        emptyRecordMsg=""
+        options={options().map((option) => ({ id: option, label: texts(option) }))}
+        selectedValues={[{ id: value(), label: texts(value()) }]}
+      />
     </p>
   )
 }

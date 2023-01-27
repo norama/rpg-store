@@ -1,3 +1,5 @@
+import PubSub from 'pubsub-js'
+import M from 'pubsub/messages'
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/races/store'
 import SingleSelect from '@input/SingleSelect'
 import { useStore } from '@nanostores/solid'
@@ -15,7 +17,8 @@ const RaceSelector = () => {
   const text = (race: string) => info()[race].name + ' (' + -info()[race].points + ')'
 
   const updateRace = (race: string) => {
-    const newPoints = properties().points + info()[block().races[0]].points - info()[race].points
+    const prevRace = block().races[0]
+    const newPoints = properties().points + info()[prevRace].points - info()[race].points
 
     blockMap.setKey('races', [race])
     propertiesMap.setKey('points', newPoints)

@@ -95,13 +95,20 @@ const defaultStyles = {
   select: {
     color: 'text',
     background: 'muted',
-    padding: '5px',
     width: '400px',
+    border: 'none',
+  },
+  options: {
+    color: 'text',
+    background: 'muted',
+    width: '400px',
+    border: 'none',
   },
   option: {
     color: 'text',
     background: 'muted',
     cursor: 'pointer',
+    width: '400px',
   },
   text: {
     color: 'text',
