@@ -26,7 +26,7 @@ const SingleSelect = ({
   customOptionsStyle = {},
 }: Props) => {
   return (
-    <p>
+    <>
       {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
       <MultiSelect
         singleSelect
@@ -57,7 +57,7 @@ const SingleSelect = ({
         options={options().map((option) => ({ id: option, label: texts(option) }))}
         selectedValues={[{ id: value(), label: texts(value()) }]}
       />
-    </p>
+    </>
   )
 }
 

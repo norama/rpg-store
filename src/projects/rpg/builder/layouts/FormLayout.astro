@@ -3,7 +3,6 @@ import 'styles/global.css'
 import 'styles/MultiSelect.css'
 
 import Header from '@layouts/Header.astro'
-import FormControls from '@widgets/form/FormControls'
 
 const { frontmatter } = Astro.props
 
@@ -17,7 +16,6 @@ const block = Path.parse(basename).name
 <div id="form" data-block={block}>
   <slot />
 </div>
-<FormControls client:only="solid-js" />
 
 <script>
   const form = document.getElementById('form')

@@ -24,6 +24,10 @@ const themeKey = (attr: string) => {
     case 'gap':
     case 'rowGap':
     case 'columnGap':
+    case 'top':
+    case 'bottom':
+    case 'left':
+    case 'right':
       return 'spaces'
     default:
       return attr + 's'

@@ -1,0 +1,13 @@
+---
+const props = Astro.props
+
+import style from 'styles/style'
+import FormControls from '@widgets/form/FormControls'
+---
+
+<div style={style('form', props)}>
+  <slot />
+  <div style={style('formControls')}>
+    <FormControls client:only="solid-js" />
+  </div>
+</div>

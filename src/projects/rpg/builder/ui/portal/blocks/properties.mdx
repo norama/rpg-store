@@ -5,13 +5,16 @@ title: 'Character Properties'
 
 ## Profil
 
+import FormControls from '@widgets/form/FormControls'
 import NameInput from '@portal/components/properties/NameInput'
 import PointDisplay from '@portal/components/PointDisplay'
 import MoneyDisplay from '@portal/components/MoneyDisplay'
 
-<Row justifyContent="flex-end">
-  <PointDisplay client:only="solid-js" />
-  <MoneyDisplay client:only="solid-js" />
-</Row>
-
-<NameInput client:only="solid-js" />
+<Form height="170px">
+  <Row justifyContent="flex-end">
+    <PointDisplay client:only="solid-js" />
+    <MoneyDisplay client:only="solid-js" />
+  </Row>
+  <Gap height={3} />
+  <NameInput client:only="solid-js" />
+</Form>

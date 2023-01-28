@@ -15,9 +15,17 @@ Zvolená rasa určuje základní počet bodů, které bude mít hráč k dispozi
 Je jasné, že např. krollové bývají silnější než hobiti a že elfové jsou obvykle chytřejší než zrovna krollové. Tvůj hrdina však může být ten výjimečný a je jen na tobě jak její body rozdělíš, a proto spíše než na obvyklou výši vlastností u dané rasy bych doporučil se zaměřit na to, jak která rasa žije a jak zapadá do settingu, který se bude hrát. Z toho plyne jaké bude mít postava zázemí, jak na ní budou pohlížet apod. Řeknete, ale trpaslík má do začátku infravizi, a elf talent na magii. Inu pokud je to to, co je pro vás ve hře důležité, tak i takové věci se dají za body přikoupit u rasy, která takovéto schopnosti běžně nemá.
 Podle typu hry může PJ dát hráči na tvorbu postavy body navíc, pokud chce aby postavy byly mocnější, například pokud se začíná na vyšší úrovni. Při tvorbě začátečnické postavy se obvykle body navíc nedávají.
 
+import FormControls from '@widgets/form/FormControls'
 import RaceSelector from '@portal/components/races/RaceSelector'
 import PointDisplay from '@portal/components/PointDisplay'
+import InfoTable from '@builder/widgets/InfoTable.astro'
 
-<RaceSelector client:only="solid-js" />
+<Form height="170px">
+  <Row justifyContent="flex-end">
+    <PointDisplay client:only="solid-js" />
+  </Row>
+  <Gap height={3} />
+  <RaceSelector client:only="solid-js" />
+</Form>
 
-<PointDisplay client:only="solid-js" />
+<InfoTable block="races" />

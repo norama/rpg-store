@@ -1,0 +1,16 @@
+---
+import { select } from 'projects/rpg/api/proxy'
+import { T } from 'pubsub/messages'
+
+const { block } = Astro.props
+
+const rpgInfo =
+  block !== 'properties'
+    ? await select<IInfoRaces | IInfoAdvantages | IInfoEquipments>(T.rpgInfo, block)
+    : undefined
+console.log('rpgInfo', rpgInfo)
+---
+
+<div>
+  {JSON.stringify(rpgInfo)}
+</div>

@@ -20,7 +20,7 @@ const StringInput = ({
   customStyle = {},
 }: Props) => {
   return (
-    <p>
+    <>
       {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
       <Input
         {...inputProps}
@@ -32,7 +32,7 @@ const StringInput = ({
         disabled={disabled}
         sx={style('input', customStyle)}
       />
-    </p>
+    </>
   )
 }
 
