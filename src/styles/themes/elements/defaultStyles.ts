@@ -103,12 +103,14 @@ const defaultStyles = {
     background: 'muted',
     width: '400px',
     border: 'none',
+    overflow: 'hidden',
   },
   option: {
     color: 'text',
     background: 'muted',
     cursor: 'pointer',
-    width: '400px',
+    width: '100%',
+    overflow: 'hidden',
   },
   text: {
     color: 'text',

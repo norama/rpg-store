@@ -1,8 +1,6 @@
 import { InputLabel } from '@suid/material'
 import style from 'styles/style'
-import MultiSelect, { IMultiSelectProps } from '@digichanges/solid-multiselect'
-import { onMount } from 'solid-js'
-import { Component } from 'solid-js/types/render'
+import MultiSelect from '@norama.matema/solid-multiselect'
 
 type Props = {
   disabled?: boolean
@@ -33,6 +31,7 @@ const SingleSelect = ({
       <MultiSelect
         singleSelect
         isObject
+        searchable={false}
         placeholder="Vyberte rasu"
         displayValue="label"
         onSelect={(data) => {
