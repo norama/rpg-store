@@ -1,0 +1,15 @@
+---
+import style from 'styles/style'
+
+const { block } = Astro.props
+---
+
+{
+  block !== 'properties' ? (
+    <a href="/" style={style('home')}>
+      🔙
+    </a>
+  ) : (
+    <div style={style('home')}>㉽</div>
+  )
+}

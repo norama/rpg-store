@@ -1,0 +1,12 @@
+---
+import Home from '@layouts/Home.astro'
+import ThemeSelector from '@builder/ui/widgets/form/ThemeSelector'
+import style from 'styles/style'
+
+const { block } = Astro.props
+---
+
+<div style={style('header')}>
+  <Home block={block} />
+  <div style={style('theme')}><ThemeSelector client:only="solid-js" /></div>
+</div>

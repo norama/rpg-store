@@ -2,7 +2,7 @@
 import 'styles/global.css'
 import 'styles/MultiSelect.css'
 
-import ThemeSelector from '@widgets/form/ThemeSelector'
+import Header from '@layouts/Header.astro'
 import FormControls from '@widgets/form/FormControls'
 
 const { frontmatter } = Astro.props
@@ -12,17 +12,7 @@ const basename = Path.basename(frontmatter.url)
 const block = Path.parse(basename).name
 ---
 
-<style>
-  .themeSelector {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-  }
-</style>
-
-<div class="themeSelector">
-  <ThemeSelector client:only="solid-js" />
-</div>
+<Header block={block} />
 
 <div id="form" data-block={block}>
   <slot />

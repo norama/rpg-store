@@ -4,7 +4,8 @@ import themeHolder, { ITheme } from 'styles/theme'
 import { useStore } from '@nanostores/solid'
 import { persistentAtom } from '@nanostores/persistent'
 import { Show, onMount } from 'solid-js'
-import styles from './ThemeSelector.module.css'
+import SingleSelect from '@builder/ui/widgets/form/input/SingleSelect'
+import style from 'styles/style'
 
 const themeInProgressAtom = persistentAtom<string>('themeInProgress', '0')
 
@@ -12,6 +13,11 @@ const themes = [
   { value: 'light', label: 'světlý' },
   { value: 'dark', label: 'tmavý' },
 ]
+
+const themeMap = themes.reduce((acc, curr) => {
+  acc[curr.value] = curr
+  return acc
+}, {})
 
 const ThemeSelector = () => {
   const theme = useStore(themeHolder.atom)
@@ -29,22 +35,25 @@ const ThemeSelector = () => {
 
   return (
     <Show when={theme()}>
-      <div class={styles.themeSelector}>
-        <div class={styles.themeLabel}>vzhled:</div>
-        <select
-          onChange={(e) => {
-            PubSub.subscribeOnce(M.uiThemeStored, () => {
-              themeInProgressAtom.set('1')
-              location.reload()
-            })
-            PubSub.publish(M.uiThemeChanged, e.currentTarget.value as ITheme)
+      <div style={{ transform: 'scale(0.8)' }}>
+        <SingleSelect
+          label="vzhled"
+          onChange={(value) => {
+            if (value !== theme()) {
+              PubSub.subscribeOnce(M.uiThemeStored, () => {
+                themeInProgressAtom.set('1')
+                location.reload()
+              })
+              PubSub.publish(M.uiThemeChanged, value as ITheme)
+            }
           }}
-          value={theme()}
-        >
-          {themes.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
+          options={() => themes.map((o) => o.value)}
+          texts={(value) => themeMap[value].label}
+          value={() => theme()}
+          customSelectStyle={style('theme')}
+          customOptionStyle={style('theme')}
+          customOptionsStyle={style('theme')}
+        />
       </div>
     </Show>
   )
