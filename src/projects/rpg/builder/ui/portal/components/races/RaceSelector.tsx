@@ -1,5 +1,3 @@
-import PubSub from 'pubsub-js'
-import M from 'pubsub/messages'
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/races/store'
 import SingleSelect from '@input/SingleSelect'
 import { useStore } from '@nanostores/solid'
