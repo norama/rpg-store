@@ -1,0 +1,19 @@
+---
+interface Props {
+  url?: string
+}
+
+const { url } = Astro.props
+---
+
+<td>
+  {
+    url ? (
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        <slot />
+      </a>
+    ) : (
+      <slot />
+    )
+  }
+</td>

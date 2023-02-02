@@ -18,7 +18,6 @@ Podle typu hry může PJ dát hráči na tvorbu postavy body navíc, pokud chce 
 import FormControls from '@widgets/form/FormControls'
 import RaceSelector from '@portal/components/races/RaceSelector'
 import PointDisplay from '@portal/components/PointDisplay'
-import ClientInfoTable from '@portal/components/InfoTable'
 import InfoTable from '@builder/widgets/InfoTable.astro'
 
 <Gap height={4} />
@@ -37,12 +36,8 @@ import InfoTable from '@builder/widgets/InfoTable.astro'
   block="races"
   width="min(600px, 100%)"
   descriptor={[
-    { key: 'name', label: 'Název' },
+    { key: 'name', label: 'Název', urlKey: 'wiki' },
     { key: 'points', label: 'Body' },
     { key: 'strength', label: 'Síla' },
   ]}
 />
-
-<Gap height={4} />
-
-<ClientInfoTable block="races" width="min(600px, 100%)" client:only="solid-js" />

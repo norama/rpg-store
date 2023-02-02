@@ -3,9 +3,14 @@ import themeHolder from 'styles/theme'
 
 import { select } from 'projects/rpg/api/proxy'
 import { T } from 'pubsub/messages'
+import InfoTableCell from '@builder/widgets/InfoTableCell.astro'
 import './InfoTable.css'
 
-type IColumnDescriptor = { key: string; label: string }
+type IColumnDescriptor = {
+  key: string
+  label: string
+  urlKey?: string
+}
 
 interface Props {
   block: string
@@ -38,7 +43,7 @@ const theme = themeHolder.atom.get()
         ids.map((id) => (
           <tr>
             {descriptor.map((col) => (
-              <td>{rpgInfo[id][col.key]}</td>
+              <InfoTableCell url={rpgInfo[id][col.urlKey]}>{rpgInfo[id][col.key]}</InfoTableCell>
             ))}
           </tr>
         ))

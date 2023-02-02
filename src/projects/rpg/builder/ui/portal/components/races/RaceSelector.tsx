@@ -12,11 +12,11 @@ const RaceSelector = () => {
   const state = useStore(stateAtom)
   const ready = useStore(readyAtom)
 
-  const text = (race: string) => info()[race].name + ' (' + -info()[race].points + ')'
+  const text = (race: string) => info()[race].name + ' (' + info()[race].points + ')'
 
   const updateRace = (race: string) => {
     const prevRace = block().races[0]
-    const newPoints = properties().points + info()[prevRace].points - info()[race].points
+    const newPoints = properties().points - info()[prevRace].points + info()[race].points
 
     blockMap.setKey('races', [race])
     propertiesMap.setKey('points', newPoints)
