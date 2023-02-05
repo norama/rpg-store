@@ -1,8 +1,8 @@
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/races/store'
-import MultiSelect from '@input/MultiSelect'
+import MultiSelect from '@builder/ui/widgets/form/input/SampleSelect'
 import { useStore } from '@nanostores/solid'
 
-const RaceSelector = () => {
+const SampleSelector = () => {
   const properties = useStore(propertiesMap)
   const block = useStore(blockMap)
   const info = useStore(infoAtom)
@@ -33,4 +33,4 @@ const RaceSelector = () => {
   )
 }
 
-export default RaceSelector
+export default SampleSelector
