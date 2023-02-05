@@ -1,12 +1,13 @@
 ---
 interface Props {
+  align?: 'left' | 'right' | 'center' | 'justify' | 'char'
   url?: string
 }
 
-const { url } = Astro.props
+const { align, url } = Astro.props
 ---
 
-<td>
+<td align={align}>
   {
     url ? (
       <a href={url} target="_blank" rel="noopener noreferrer">

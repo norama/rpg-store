@@ -9,6 +9,7 @@ import './InfoTable.css'
 type IColumnDescriptor = {
   key: string
   label: string
+  align?: 'left' | 'right' | 'center' | 'justify' | 'char'
   urlKey?: string
 }
 
@@ -43,7 +44,9 @@ const theme = themeHolder.atom.get()
         ids.map((id) => (
           <tr>
             {descriptor.map((col) => (
-              <InfoTableCell url={rpgInfo[id][col.urlKey]}>{rpgInfo[id][col.key]}</InfoTableCell>
+              <InfoTableCell align={col.align} url={rpgInfo[id][col.urlKey]}>
+                {rpgInfo[id][col.key]}
+              </InfoTableCell>
             ))}
           </tr>
         ))
