@@ -1,6 +1,6 @@
 import { InputLabel } from '@suid/material'
 import style from 'styles/style'
-import MultiSelect from '@norama.matema/solid-multiselect'
+import Select from '@norama.matema/solid-multiselect'
 
 type Props = {
   disabled?: boolean
@@ -28,7 +28,7 @@ const SingleSelect = ({
   return (
     <>
       {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
-      <MultiSelect
+      <Select
         singleSelect
         isObject
         searchable={false}

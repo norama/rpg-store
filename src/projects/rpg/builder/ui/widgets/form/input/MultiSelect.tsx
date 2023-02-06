@@ -18,7 +18,7 @@ console.log('SSSSSSSSSSSSS style', style)
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
-const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
+const LIST_STYLE = style('list')
 
 console.log('LIST_STYLE', LIST_STYLE)
 
