@@ -102,13 +102,19 @@ const MultiSelect = ({
   customStyle,
 }: Props) => {
   const [checked, setChecked] = createSignal([])
-  const [left, setLeft] = createSignal(not(options(), values()))
-  const [right] = createSignal(values())
+  const [left, setLeft] = createSignal([])
+  const [right, setRight] = createSignal([])
 
   const [leftChecked, setLeftChecked] = createSignal([])
   const [rightChecked, onChangeChecked] = createSignal([])
 
   const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
+
+  createEffect(() => {
+    setRight(values())
+    setLeft(not(options(), values()))
+    setChecked([])
+  })
 
   createEffect(() => {
     setLeftChecked(intersection(checked(), left()))
