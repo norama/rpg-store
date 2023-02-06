@@ -9,18 +9,15 @@ import {
   Checkbox,
   Button,
   Paper,
+  Typography,
 } from '@suid/material'
 import { createSignal, createEffect } from 'solid-js'
 import style from 'styles/style'
 
-console.log('SSSSSSSSSSSSS style', style)
-
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
-const LIST_STYLE = style('list')
-
-console.log('LIST_STYLE', LIST_STYLE)
+const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1)
@@ -30,52 +27,92 @@ function intersection(a, b) {
   return a.filter((value) => b.indexOf(value) !== -1)
 }
 
+type ListProps = {
+  label?: string
+  items: () => string[]
+  texts: (option: string) => string
+  checked: () => string[]
+  onToggle: (value: string) => void
+  customStyle?: object
+  disabled?: boolean
+}
+
 const CustomList = ({
+  label,
   items,
+  texts,
   checked,
   onToggle,
-  customStyle = { width: '200px', height: '300px' },
-}) => (
-  <Paper sx={customStyle}>
-    <List dense component="div" role="list">
-      {items().map((value) => {
-        const labelId = `transfer-list-item-${value}-label`
+  customStyle = { width: '300px', height: '400px' } as object,
+  disabled,
+}: ListProps) => (
+  <>
+    {' '}
+    {label && <Typography variant="button">{label}</Typography>}
+    <Paper sx={style('list', customStyle)}>
+      <List dense component="div" role="list">
+        {items().map((value) => {
+          const labelId = `transfer-list-item-${value}-label`
 
-        return (
-          <ListItem role="listitem" onClick={() => onToggle(value)}>
-            <ListItemIcon>
-              <Checkbox
-                checked={checked().indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-                sx={{ transform: 'scale(1.2)' }}
-                color="success"
-                size="medium"
-                inputProps={{
-                  'aria-labelledby': labelId,
-                }}
+          return (
+            <ListItem role="listitem" onClick={() => onToggle(value)}>
+              <ListItemIcon>
+                <Checkbox
+                  disabled={disabled}
+                  checked={checked().indexOf(value) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  sx={style('checkbox', { transform: 'scale(1.2)' })}
+                  color="success"
+                  size="medium"
+                  inputProps={{
+                    'aria-labelledby': labelId,
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                id={labelId}
+                primary={texts(value)}
+                sx={{ opacity: disabled ? 0.8 : 1 }}
               />
-            </ListItemIcon>
-            <ListItemText id={labelId} primary={`Item ${value + 1}`} />
-          </ListItem>
-        )
-      })}
-      <ListItem />
-    </List>
-  </Paper>
+            </ListItem>
+          )
+        })}
+        <ListItem />
+      </List>
+    </Paper>
+  </>
 )
 
-const MultiSelect = () => {
+type Props = {
+  disabled?: boolean
+  label?: string
+  options: () => string[]
+  texts?: (option: string) => string
+  values: () => string[]
+  onChange: (values: string[]) => void
+  customStyle?: object
+}
+
+const MultiSelect = ({
+  disabled,
+  label,
+  options,
+  texts = (option) => option,
+  values,
+  onChange,
+  customStyle,
+}: Props) => {
   const [checked, setChecked] = createSignal([])
-  const [left, setLeft] = createSignal([0, 1, 2])
-  const [right, setRight] = createSignal([3, 4, 5])
+  const [left, setLeft] = createSignal(not(options(), values()))
+  const [right] = createSignal(values())
 
   const [leftChecked, setLeftChecked] = createSignal([])
-  const [rightChecked, setRightChecked] = createSignal([])
+  const [rightChecked, onChangeChecked] = createSignal([])
 
   createEffect(() => {
     setLeftChecked(intersection(checked(), left()))
-    setRightChecked(intersection(checked(), right()))
+    onChangeChecked(intersection(checked(), right()))
   })
 
   const handleToggle = (value) => {
@@ -92,32 +129,47 @@ const MultiSelect = () => {
   }
 
   const handleAllRight = () => {
-    setRight([...right(), ...left()])
+    onChange([...right(), ...left()])
     setLeft([])
   }
 
   const handleCheckedRight = () => {
-    setRight([...right(), ...leftChecked()])
+    onChange([...right(), ...leftChecked()])
     setLeft(not(left(), leftChecked()))
     setChecked(not(checked(), leftChecked()))
   }
 
   const handleCheckedLeft = () => {
     setLeft([...left(), ...rightChecked()])
-    setRight(not(right(), rightChecked()))
+    onChange(not(right(), rightChecked()))
     setChecked(not(checked(), rightChecked()))
   }
 
   const handleAllLeft = () => {
     setLeft([...left(), ...right()])
-    setRight([])
+    onChange([])
   }
 
   return (
-    <div style={{ 'text-align': 'center' }}>
-      <Grid container spacing={2} justifyContent="center" alignItems="center">
+    <div>
+      {label && <Typography variant="h6">{label}</Typography>}
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        style={{ 'text-align': 'center', 'margin-top': '10px' }}
+      >
         <Grid item>
-          <CustomList items={left} checked={checked} onToggle={handleToggle} />
+          <CustomList
+            label="Na výběr"
+            items={left}
+            texts={texts}
+            checked={checked}
+            onToggle={handleToggle}
+            customStyle={customStyle}
+            disabled={disabled}
+          />
         </Grid>
         <Grid item>
           <Grid container direction="column" alignItems="center">
@@ -127,7 +179,7 @@ const MultiSelect = () => {
               color="success"
               size="medium"
               onClick={handleAllRight}
-              disabled={left().length === 0}
+              disabled={!!disabled || left().length === 0}
               aria-label="move all right"
             >
               ≫
@@ -138,7 +190,7 @@ const MultiSelect = () => {
               color="success"
               size="medium"
               onClick={handleCheckedRight}
-              disabled={leftChecked().length === 0}
+              disabled={!!disabled || leftChecked().length === 0}
               aria-label="move selected right"
             >
               {RIGHT_ARROW}
@@ -149,7 +201,7 @@ const MultiSelect = () => {
               color="success"
               size="medium"
               onClick={handleCheckedLeft}
-              disabled={rightChecked().length === 0}
+              disabled={!!disabled || rightChecked().length === 0}
               aria-label="move selected left"
             >
               {LEFT_ARROW}
@@ -160,7 +212,7 @@ const MultiSelect = () => {
               color="success"
               size="medium"
               onClick={handleAllLeft}
-              disabled={right().length === 0}
+              disabled={!!disabled || right().length === 0}
               aria-label="move all left"
             >
               ≪
@@ -168,7 +220,15 @@ const MultiSelect = () => {
           </Grid>
         </Grid>
         <Grid item>
-          <CustomList items={right} checked={checked} onToggle={handleToggle} />
+          <CustomList
+            label="Vybrané"
+            items={right}
+            texts={texts}
+            checked={checked}
+            onToggle={handleToggle}
+            customStyle={customStyle}
+            disabled={disabled}
+          />
         </Grid>
       </Grid>
     </div>

@@ -5,9 +5,27 @@ title: 'Advantages'
 
 ## Výhody - nevýhody
 
-Bla Bla Bla
-Info text advantages / disadvantages
+import AdvantagesSelector from '@portal/components/advantages/AdvantagesSelector'
+import PointDisplay from '@portal/components/PointDisplay'
+import InfoTable from '@builder/widgets/InfoTable.astro'
 
-import MultiSelect from '@input/MultiSelect'
+<Gap height={4} />
 
-<MultiSelect client:only="solid-js" />
+<Form width="600px" height="600px">
+  <Row justifyContent="flex-end">
+    <PointDisplay client:only="solid-js" />
+  </Row>
+  <Gap height={3} />
+  <AdvantagesSelector client:only="solid-js" />
+</Form>
+
+<Gap height={4} />
+
+<InfoTable
+  block="advantages"
+  width="min(600px, 100%)"
+  descriptor={[
+    { key: 'name', label: 'Název' },
+    { key: 'points', label: 'Body' },
+  ]}
+/>

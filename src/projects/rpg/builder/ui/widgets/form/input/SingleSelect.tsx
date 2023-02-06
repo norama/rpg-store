@@ -4,7 +4,7 @@ import Select from '@norama.matema/solid-multiselect'
 
 type Props = {
   disabled?: boolean
-  label: string
+  label?: string
   options: () => string[]
   texts?: (option: string) => string
   value: () => string
@@ -34,10 +34,7 @@ const SingleSelect = ({
         searchable={false}
         placeholder="Vyberte rasu"
         displayValue="label"
-        onSelect={(data) => {
-          console.log('SEL', data[0]['id'])
-          onChange(data[0]['id'])
-        }}
+        onSelect={(data) => onChange(data[0]['id'])}
         onRemove={(data) => {
           console.log('REMOVE', data)
         }}
