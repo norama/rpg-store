@@ -13,6 +13,8 @@ import {
 import { createSignal, createEffect } from 'solid-js'
 import style from 'styles/style'
 
+console.log('SSSSSSSSSSSSS style', style)
+
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
