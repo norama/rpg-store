@@ -60,7 +60,7 @@ type Props = {
   customStyle: object
 }
 
-const MultiSelect = ({ customStyle }: Props) => {
+const MultiSelect = ({ customStyle = { width: '200px', height: '300px' } }: Props) => {
   const [checked, setChecked] = createSignal([])
   const [left, setLeft] = createSignal([0, 1, 2])
   const [right, setRight] = createSignal([3, 4, 5])
