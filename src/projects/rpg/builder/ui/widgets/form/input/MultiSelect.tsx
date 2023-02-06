@@ -18,7 +18,9 @@ console.log('SSSSSSSSSSSSS style', style)
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
-const LIST_STYLE = { my: 0.5, fontWeight: 700 } //style('list', { my: 0.5, fontWeight: 700 })
+const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
+
+console.log('LIST_STYLE', LIST_STYLE)
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1)
