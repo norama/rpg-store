@@ -17,8 +17,6 @@ import style from 'styles/style'
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
-const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
-
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1)
 }
@@ -109,6 +107,8 @@ const MultiSelect = ({
 
   const [leftChecked, setLeftChecked] = createSignal([])
   const [rightChecked, onChangeChecked] = createSignal([])
+
+  const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
 
   createEffect(() => {
     setLeftChecked(intersection(checked(), left()))
