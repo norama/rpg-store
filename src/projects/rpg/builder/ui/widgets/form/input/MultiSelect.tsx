@@ -11,7 +11,7 @@ import {
   Paper,
 } from '@suid/material'
 import { createSignal, createEffect } from 'solid-js'
-//import style from 'styles/style'
+import style from 'styles/style'
 
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
