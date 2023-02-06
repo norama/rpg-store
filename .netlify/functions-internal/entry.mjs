@@ -1,10 +1,10 @@
 import * as adapter from '@astrojs/netlify/netlify-functions.js';
 import { escape as escape$1 } from 'html-escaper';
 import PubSub from 'pubsub-js';
+import { useStore } from '@nanostores/solid';
 import { atom, map, computed } from 'nanostores';
 import clsx from 'clsx';
-import { useStore } from '@nanostores/solid';
-/* empty css                                      *//* empty css                                 *//* empty css                                 *//* empty css                                 *//* empty css                                 *//* empty css                                *//* empty css                                 */import 'mime';
+/* empty css                                      *//* empty css                                 *//* empty css                                 *//* empty css                                 *//* empty css                                 *//* empty css                                 *//* empty css                                *//* empty css                                 */import 'mime';
 import 'cookie';
 import 'kleur/colors';
 import 'string-width';
@@ -31,10 +31,10 @@ let Owner = null;
 function createRoot(fn, detachedOwner) {
   detachedOwner && (Owner = detachedOwner);
   const owner = Owner,
-        root = fn.length === 0 ? UNOWNED : {
-    context: null,
-    owner
-  };
+    root = fn.length === 0 ? UNOWNED : {
+      context: null,
+      owner
+    };
   Owner = root;
   let result;
   try {
@@ -163,7 +163,8 @@ function setHydrateContext(context) {
   sharedConfig.context = context;
 }
 function nextHydrateContext() {
-  return sharedConfig.context ? { ...sharedConfig.context,
+  return sharedConfig.context ? {
+    ...sharedConfig.context,
     id: `${sharedConfig.context.id}${sharedConfig.context.count++}-`,
     count: 0
   } : undefined;
@@ -183,29 +184,45 @@ function mergeProps(...sources) {
   for (let i = 0; i < sources.length; i++) {
     let source = sources[i];
     if (typeof source === "function") source = source();
-    if (source) Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    if (source) {
+      const descriptors = Object.getOwnPropertyDescriptors(source);
+      for (const key in descriptors) {
+        if (key in target) continue;
+        Object.defineProperty(target, key, {
+          enumerable: true,
+          get() {
+            for (let i = sources.length - 1; i >= 0; i--) {
+              let s = sources[i] || {};
+              if (typeof s === "function") s = s();
+              const v = s[key];
+              if (v !== undefined) return v;
+            }
+          }
+        });
+      }
+    }
   }
   return target;
 }
 function splitProps(props, ...keys) {
   const descriptors = Object.getOwnPropertyDescriptors(props),
-        split = k => {
-    const clone = {};
-    for (let i = 0; i < k.length; i++) {
-      const key = k[i];
-      if (descriptors[key]) {
-        Object.defineProperty(clone, key, descriptors[key]);
-        delete descriptors[key];
+    split = k => {
+      const clone = {};
+      for (let i = 0; i < k.length; i++) {
+        const key = k[i];
+        if (descriptors[key]) {
+          Object.defineProperty(clone, key, descriptors[key]);
+          delete descriptors[key];
+        }
       }
-    }
-    return clone;
-  };
+      return clone;
+    };
   return keys.map(split).concat(split(Object.keys(descriptors)));
 }
 function simpleMap(props, wrap) {
   const list = props.each || [],
-        len = list.length,
-        fn = props.children;
+    len = list.length,
+    fn = props.children;
   if (len) {
     let mapped = Array(len);
     for (let i = 0; i < len; i++) mapped[i] = wrap(fn, list[i], i);
@@ -500,6 +517,7 @@ function renderToString$1(code, options = {}) {
     id: options.renderId || "",
     count: 0,
     suspense: {},
+    lazy: {},
     assets: [],
     nonce: options.nonce,
     writeResource(id, p, error) {
@@ -531,10 +549,10 @@ function ssr(t, ...nodes) {
 function ssrClassList(value) {
   if (!value) return "";
   let classKeys = Object.keys(value),
-      result = "";
+    result = "";
   for (let i = 0, len = classKeys.length; i < len; i++) {
     const key = classKeys[i],
-          classValue = !!value[key];
+      classValue = !!value[key];
     if (!key || key === "undefined" || !classValue) continue;
     i && (result += " ");
     result += key;
@@ -615,7 +633,7 @@ function escape(s, attr) {
   let iAmp = s.indexOf("&");
   if (iDelim < 0 && iAmp < 0) return s;
   let left = 0,
-      out = "";
+    out = "";
   while (iDelim >= 0 && iAmp >= 0) {
     if (iDelim < iAmp) {
       if (left < iDelim) out += s.substring(left, iDelim);
@@ -693,7 +711,7 @@ function serializeError(error) {
 function Dynamic$1(props) {
   const [p, others] = splitProps(props, ["component"]);
   const comp = p.component,
-        t = typeof comp;
+    t = typeof comp;
   if (comp) {
     if (t === "function") return comp(others);else if (t === "string") {
       return ssrElement(comp, others, undefined, true);
@@ -2381,9 +2399,9 @@ var server_default = {
   renderToStaticMarkup
 };
 
-const $$Astro$m = createAstro("C:/work/killman/rpg-store/src/pages/index.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$q = createAstro("C:/work/killman/rpg-store/src/pages/index.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$Index$2 = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$m, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$q, $$props, $$slots);
   Astro2.self = $$Index$2;
   return Astro2.redirect("/builder");
 });
@@ -2444,72 +2462,6 @@ const M = {
   uiThemeStored: msg("uiThemeStored")
 };
 
-class BusinessReady {
-  atom = atom(false);
-  resources = /* @__PURE__ */ new Set();
-  resourceToLoad(resource) {
-    this.resources.add(resource);
-    console.log("TO LOAD", resource);
-    console.log("this.resources.size", this.resources.size);
-    console.trace();
-  }
-  resourceLoaded(resource) {
-    this.resources.delete(resource);
-    console.log("LOADED", resource);
-    console.log("this.resources.size", this.resources.size);
-    if (this.resources.size === 0) {
-      this.atom.set(true);
-    }
-  }
-}
-const businessReady = new BusinessReady();
-
-class ResourceAtom {
-  atom = atom();
-  constructor(resource) {
-    businessReady.resourceToLoad(resource);
-    PubSub.subscribe(resource, (_msg, target) => {
-      this.atom.set(target);
-      businessReady.resourceLoaded(resource);
-    });
-  }
-}
-class FormData {
-  data;
-  map = map();
-  dirtyKeys = /* @__PURE__ */ new Set();
-  constructor(resource) {
-    businessReady.resourceToLoad(resource);
-    PubSub.subscribe(resource, (_msg, data) => {
-      this.data = data;
-      this.map.set({ ...data });
-      this.dirtyKeys.clear();
-      PubSub.publish(M.uiDirty, false);
-      console.log("resource loaded: " + resource, this.map.get());
-      businessReady.resourceLoaded(resource);
-    });
-    this.map.listen((value, changedKey) => {
-      const changed = JSON.stringify(this.data[changedKey]) !== JSON.stringify(value[changedKey]);
-      if (changed) {
-        const wasDirty = this.dirtyKeys.size > 0;
-        this.dirtyKeys.add(changedKey);
-        if (!wasDirty) {
-          PubSub.publish(M.uiDirty, true);
-        }
-      } else {
-        this.dirtyKeys.delete(changedKey);
-        const isDirty = this.dirtyKeys.size > 0;
-        if (!isDirty) {
-          PubSub.publish(M.uiDirty, false);
-        }
-      }
-    });
-  }
-}
-
-const properties = new FormData(M.uiProperties);
-const propertiesMap = properties.map;
-
 const isFunction = (valOrFunction) => typeof valOrFunction === 'function';
 const resolveValue = (valOrFunction, arg) => isFunction(valOrFunction) ? valOrFunction(arg) : valOrFunction;
 
@@ -2545,7 +2497,7 @@ function updateArray(current, next) {
   if (Array.isArray(next)) {
     if (current === next) return;
     let i = 0,
-        len = next.length;
+      len = next.length;
     for (; i < len; i++) {
       const value = next[i];
       if (current[i] !== value) setProperty(current, i, value);
@@ -2555,11 +2507,11 @@ function updateArray(current, next) {
 }
 function updatePath(current, path, traversed = []) {
   let part,
-      next = current;
+    next = current;
   if (path.length > 1) {
     part = path.shift();
     const partType = typeof part,
-          isArray = Array.isArray(current);
+      isArray = Array.isArray(current);
     if (Array.isArray(part)) {
       for (let i = 0; i < part.length; i++) {
         updatePath(current, [part[i]].concat(path), traversed);
@@ -2882,9 +2834,9 @@ toast$1.remove = (toastId) => {
     });
 };
 
-const _tmpl$$d = ["<div", " style=\"", "\"", "><style>.sldt-active{z-index:9999;}.sldt-active>*{pointer-events:auto;}</style><!--#-->", "<!--/--></div>"];
+const _tmpl$$f = ["<div", " style=\"", "\"", "><style>.sldt-active{z-index:9999;}.sldt-active>*{pointer-events:auto;}</style><!--#-->", "<!--/--></div>"];
 const Toaster = props => {
-  return ssr(_tmpl$$d, ssrHydrationKey(), ssrStyle({
+  return ssr(_tmpl$$f, ssrHydrationKey(), ssrStyle({
     ...defaultContainerStyle,
     ...props.containerStyle
   }), ssrAttribute("class", escape(props.containerClassName, true), false), escape(createComponent$1(For, {
@@ -2899,7 +2851,7 @@ const Toaster = props => {
 
 __astro_tag_component__(Toaster, "@astrojs/solid-js");
 
-const _tmpl$$c = ["<div", " style=\"", "\">", "</div>"],
+const _tmpl$$e = ["<div", " style=\"", "\">", "</div>"],
   _tmpl$2$2 = ["<div", " style=\"", "\"><!--#-->", "<!--/-->", "</div>"];
 const ToastBar = props => {
   return ssr(_tmpl$2$2, ssrHydrationKey() + ssrAttribute("class", escape(props.toast.className, true), false), ssrStyle({
@@ -2912,28 +2864,28 @@ const ToastBar = props => {
           return props.toast.icon;
         },
         get children() {
-          return ssr(_tmpl$$c, ssrHydrationKey(), ssrStyle(iconContainer), escape(props.toast.icon));
+          return ssr(_tmpl$$e, ssrHydrationKey(), ssrStyle(iconContainer), escape(props.toast.icon));
         }
       }), createComponent$1(Match, {
         get when() {
           return props.toast.type === "loading";
         },
         get children() {
-          return ssr(_tmpl$$c, ssrHydrationKey(), ssrStyle(iconContainer), escape(createComponent$1(Loader, mergeProps(() => props.toast.iconTheme))));
+          return ssr(_tmpl$$e, ssrHydrationKey(), ssrStyle(iconContainer), escape(createComponent$1(Loader, mergeProps(() => props.toast.iconTheme))));
         }
       }), createComponent$1(Match, {
         get when() {
           return props.toast.type === "success";
         },
         get children() {
-          return ssr(_tmpl$$c, ssrHydrationKey(), ssrStyle(iconContainer), escape(createComponent$1(Success, mergeProps(() => props.toast.iconTheme))));
+          return ssr(_tmpl$$e, ssrHydrationKey(), ssrStyle(iconContainer), escape(createComponent$1(Success, mergeProps(() => props.toast.iconTheme))));
         }
       }), createComponent$1(Match, {
         get when() {
           return props.toast.type === "error";
         },
         get children() {
-          return ssr(_tmpl$$c, ssrHydrationKey(), ssrStyle(iconContainer), escape(createComponent$1(Error$1, mergeProps(() => props.toast.iconTheme))));
+          return ssr(_tmpl$$e, ssrHydrationKey(), ssrStyle(iconContainer), escape(createComponent$1(Error$1, mergeProps(() => props.toast.iconTheme))));
         }
       })];
     }
@@ -2945,7 +2897,7 @@ const ToastBar = props => {
 
 __astro_tag_component__(ToastBar, "@astrojs/solid-js");
 
-const _tmpl$$b = ["<div", " style=\"", "\"", ">", "</div>"];
+const _tmpl$$d = ["<div", " style=\"", "\"", ">", "</div>"];
 const ToastContainer = props => {
   const calculatePosition = () => {
     const position = props.toast.position || defaultToastOptions.position;
@@ -2954,7 +2906,7 @@ const ToastContainer = props => {
     return positionStyle2;
   };
   const positionStyle = createMemo(() => calculatePosition());
-  return ssr(_tmpl$$b, ssrHydrationKey(), ssrStyle(positionStyle()), ssrAttribute("class", props.toast.visible ? "sldt-active" : "", false), props.toast.type === "custom" ? escape(resolveValue(props.toast.message, props.toast)) : escape(createComponent$1(ToastBar, {
+  return ssr(_tmpl$$d, ssrHydrationKey(), ssrStyle(positionStyle()), ssrAttribute("class", props.toast.visible ? "sldt-active" : "", false), props.toast.type === "custom" ? escape(resolveValue(props.toast.message, props.toast)) : escape(createComponent$1(ToastBar, {
     get toast() {
       return props.toast;
     },
@@ -2966,7 +2918,7 @@ const ToastContainer = props => {
 
 __astro_tag_component__(ToastContainer, "@astrojs/solid-js");
 
-const _tmpl$$a = ["<circle", " cx=\"16\" cy=\"16\" r=\"0\">", "", "</circle>"],
+const _tmpl$$c = ["<circle", " cx=\"16\" cy=\"16\" r=\"0\">", "", "</circle>"],
   _tmpl$2$1 = ["<circle", " cx=\"16\" cy=\"16\" r=\"12\" opacity=\"0\">", "", "</circle>"];
 const MainCircle = props => {
   const publicProps = {
@@ -2977,7 +2929,7 @@ const MainCircle = props => {
     keyTimes: "0; 0.6; 1",
     keySplines: "0.25 0.71 0.4 0.88; .59 .22 .87 .63"
   };
-  return ssr(_tmpl$$a, ssrHydrationKey() + ssrAttribute("fill", escape(props.fill, true), false), ssrElement("animate", () => ({
+  return ssr(_tmpl$$c, ssrHydrationKey() + ssrAttribute("fill", escape(props.fill, true), false), ssrElement("animate", () => ({
     "attributeName": "opacity",
     "values": "0; 1; 1",
     ...publicProps
@@ -3008,10 +2960,10 @@ const SecondaryCircle = props => {
 __astro_tag_component__(MainCircle, "@astrojs/solid-js");
 __astro_tag_component__(SecondaryCircle, "@astrojs/solid-js");
 
-const _tmpl$$9 = ["<svg", " style=\"", "\" viewBox=\"0 0 32 32\" width=\"1.25rem\" height=\"1.25rem\"><!--#-->", "<!--/--><!--#-->", "<!--/--><path fill=\"none\"", " stroke-width=\"4\" stroke-dasharray=\"22\" stroke-dashoffset=\"22\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M9.8,17.2l3.8,3.6c0.1,0.1,0.3,0.1,0.4,0l9.6-9.7\">", "</path></svg>"];
+const _tmpl$$b = ["<svg", " style=\"", "\" viewBox=\"0 0 32 32\" width=\"1.25rem\" height=\"1.25rem\"><!--#-->", "<!--/--><!--#-->", "<!--/--><path fill=\"none\"", " stroke-width=\"4\" stroke-dasharray=\"22\" stroke-dashoffset=\"22\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M9.8,17.2l3.8,3.6c0.1,0.1,0.3,0.1,0.4,0l9.6-9.7\">", "</path></svg>"];
 const Success = props => {
   const fill = props.primary || "#34C759";
-  return ssr(_tmpl$$9, ssrHydrationKey(), "overflow:" + "visible", escape(createComponent$1(MainCircle, {
+  return ssr(_tmpl$$b, ssrHydrationKey(), "overflow:" + "visible", escape(createComponent$1(MainCircle, {
     fill: fill
   })), escape(createComponent$1(SecondaryCircle, {
     fill: fill,
@@ -3028,10 +2980,10 @@ const Success = props => {
 
 __astro_tag_component__(Success, "@astrojs/solid-js");
 
-const _tmpl$$8 = ["<svg", " style=\"", "\" viewBox=\"0 0 32 32\" width=\"1.25rem\" height=\"1.25rem\"><!--#-->", "<!--/--><!--#-->", "<!--/--><path fill=\"none\"", " stroke-width=\"4\" stroke-dasharray=\"9\" stroke-dashoffset=\"9\" stroke-linecap=\"round\" d=\"M16,7l0,9\">", "</path><circle", " cx=\"16\" cy=\"23\" r=\"2.5\" opacity=\"0\">", "</circle></svg>"];
+const _tmpl$$a = ["<svg", " style=\"", "\" viewBox=\"0 0 32 32\" width=\"1.25rem\" height=\"1.25rem\"><!--#-->", "<!--/--><!--#-->", "<!--/--><path fill=\"none\"", " stroke-width=\"4\" stroke-dasharray=\"9\" stroke-dashoffset=\"9\" stroke-linecap=\"round\" d=\"M16,7l0,9\">", "</path><circle", " cx=\"16\" cy=\"23\" r=\"2.5\" opacity=\"0\">", "</circle></svg>"];
 const Error$1 = props => {
   const fill = props.primary || "#FF3B30";
-  return ssr(_tmpl$$8, ssrHydrationKey(), "overflow:" + "visible", escape(createComponent$1(MainCircle, {
+  return ssr(_tmpl$$a, ssrHydrationKey(), "overflow:" + "visible", escape(createComponent$1(MainCircle, {
     fill: fill
   })), escape(createComponent$1(SecondaryCircle, {
     fill: fill
@@ -3054,8 +3006,8 @@ const Error$1 = props => {
 
 __astro_tag_component__(Error$1, "@astrojs/solid-js");
 
-const _tmpl$$7 = ["<svg", " style=\"", "\" viewBox=\"0 0 32 32\" width=\"1.25rem\" height=\"1.25rem\"><path fill=\"none\"", " stroke-width=\"4\" stroke-miterlimit=\"10\" d=\"M16,6c3,0,5.7,1.3,7.5,3.4c1.5,1.8,2.5,4,2.5,6.6c0,5.5-4.5,10-10,10S6,21.6,6,16S10.5,6,16,6z\"></path><path fill=\"none\"", " stroke-width=\"4\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16,6c3,0,5.7,1.3,7.5,3.4c0.6,0.7,1.1,1.4,1.5,2.2\"><animateTransform attributeName=\"transform\" type=\"rotate\" from=\"0 16 16\" to=\"360 16 16\" dur=\"0.75s\" repeatCount=\"indefinite\"></animateTransform></path></svg>"];
-const Loader = props => ssr(_tmpl$$7, ssrHydrationKey(), "overflow:" + "visible", ssrAttribute("stroke", escape(props.primary, true) || "#E5E7EB", false), ssrAttribute("stroke", escape(props.secondary, true) || "#4b5563", false));
+const _tmpl$$9 = ["<svg", " style=\"", "\" viewBox=\"0 0 32 32\" width=\"1.25rem\" height=\"1.25rem\"><path fill=\"none\"", " stroke-width=\"4\" stroke-miterlimit=\"10\" d=\"M16,6c3,0,5.7,1.3,7.5,3.4c1.5,1.8,2.5,4,2.5,6.6c0,5.5-4.5,10-10,10S6,21.6,6,16S10.5,6,16,6z\"></path><path fill=\"none\"", " stroke-width=\"4\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16,6c3,0,5.7,1.3,7.5,3.4c0.6,0.7,1.1,1.4,1.5,2.2\"><animateTransform attributeName=\"transform\" type=\"rotate\" from=\"0 16 16\" to=\"360 16 16\" dur=\"0.75s\" repeatCount=\"indefinite\"></animateTransform></path></svg>"];
+const Loader = props => ssr(_tmpl$$9, ssrHydrationKey(), "overflow:" + "visible", ssrAttribute("stroke", escape(props.primary, true) || "#E5E7EB", false), ssrAttribute("stroke", escape(props.secondary, true) || "#4b5563", false));
 
 __astro_tag_component__(Loader, "@astrojs/solid-js");
 
@@ -3157,13 +3109,83 @@ const defaultStyles = {
     color: "text",
     backgroundColor: "muted",
     padding: "5px",
-    width: "400px"
+    width: "100%"
+  },
+  select: {
+    color: "text",
+    background: "muted",
+    width: "400px100%",
+    border: "none"
+  },
+  options: {
+    color: "text",
+    background: "muted",
+    width: "100%",
+    border: "none",
+    overflowX: "hidden"
+  },
+  option: {
+    color: "text",
+    background: "muted",
+    cursor: "pointer",
+    width: "100%",
+    overflowX: "hidden"
+  },
+  checkbox: {
+    color: "text",
+    background: "muted"
+  },
+  list: {
+    color: "text",
+    background: "muted",
+    overflowX: "hidden",
+    overflowY: "auto"
+  },
+  header: {
+    backgroundColor: "background",
+    padding: "5px 30px",
+    width: "100%",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    zIndex: 1e3,
+    height: "60px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  home: {
+    color: "secondary",
+    fontSize: "24px",
+    fontWeight: 700,
+    textDecoration: "none"
+  },
+  theme: {
+    width: "100px",
+    marginTop: "5px",
+    marginRight: 5
   },
   text: {
     color: "text"
   },
   box: {
     color: "text"
+  },
+  form: {
+    color: "text",
+    width: "400px",
+    border: "1px solid",
+    borderColor: "muted",
+    borderRadius: "4px",
+    padding: 3,
+    marginTop: 3,
+    marginBottom: 3,
+    position: "relative"
+  },
+  formControls: {
+    position: "absolute",
+    right: 3,
+    bottom: 3
   },
   chip: {
     color: "sharp",
@@ -3457,7 +3479,7 @@ class Theme {
     }
   }
 }
-const Theme$1 = new Theme();
+const themeHolder = new Theme();
 
 const themeKey = (attr) => {
   switch (attr) {
@@ -3482,13 +3504,17 @@ const themeKey = (attr) => {
     case "gap":
     case "rowGap":
     case "columnGap":
+    case "top":
+    case "bottom":
+    case "left":
+    case "right":
       return "spaces";
     default:
       return attr + "s";
   }
 };
 const style = (tag = "", customStyle = {}) => {
-  const theme = Theme$1.getTheme();
+  const theme = themeHolder.getTheme();
   const themeStyle = theme.styles[tag] ?? {};
   const baseStyle = { ...themeStyle, ...customStyle };
   const derivedStyle = {};
@@ -3513,692 +3539,6 @@ PubSub.subscribe(M.uiSaveError, (_msg, error) => {
   }, 5e3);
   toast.error("Chyba p\u0159i ulo\u017Een\xED!", { style: style("error") });
 });
-
-/**
- * @ignore - internal component.
- */
-const FormControlContext = createContext();
-
-function formControlState(data) {
-    const compose = () => {
-        return data.states.reduce((acc, state) => {
-            acc[state] = data.props[state];
-            if (data.muiFormControl) {
-                if (typeof data.props[state] === "undefined") {
-                    acc[state] = data.muiFormControl[state];
-                }
-            }
-            return acc;
-        }, {});
-    };
-    const object = createMutable({});
-    createComputed(() => {
-        const newObject = compose();
-        batch(() => {
-            for (const key in newObject) {
-                if (object[key] !== newObject[key])
-                    object[key] = newObject[key];
-            }
-            const newKeys = Object.keys(newObject);
-            for (const key in object) {
-                if (!newKeys.includes(key))
-                    delete object[key];
-            }
-        });
-    });
-    return object;
-}
-
-function useFormControl() {
-    return useContext(FormControlContext);
-}
-
-// https://github.com/mui/material-ui/blob/master/packages/mui-base/src/composeClasses/composeClasses.ts
-function composeClasses(slots, getUtilityClass, classes) {
-    const output = {};
-    Object.keys(slots).forEach(
-    // `Objet.keys(slots)` can't be wider than `T` because we infer `T` from `slots`.
-    // @ts-expect-error https://github.com/microsoft/TypeScript/pull/12253#issuecomment-263132208
-    (slot) => {
-        output[slot] = slots[slot]
-            .reduce((acc, key) => {
-            if (key) {
-                if (classes && classes[key]) {
-                    acc.push(classes[key]);
-                }
-                acc.push(getUtilityClass(key));
-            }
-            return acc;
-        }, [])
-            .join(" ");
-    });
-    return output;
-}
-
-let ThemeContext;
-if (process.env.NODE_ENV !== "production") {
-  const global = globalThis;
-  const suid = global.__suid || (global.__suid = {});
-  ThemeContext = suid.systemThemeContext || (suid.systemThemeContext = createContext({}));
-} else {
-  ThemeContext = createContext({});
-}
-const ThemeContext$1 = ThemeContext;
-
-__astro_tag_component__(ThemeContext, "@astrojs/solid-js");
-
-function renderMediaQuery(comparator, width, units = "px") {
-    let selector;
-    if (comparator === "up") {
-        selector = `(min-width:${width}${units})`;
-    }
-    else if (comparator === "down") {
-        selector = `(max-width:${width}${units})`;
-    }
-    else if (comparator === "between") {
-        const [maxW, minW] = width;
-        selector = `(max-width:${maxW}${units}) and (min-width:${minW}${units})`;
-    }
-    else {
-        throw new Error(`Invalid comparator: ${comparator}`);
-    }
-    return `@media ${selector}`;
-}
-
-const breakpointsDefault = createBreakpointsOptions({
-    columns: 12,
-    keys: ["xs", "sm", "md", "lg", "xl"],
-    values: {
-        xs: 0,
-        sm: 600,
-        md: 900,
-        lg: 1200,
-        xl: 1536,
-    },
-    unit: "px",
-});
-function createBreakpointsOptions(options) {
-    return options;
-}
-function createBreakpoints(options) {
-    const result = {
-        ...breakpointsDefault,
-        ...(options ?? {}),
-        up: (value, css) => {
-            const key = renderMediaQuery("up", result.resolve(value));
-            return (css ? { [key]: css } : key);
-        },
-        down: (value, css) => {
-            const key = renderMediaQuery("down", result.resolve(value));
-            return (css ? { [key]: css } : key);
-        },
-        between: (value, css) => {
-            const key = renderMediaQuery("between", [
-                result.resolve(value[0]),
-                result.resolve(value[1]),
-            ]);
-            return (css ? { [key]: css } : key);
-        },
-        resolve: (value) => typeof value === "number" ? value : result.values[value],
-    };
-    return result;
-}
-
-function createSpacing(options) {
-    if (typeof options === "function")
-        return options;
-    const resolved = (...values) => {
-        return values
-            .map((v) => typeof v === "number" ? `${v * (options ?? 8)}px` : v)
-            .join(" ");
-    };
-    return resolved;
-}
-
-function isPlainObject(item) {
-    return (item !== null && typeof item === "object" && item.constructor === Object);
-}
-function sortKeys(object, keys) {
-    for (const key of keys) {
-        const value = object[key];
-        delete object[key];
-        object[key] = value;
-    }
-}
-function deepmerge(target, source, options = { clone: true }) {
-    const output = options.clone ? { ...target } : target;
-    if (isPlainObject(target) && isPlainObject(source)) {
-        Object.keys(source).forEach((key) => {
-            // Avoid prototype pollution
-            if (key === "__proto__") {
-                return;
-            }
-            if (isPlainObject(source[key]) &&
-                key in target &&
-                isPlainObject(target[key])) {
-                // Since `output` is a clone of `target` and we have narrowed `target` in this block we can cast to the same type.
-                output[key] = deepmerge(target[key], source[key], options);
-            }
-            else {
-                output[key] = source[key];
-            }
-        });
-        if (options.sortKeys)
-            sortKeys(output, Object.keys(source));
-    }
-    return output;
-}
-
-function cloneObject(target) {
-    if (Array.isArray(target)) {
-        const output = [];
-        for (const value of target) {
-            output.push(cloneObject(value));
-        }
-        return output;
-    }
-    else if (isPlainObject(target)) {
-        const output = {};
-        for (const key in target) {
-            if (key === "__proto__") {
-                continue;
-            }
-            output[key] = cloneObject(target[key]);
-        }
-        return output;
-    }
-    else {
-        return target;
-    }
-}
-
-function merge(target, ...sources) {
-    for (const source of sources)
-        deepmerge(target, cloneObject(source), {
-            clone: false,
-        });
-    return target;
-}
-
-const shapeDefaults = createShapeOptions({
-    borderRadius: 4,
-});
-function createShapeOptions(data) {
-    return data;
-}
-function createShape(options) {
-    const result = {
-        ...merge({}, shapeDefaults, options),
-    };
-    return result;
-}
-
-function createThemeOptions$1(options) {
-  return options;
-}
-function createTheme$1(data) {
-  const result = {
-    direction: "ltr",
-    shadows: void 0,
-    transitions: void 0,
-    components: void 0,
-    palette: void 0,
-    typography: void 0,
-    zIndex: void 0,
-    mixins: void 0,
-    ...data,
-    breakpoints: createBreakpoints(data?.breakpoints),
-    shape: createShape(data?.shape),
-    spacing: createSpacing(data?.spacing)
-  };
-  return result;
-}
-
-__astro_tag_component__(createThemeOptions$1, "@astrojs/solid-js");
-__astro_tag_component__(createTheme$1, "@astrojs/solid-js");
-__astro_tag_component__(createTheme$1, "@astrojs/solid-js");
-
-function makeGetDefaultTheme(createTheme) {
-    let defaultTheme;
-    return function getDefaultTheme() {
-        if (!defaultTheme) {
-            defaultTheme = createTheme();
-        }
-        return defaultTheme;
-    };
-}
-
-const getDefaultTheme$1 = makeGetDefaultTheme(createTheme$1);
-
-function isEmptyObject(object) {
-    for (const _key in object)
-        return false;
-    return true;
-}
-
-function useTheme$2(defaultTheme = getDefaultTheme$1, Context = ThemeContext$1) {
-    const theme = useContext(Context);
-    if (isEmptyObject(theme) && defaultTheme) {
-        if (typeof defaultTheme === "function")
-            return defaultTheme();
-        return defaultTheme;
-    }
-    if (!theme)
-        throw new Error("Theme is not defined");
-    return theme;
-}
-
-function useTheme$1(defaultTheme) {
-    return useTheme$2(defaultTheme, ThemeContext$1);
-}
-
-function useThemeProps(options) {
-    const theme = useTheme$1();
-    const set = (v) => v;
-    const propDefaults = typeof options.propDefaults === "function"
-        ? options.propDefaults({
-            set,
-            inProps: options.props,
-        })
-        : options.propDefaults;
-    return mergeProps(...[
-        ...(propDefaults ? [propDefaults] : []),
-        () => theme.components?.[options.name]?.defaultProps || {},
-        options.props,
-    ]);
-}
-
-function componentTrap(fn) {
-    function Component(props) {
-        return fn(props);
-    }
-    Object.defineProperty(Component, "name", {
-        value: fn.name,
-    });
-    Component.toString = fn.toString;
-    return Component;
-}
-
-function createComponentFactory() {
-    return function (options) {
-        function useClasses(ownerState) {
-            const haveSlotClasses = !!options.slotClasses;
-            const compose = () => {
-                if (!options.slotClasses)
-                    throw new Error(`'slotClasses' option is not defined`);
-                if (!options.utilityClass)
-                    throw new Error(`'utilityClass' option is not defined`);
-                return composeClasses(options.slotClasses(ownerState), options.utilityClass, ownerState["classes"] ?? "");
-            };
-            const classes = createMutable({});
-            if (haveSlotClasses)
-                createComputed(() => {
-                    const result = compose();
-                    batch(() => {
-                        for (const slot in result)
-                            classes[slot] = result[slot];
-                    });
-                });
-            return classes;
-        }
-        function splitInProps(allProps) {
-            const [props, otherProps] = splitProps(allProps, options.selfPropNames);
-            return { allProps, props, otherProps };
-        }
-        function useThemeProps$1(input) {
-            return useThemeProps({
-                propDefaults: options.propDefaults,
-                ...input,
-                name: options.name,
-            });
-        }
-        function useProps(props) {
-            const themeProps = useThemeProps$1({ props });
-            return splitInProps(themeProps);
-        }
-        function defineComponent(cb) {
-            cb.toString = () => `${options.name}-root`;
-            return componentTrap(cb);
-        }
-        function component(cb) {
-            const Component = defineComponent(function Component(inProps) {
-                const { allProps, otherProps, props } = useProps(inProps);
-                const classes = (options.autoCallUseClasses ?? true)
-                    ? useClasses(allProps)
-                    : {};
-                return cb({
-                    allProps,
-                    otherProps,
-                    props,
-                    classes,
-                });
-            });
-            Object.defineProperty(Component, "name", { value: cb.name });
-            return Component;
-        }
-        return {
-            name: options.name,
-            selfPropNames: options.selfPropNames,
-            component,
-            defineComponent,
-            useClasses,
-            useThemeProps: useThemeProps$1,
-            useProps,
-            splitInProps,
-        };
-    };
-}
-
-const StyledEngineContext = createContext({});
-
-__astro_tag_component__(StyledEngineContext, "@astrojs/solid-js");
-
-function mergeStyleProps(values) {
-    const result = values.reduce((result, value) => {
-        if ("name" in value)
-            result[`--${value.name}`] = "0";
-        deepmerge(result, value, {
-            clone: false,
-            sortKeys: true,
-        });
-        return result;
-    }, {});
-    delete result.name;
-    return result;
-}
-
-function isVar(value) {
-    return value.startsWith("--");
-}
-function isPrivateVar(value) {
-    return value.startsWith("__");
-}
-function isSelector(value) {
-    return /[^a-z-]/i.test(value) && !isVar(value);
-}
-function isGlobalSelector(value) {
-    return value.startsWith("@global");
-}
-function isMediaQuery(value) {
-    return value.startsWith("@media");
-}
-function isKeyframes(value) {
-    return value.startsWith("@keyframes");
-}
-
-function snakeCase(value) {
-    return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-}
-
-function renderSelector(propKey, propValue, selectors = [], options = {}) {
-    const subselectors = propKey.split(",").map((v) => {
-        v = v.trim();
-        return v.includes("&") ? v : `& ${v}`;
-    });
-    return render(propValue, (selectors.length ? selectors : [""]).flatMap((selector) => subselectors.map((v) => v.replace(/&/g, selector).trim())), {
-        ...options,
-    });
-}
-function render(css, selectors = [], options = {}) {
-    const props = [];
-    const rules = [];
-    for (let propKey in css) {
-        const propValue = css[propKey];
-        if (isPrivateVar(propKey)) {
-            continue;
-        }
-        else if (isGlobalSelector(propKey)) {
-            for (const selector in propValue) {
-                rules.push(...renderSelector(selector, propValue[selector], [], options));
-            }
-        }
-        else if (isMediaQuery(propKey)) {
-            rules.push(...render(propValue, selectors, {
-                ...options,
-                sublevel: true,
-            }).map((v) => `${propKey} {\n${v}\n}`));
-        }
-        else if (isVar(propKey)) {
-            if (propValue !== undefined && propValue !== null)
-                props.push(`${propKey}: ${propValue};`);
-        }
-        else if (isKeyframes(propKey)) {
-            const keyframes = [];
-            for (const k in propValue) {
-                keyframes.push(...render(propValue[k], [/^\d+$/.test(k) ? `${k}%` : k], {
-                    ...options,
-                    sublevel: true,
-                }));
-            }
-            rules.push(`${propKey} {\n${keyframes.join("\n")}\n}`);
-        }
-        else if (isSelector(propKey)) {
-            rules.push(...renderSelector(propKey, propValue, selectors, options));
-        }
-        else if (options.extraProperties && propKey in options.extraProperties) {
-            const extraProps = options.extraProperties[propKey](propValue);
-            for (const extraPropKey in extraProps) {
-                const inValue = extraProps[extraPropKey];
-                const value = options.onPropertyValue
-                    ? options.onPropertyValue(extraPropKey, inValue)
-                    : inValue;
-                if (value !== undefined && value !== null)
-                    props.push(`${snakeCase(extraPropKey)}: ${value};`);
-            }
-        }
-        else {
-            propKey = snakeCase(propKey);
-            const value = options.onPropertyValue
-                ? options.onPropertyValue(propKey, propValue)
-                : propValue;
-            if (value !== undefined && value !== null)
-                props.push(`${propKey}: ${value};`);
-        }
-    }
-    const renderProps = (level) => {
-        const pad = "\t".repeat(level);
-        return `${pad}${props.join(`\n${pad}`)}`;
-    };
-    if (selectors.length) {
-        const pad = options.sublevel ? `\t` : ``;
-        const selectorStr = pad + selectors.join(`,\n${pad}`);
-        return [
-            ...(props.length
-                ? [
-                    `${selectorStr} {\n${renderProps(options.sublevel ? 2 : 1)}\n${pad}}`,
-                ]
-                : []),
-            ...rules,
-        ];
-    }
-    else {
-        return [...(props.length ? [renderProps(0)] : []), ...rules];
-    }
-}
-
-function randomString() {
-    return Math.random().toString(36).substring(2, 15).slice(0, 8);
-}
-
-function resolveFunction(value, args) {
-    if (typeof value === "function")
-        value = value(...(args || []));
-    return value;
-}
-
-function toArray(value) {
-    return value ? (Array.isArray(value) ? value : [value]) : [];
-}
-
-function create(name, rules) {
-    const id = randomString().slice(0, 6);
-    return {
-        id,
-        name: name,
-        className: `${name}-${id}`,
-        rules: rules.replaceAll(`$id`, `${id}`),
-    };
-}
-function createStyleObject(options) {
-    const className = `${options.name}-$id`;
-    const propsValues = toArray(resolveFunction(options.props));
-    const rules = propsValues
-        .map((v) => typeof v === "string"
-        ? `.${className} {\n${v}\n}`
-        : render(v, [`.${className}`], {
-            extraProperties: options.extraProperties,
-        }).join("\n"))
-        .join("\n");
-    const styleObject = options.cache?.get(rules) || create(options.name, rules);
-    if (options.cache)
-        options.cache.set(rules, styleObject);
-    return styleObject;
-}
-
-function setStyleElementText(element, text) {
-    if ("styleSheet" in element) {
-        element["styleSheet"].cssText = text;
-    }
-    else {
-        element.innerText = "";
-        element.appendChild(document.createTextNode(text));
-    }
-}
-
-function setAttributes(element, attributes) {
-    for (const name in attributes) {
-        const value = attributes[name];
-        if (value !== undefined) {
-            if (value === null) {
-                element.removeAttribute(name);
-            }
-            else {
-                element.setAttribute(name, value);
-            }
-        }
-    }
-}
-function createStyleElement(css, attributes) {
-    const element = document.createElement("style");
-    element.type = "text/css";
-    if (attributes)
-        setAttributes(element, attributes);
-    setStyleElementText(element, css);
-    return element;
-}
-
-function registerStyleElementUsage(style) {
-    let uses = Number(style.getAttribute("data-uses"));
-    uses++;
-    style.setAttribute("data-uses", uses.toString());
-}
-
-function appendStyleElement(css, attributes) {
-    if (Array.isArray(css))
-        css = css.join("\n");
-    const id = attributes?.["id"];
-    const head = document.head || document.getElementsByTagName("head")[0];
-    const prevElement = id && document.getElementById(id);
-    if (prevElement && prevElement instanceof HTMLStyleElement) {
-        setStyleElementText(prevElement, css);
-        registerStyleElementUsage(prevElement);
-        return prevElement;
-    }
-    else {
-        if (prevElement)
-            prevElement.remove();
-        const element = createStyleElement(css, attributes);
-        registerStyleElementUsage(element);
-        head.appendChild(element);
-        return element;
-    }
-}
-
-function findStyleElement(id) {
-    return document.getElementById(id);
-}
-
-function unregisterStyleElementUsage(style) {
-    let uses = Number(style.getAttribute("data-uses"));
-    uses--;
-    if (uses <= 0) {
-        style.remove();
-    }
-    else {
-        style.setAttribute("data-uses", uses.toString());
-    }
-}
-
-const styleObjectCache = new Map();
-function normalizeStyleProps(props) {
-    if (!props)
-        return [];
-    return (Array.isArray(props) ? props : [props])
-        // https://github.com/microsoft/TypeScript/issues/44408
-        .flat(Infinity)
-        .filter((v) => !!v);
-}
-function createStyle(value) {
-    const context = useContext(StyledEngineContext);
-    const [name, setName] = createSignal("");
-    let styleElement;
-    createRenderEffect((prevResult) => {
-        const propsValue = value();
-        let styleObject;
-        if (propsValue) {
-            styleObject = createStyleObject({
-                name: "css",
-                props: mergeStyleProps(normalizeStyleProps(propsValue)),
-                cache: styleObjectCache,
-            });
-            styleElement = findStyleElement(styleObject.id);
-            if (styleElement) {
-                registerStyleElementUsage(styleElement);
-            }
-            else {
-                styleElement = appendStyleElement(styleObject.rules, {
-                    id: styleObject.id,
-                    nonce: context.cache?.nonce,
-                });
-            }
-        }
-        if (prevResult?.styleElement) {
-            unregisterStyleElementUsage(prevResult.styleElement);
-        }
-        if (typeof styleObject?.className === "string") {
-            setName(styleObject.className);
-        }
-        else {
-            setName("");
-        }
-        return {
-            className: styleObject?.className,
-            styleElement,
-        };
-    }, undefined);
-    onCleanup(() => {
-        if (styleElement)
-            unregisterStyleElementUsage(styleElement);
-    });
-    return name;
-}
-
-const resolvedPropKey = "__resolved";
-
-const $$b = createComponentFactory()({
-  name: "MuiGlobalStyles",
-  selfPropNames: ["styles"]
-});
-const GlobalStyles = $$b.component(function GlobalStyles2({
-  props
-}) {
-  createStyle(() => ({
-    "@global": props.styles || {}
-  }));
-  return [];
-});
-
-__astro_tag_component__(GlobalStyles, "@astrojs/solid-js");
 
 /**
  * Returns a number whose value is limited to the given range.
@@ -4438,6 +3778,103 @@ function lighten(inputColor, coefficient) {
     return recomposeColor(color);
 }
 
+// The breakpoint **start** at this value.
+// For instance with the first breakpoint xs: [xs, sm[.
+const values = {
+    xs: 0,
+    sm: 600,
+    md: 900,
+    lg: 1200,
+    xl: 1536, // large screens
+};
+function handleBreakpoints(props, propValue, styleFromPropValue) {
+    const theme = props.theme || {};
+    if (Array.isArray(propValue)) {
+        const themeBreakpoints = theme.breakpoints;
+        return propValue.reduce((acc, item, index) => {
+            acc = {
+                ...acc,
+                ...themeBreakpoints.up(themeBreakpoints.keys[index], styleFromPropValue(propValue[index])),
+            };
+            return acc;
+        }, {});
+    }
+    if (typeof propValue === "object") {
+        const themeBreakpoints = theme.breakpoints;
+        const keys = Object.keys(propValue);
+        return keys.reduce((acc, breakpoint) => {
+            // key is breakpoint
+            if (Object.keys(themeBreakpoints.values || values).indexOf(breakpoint) !==
+                -1) {
+                acc = {
+                    ...acc,
+                    ...themeBreakpoints.up(breakpoint, styleFromPropValue(propValue[breakpoint], breakpoint)),
+                };
+            }
+            else {
+                const cssKey = breakpoint;
+                acc[cssKey] = propValue[cssKey];
+            }
+            return acc;
+        }, {});
+    }
+    const output = styleFromPropValue(propValue);
+    return output;
+}
+function computeBreakpointsBase(values, breakpoints) {
+    const base = {};
+    // fixed value
+    if (typeof values !== "object") {
+        return base;
+    }
+    const breakpointsKeys = Object.keys(breakpoints);
+    if (Array.isArray(values)) {
+        breakpointsKeys.forEach((breakpoint, i) => {
+            if (i < values.length) {
+                base[breakpoint] = true;
+            }
+        });
+    }
+    else {
+        breakpointsKeys.forEach((breakpoint) => {
+            if (values[breakpoint] != null) {
+                base[breakpoint] = true;
+            }
+        });
+    }
+    return base;
+}
+function resolveBreakpointValues(data) {
+    const values = data.values;
+    const base = data.base ||
+        computeBreakpointsBase(values, data.breakpoints || {});
+    const keys = Object.keys(base);
+    if (keys.length === 0) {
+        return data.values;
+    }
+    let previous;
+    return keys.reduce((acc, breakpoint, i) => {
+        if (Array.isArray(values)) {
+            acc[breakpoint] =
+                values[i] != null ? values[i] : values[previous];
+            previous = i;
+        }
+        else if (typeof values === "number") {
+            acc[breakpoint] = values;
+        }
+        else {
+            acc[breakpoint] =
+                values[breakpoint] != null ? values[breakpoint] : values[previous];
+            previous = breakpoint;
+        }
+        return acc;
+    }, {});
+}
+
+const StyledEngineContext = createContext({});
+
+__astro_tag_component__(StyledEngineContext, "@astrojs/solid-js");
+
 function StyledEngineProvider(inProps) {
   return createComponent$1(StyledEngineContext.Provider, {
     get value() {
@@ -4450,6 +3887,71 @@ function StyledEngineProvider(inProps) {
 }
 
 __astro_tag_component__(StyledEngineProvider, "@astrojs/solid-js");
+
+function isPlainObject(item) {
+    return (item !== null && typeof item === "object" && item.constructor === Object);
+}
+function sortKeys(object, keys) {
+    for (const key of keys) {
+        const value = object[key];
+        delete object[key];
+        object[key] = value;
+    }
+}
+function deepmerge(target, source, options = { clone: true }) {
+    const output = options.clone ? { ...target } : target;
+    if (isPlainObject(target) && isPlainObject(source)) {
+        Object.keys(source).forEach((key) => {
+            // Avoid prototype pollution
+            if (key === "__proto__") {
+                return;
+            }
+            if (isPlainObject(source[key]) &&
+                key in target &&
+                isPlainObject(target[key])) {
+                // Since `output` is a clone of `target` and we have narrowed `target` in this block we can cast to the same type.
+                output[key] = deepmerge(target[key], source[key], options);
+            }
+            else {
+                output[key] = source[key];
+            }
+        });
+        if (options.sortKeys)
+            sortKeys(output, Object.keys(source));
+    }
+    return output;
+}
+
+function cloneObject(target) {
+    if (Array.isArray(target)) {
+        const output = [];
+        for (const value of target) {
+            output.push(cloneObject(value));
+        }
+        return output;
+    }
+    else if (isPlainObject(target)) {
+        const output = {};
+        for (const key in target) {
+            if (key === "__proto__") {
+                continue;
+            }
+            output[key] = cloneObject(target[key]);
+        }
+        return output;
+    }
+    else {
+        return target;
+    }
+}
+
+function merge(target, ...sources) {
+    for (const source of sources)
+        deepmerge(target, cloneObject(source), {
+            clone: false,
+        });
+    return target;
+}
 
 const componentsDefault = createComponentsOptions({});
 function createComponentsOptions(options) {
@@ -5009,10 +4511,91 @@ function createZIndex(data) {
 __astro_tag_component__(createZIndexOptions, "@astrojs/solid-js");
 __astro_tag_component__(createZIndex, "@astrojs/solid-js");
 
-function createThemeOptions(options) {
+function renderMediaQuery(comparator, width, units = "px") {
+    let selector;
+    if (comparator === "up") {
+        selector = `(min-width:${width}${units})`;
+    }
+    else if (comparator === "down") {
+        selector = `(max-width:${width}${units})`;
+    }
+    else if (comparator === "between") {
+        const [maxW, minW] = width;
+        selector = `(max-width:${maxW}${units}) and (min-width:${minW}${units})`;
+    }
+    else {
+        throw new Error(`Invalid comparator: ${comparator}`);
+    }
+    return `@media ${selector}`;
+}
+
+const breakpointsDefault = createBreakpointsOptions({
+    columns: 12,
+    keys: ["xs", "sm", "md", "lg", "xl"],
+    values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+    },
+    unit: "px",
+});
+function createBreakpointsOptions(options) {
+    return options;
+}
+function createBreakpoints(options) {
+    const result = {
+        ...breakpointsDefault,
+        ...(options ?? {}),
+        up: (value, css) => {
+            const key = renderMediaQuery("up", result.resolve(value));
+            return (css ? { [key]: css } : key);
+        },
+        down: (value, css) => {
+            const key = renderMediaQuery("down", result.resolve(value));
+            return (css ? { [key]: css } : key);
+        },
+        between: (value, css) => {
+            const key = renderMediaQuery("between", [
+                result.resolve(value[0]),
+                result.resolve(value[1]),
+            ]);
+            return (css ? { [key]: css } : key);
+        },
+        resolve: (value) => typeof value === "number" ? value : result.values[value],
+    };
+    return result;
+}
+
+function createSpacing(options) {
+    if (typeof options === "function")
+        return options;
+    const resolved = (...values) => {
+        return values
+            .map((v) => typeof v === "number" ? `${v * (options ?? 8)}px` : v)
+            .join(" ");
+    };
+    return resolved;
+}
+
+const shapeDefaults = createShapeOptions({
+    borderRadius: 4,
+});
+function createShapeOptions(data) {
+    return data;
+}
+function createShape(options) {
+    const result = {
+        ...merge({}, shapeDefaults, options),
+    };
+    return result;
+}
+
+function createThemeOptions$1(options) {
   return options;
 }
-function createTheme(input = {}) {
+function createTheme$1(input = {}) {
   const theme = {
     direction: "ltr",
     ...input
@@ -5044,14 +4627,101 @@ function createTheme(input = {}) {
   return theme;
 }
 
+__astro_tag_component__(createThemeOptions$1, "@astrojs/solid-js");
+__astro_tag_component__(createTheme$1, "@astrojs/solid-js");
+__astro_tag_component__(createTheme$1, "@astrojs/solid-js");
+
+function makeGetDefaultTheme(createTheme) {
+    let defaultTheme;
+    return function getDefaultTheme() {
+        if (!defaultTheme) {
+            defaultTheme = createTheme();
+        }
+        return defaultTheme;
+    };
+}
+
+const getDefaultTheme$1 = makeGetDefaultTheme(createTheme$1);
+
+let ThemeContext;
+if (process.env.NODE_ENV !== "production") {
+  const global = globalThis;
+  const suid = global.__suid || (global.__suid = {});
+  ThemeContext = suid.systemThemeContext || (suid.systemThemeContext = createContext({}));
+} else {
+  ThemeContext = createContext({});
+}
+const ThemeContext$1 = ThemeContext;
+
+__astro_tag_component__(ThemeContext, "@astrojs/solid-js");
+
+function createThemeOptions(options) {
+  return options;
+}
+function createTheme(data) {
+  const result = {
+    direction: "ltr",
+    shadows: void 0,
+    transitions: void 0,
+    components: void 0,
+    palette: void 0,
+    typography: void 0,
+    zIndex: void 0,
+    mixins: void 0,
+    ...data,
+    breakpoints: createBreakpoints(data?.breakpoints),
+    shape: createShape(data?.shape),
+    spacing: createSpacing(data?.spacing)
+  };
+  return result;
+}
+
 __astro_tag_component__(createThemeOptions, "@astrojs/solid-js");
 __astro_tag_component__(createTheme, "@astrojs/solid-js");
 __astro_tag_component__(createTheme, "@astrojs/solid-js");
 
 const getDefaultTheme = makeGetDefaultTheme(createTheme);
 
-function useTheme(defaultTheme = getDefaultTheme) {
+function isEmptyObject(object) {
+    for (const _key in object)
+        return false;
+    return true;
+}
+
+function useTheme$2(defaultTheme = getDefaultTheme, Context = ThemeContext$1) {
+    const theme = useContext(Context);
+    if (isEmptyObject(theme) && defaultTheme) {
+        if (typeof defaultTheme === "function")
+            return defaultTheme();
+        return defaultTheme;
+    }
+    if (!theme)
+        throw new Error("Theme is not defined");
+    return theme;
+}
+
+function useTheme$1(defaultTheme = getDefaultTheme$1) {
     return useTheme$2(defaultTheme, ThemeContext$1);
+}
+
+function useTheme(defaultTheme) {
+    return useTheme$2(defaultTheme, ThemeContext$1);
+}
+
+function useThemeProps(options) {
+    const theme = useTheme();
+    const set = (v) => v;
+    const propDefaults = typeof options.propDefaults === "function"
+        ? options.propDefaults({
+            set,
+            inProps: options.props,
+        })
+        : options.propDefaults;
+    return mergeProps(...[
+        ...(propDefaults ? [propDefaults] : []),
+        () => theme.components?.[options.name]?.defaultProps || {},
+        options.props,
+    ]);
 }
 
 function ThemeProvider(props) {
@@ -5077,6 +4747,298 @@ const Dynamic = defineComponent(function Dynamic2(props) {
 });
 
 __astro_tag_component__(Dynamic, "@astrojs/solid-js");
+
+function mergeStyleProps(values) {
+    const result = values.reduce((result, value) => {
+        if ("name" in value)
+            result[`--${value.name}`] = "0";
+        deepmerge(result, value, {
+            clone: false,
+            sortKeys: true,
+        });
+        return result;
+    }, {});
+    delete result.name;
+    return result;
+}
+
+function isVar(value) {
+    return value.startsWith("--");
+}
+function isPrivateVar(value) {
+    return value.startsWith("__");
+}
+function isSelector(value) {
+    return /[^a-z-]/i.test(value) && !isVar(value);
+}
+function isGlobalSelector(value) {
+    return value.startsWith("@global");
+}
+function isMediaQuery(value) {
+    return value.startsWith("@media");
+}
+function isKeyframes(value) {
+    return value.startsWith("@keyframes");
+}
+
+function snakeCase(value) {
+    return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
+function renderSelector(propKey, propValue, selectors = [], options = {}) {
+    const subselectors = propKey.split(",").map((v) => {
+        v = v.trim();
+        return v.includes("&") ? v : `& ${v}`;
+    });
+    return render(propValue, (selectors.length ? selectors : [""]).flatMap((selector) => subselectors.map((v) => v.replace(/&/g, selector).trim())), {
+        ...options,
+    });
+}
+function render(css, selectors = [], options = {}) {
+    const props = [];
+    const rules = [];
+    for (let propKey in css) {
+        const propValue = css[propKey];
+        if (isPrivateVar(propKey)) {
+            continue;
+        }
+        else if (isGlobalSelector(propKey)) {
+            for (const selector in propValue) {
+                rules.push(...renderSelector(selector, propValue[selector], [], options));
+            }
+        }
+        else if (isMediaQuery(propKey)) {
+            rules.push(...render(propValue, selectors, {
+                ...options,
+                sublevel: true,
+            }).map((v) => `${propKey} {\n${v}\n}`));
+        }
+        else if (isVar(propKey)) {
+            if (propValue !== undefined && propValue !== null)
+                props.push(`${propKey}: ${propValue};`);
+        }
+        else if (isKeyframes(propKey)) {
+            const keyframes = [];
+            for (const k in propValue) {
+                keyframes.push(...render(propValue[k], [/^\d+$/.test(k) ? `${k}%` : k], {
+                    ...options,
+                    sublevel: true,
+                }));
+            }
+            rules.push(`${propKey} {\n${keyframes.join("\n")}\n}`);
+        }
+        else if (isSelector(propKey)) {
+            rules.push(...renderSelector(propKey, propValue, selectors, options));
+        }
+        else if (options.extraProperties && propKey in options.extraProperties) {
+            const extraProps = options.extraProperties[propKey](propValue);
+            for (const extraPropKey in extraProps) {
+                const inValue = extraProps[extraPropKey];
+                const value = options.onPropertyValue
+                    ? options.onPropertyValue(extraPropKey, inValue)
+                    : inValue;
+                if (value !== undefined && value !== null)
+                    props.push(`${snakeCase(extraPropKey)}: ${value};`);
+            }
+        }
+        else {
+            propKey = snakeCase(propKey);
+            const value = options.onPropertyValue
+                ? options.onPropertyValue(propKey, propValue)
+                : propValue;
+            if (value !== undefined && value !== null)
+                props.push(`${propKey}: ${value};`);
+        }
+    }
+    const renderProps = (level) => {
+        const pad = "\t".repeat(level);
+        return `${pad}${props.join(`\n${pad}`)}`;
+    };
+    if (selectors.length) {
+        const pad = options.sublevel ? `\t` : ``;
+        const selectorStr = pad + selectors.join(`,\n${pad}`);
+        return [
+            ...(props.length
+                ? [
+                    `${selectorStr} {\n${renderProps(options.sublevel ? 2 : 1)}\n${pad}}`,
+                ]
+                : []),
+            ...rules,
+        ];
+    }
+    else {
+        return [...(props.length ? [renderProps(0)] : []), ...rules];
+    }
+}
+
+function randomString() {
+    return Math.random().toString(36).substring(2, 15).slice(0, 8);
+}
+
+function resolveFunction(value, args) {
+    if (typeof value === "function")
+        value = value(...(args || []));
+    return value;
+}
+
+function toArray(value) {
+    return value ? (Array.isArray(value) ? value : [value]) : [];
+}
+
+function create(name, rules) {
+    const id = randomString().slice(0, 6);
+    return {
+        id,
+        name: name,
+        className: `${name}-${id}`,
+        rules: rules.replaceAll(`$id`, `${id}`),
+    };
+}
+function createStyleObject(options) {
+    const className = `${options.name}-$id`;
+    const propsValues = toArray(resolveFunction(options.props));
+    const rules = propsValues
+        .map((v) => typeof v === "string"
+        ? `.${className} {\n${v}\n}`
+        : render(v, [`.${className}`], {
+            extraProperties: options.extraProperties,
+        }).join("\n"))
+        .join("\n");
+    const styleObject = options.cache?.get(rules) || create(options.name, rules);
+    if (options.cache)
+        options.cache.set(rules, styleObject);
+    return styleObject;
+}
+
+function setStyleElementText(element, text) {
+    if ("styleSheet" in element) {
+        element["styleSheet"].cssText = text;
+    }
+    else {
+        element.innerText = "";
+        element.appendChild(document.createTextNode(text));
+    }
+}
+
+function setAttributes(element, attributes) {
+    for (const name in attributes) {
+        const value = attributes[name];
+        if (value !== undefined) {
+            if (value === null) {
+                element.removeAttribute(name);
+            }
+            else {
+                element.setAttribute(name, value);
+            }
+        }
+    }
+}
+function createStyleElement(css, attributes) {
+    const element = document.createElement("style");
+    element.type = "text/css";
+    if (attributes)
+        setAttributes(element, attributes);
+    setStyleElementText(element, css);
+    return element;
+}
+
+function registerStyleElementUsage(style) {
+    let uses = Number(style.getAttribute("data-uses"));
+    uses++;
+    style.setAttribute("data-uses", uses.toString());
+}
+
+function appendStyleElement(css, attributes) {
+    if (Array.isArray(css))
+        css = css.join("\n");
+    const id = attributes?.["id"];
+    const head = document.head || document.getElementsByTagName("head")[0];
+    const prevElement = id && document.getElementById(id);
+    if (prevElement && prevElement instanceof HTMLStyleElement) {
+        setStyleElementText(prevElement, css);
+        registerStyleElementUsage(prevElement);
+        return prevElement;
+    }
+    else {
+        if (prevElement)
+            prevElement.remove();
+        const element = createStyleElement(css, attributes);
+        registerStyleElementUsage(element);
+        head.appendChild(element);
+        return element;
+    }
+}
+
+function findStyleElement(id) {
+    return document.getElementById(id);
+}
+
+function unregisterStyleElementUsage(style) {
+    let uses = Number(style.getAttribute("data-uses"));
+    uses--;
+    if (uses <= 0) {
+        style.remove();
+    }
+    else {
+        style.setAttribute("data-uses", uses.toString());
+    }
+}
+
+const styleObjectCache = new Map();
+function normalizeStyleProps(props) {
+    if (!props)
+        return [];
+    return (Array.isArray(props) ? props : [props])
+        // https://github.com/microsoft/TypeScript/issues/44408
+        .flat(Infinity)
+        .filter((v) => !!v);
+}
+function createStyle(value) {
+    const context = useContext(StyledEngineContext);
+    const [name, setName] = createSignal("");
+    let styleElement;
+    createRenderEffect((prevResult) => {
+        const propsValue = value();
+        let styleObject;
+        if (propsValue) {
+            styleObject = createStyleObject({
+                name: "css",
+                props: mergeStyleProps(normalizeStyleProps(propsValue)),
+                cache: styleObjectCache,
+            });
+            styleElement = findStyleElement(styleObject.id);
+            if (styleElement) {
+                registerStyleElementUsage(styleElement);
+            }
+            else {
+                styleElement = appendStyleElement(styleObject.rules, {
+                    id: styleObject.id,
+                    nonce: context.cache?.nonce,
+                });
+            }
+        }
+        if (prevResult?.styleElement) {
+            unregisterStyleElementUsage(prevResult.styleElement);
+        }
+        if (typeof styleObject?.className === "string") {
+            setName(styleObject.className);
+        }
+        else {
+            setName("");
+        }
+        return {
+            className: styleObject?.className,
+            styleElement,
+        };
+    }, undefined);
+    onCleanup(() => {
+        if (styleElement)
+            unregisterStyleElementUsage(styleElement);
+    });
+    return name;
+}
+
+const resolvedPropKey = "__resolved";
 
 function resolve(css, onProp, cssTarget = {}) {
     for (const name in css) {
@@ -5237,6 +5199,9 @@ function createUnaryUnit(theme, themeKey, defaultValue, propName) {
         ].join("\n"));
     }
     return () => undefined;
+}
+function createUnarySpacing(theme) {
+    return createUnaryUnit(theme, "spacing.resolve", 8, "spacing.resolve");
 }
 
 const dirMap = {
@@ -5606,50 +5571,189 @@ function createStyled(config) {
 __astro_tag_component__(createStyled, "@astrojs/solid-js");
 
 const skipRootProps = [...skipProps, "classes"];
-const _hoc_function$2 = createStyled({
-  onUseTheme: () => useTheme()
+const _hoc_function$5 = createStyled({
+  onUseTheme: () => useTheme$1()
 });
 
-__astro_tag_component__(_hoc_function$2, "@astrojs/solid-js");
+__astro_tag_component__(_hoc_function$5, "@astrojs/solid-js");
 
-// It should to be noted that this function isn't equivalent to `text-transform: capitalize`.
-//
-// A strict capitalization should uppercase the first letter of each word in the sentence.
-// We only handle the first word.
-function capitalize(string) {
-    if (typeof string !== "string") {
-        throw new Error("MUI: `capitalize(string)` expects a string argument.");
-    }
-    return string.charAt(0).toUpperCase() + string.slice(1);
+// https://github.com/mui/material-ui/blob/master/packages/mui-base/src/composeClasses/composeClasses.ts
+function composeClasses(slots, getUtilityClass, classes) {
+    const output = {};
+    Object.keys(slots).forEach(
+    // `Objet.keys(slots)` can't be wider than `T` because we infer `T` from `slots`.
+    // @ts-expect-error https://github.com/microsoft/TypeScript/pull/12253#issuecomment-263132208
+    (slot) => {
+        output[slot] = slots[slot]
+            .reduce((acc, key) => {
+            if (key) {
+                if (classes && classes[key]) {
+                    acc.push(classes[key]);
+                }
+                acc.push(getUtilityClass(key));
+            }
+            return acc;
+        }, [])
+            .join(" ");
+    });
+    return output;
 }
 
-function useControlled(props) {
-    // isControlled is ignored in the hook dependency lists as it should never change.
-    const isControlled = props.controlled() !== undefined;
-    const [valueState, setValue] = createSignal(props.default());
-    const value = createMemo(() => isControlled ? props.controlled() : valueState());
-    if (process.env.NODE_ENV !== "production") {
-        let first = true;
-        createEffect(on(() => props.default(), () => {
-            if (first) {
-                first = false;
-                return;
-            }
-            else if (!isControlled) {
-                console.error([
-                    `MUI: A component is changing the default ${props.state ?? "value"} state of an uncontrolled ${props.name} after being initialized. ` +
-                        `To suppress this warning opt to use a controlled ${props.name}.`,
-                ].join("\n"));
-            }
-        }));
+function componentTrap(fn) {
+    function Component(props) {
+        return fn(props);
     }
-    const setValueIfUncontrolled = (newValue) => {
-        if (!isControlled) {
-            setValue(newValue);
+    Object.defineProperty(Component, "name", {
+        value: fn.name,
+    });
+    Component.toString = fn.toString;
+    return Component;
+}
+
+function createComponentFactory() {
+    return function (options) {
+        function useClasses(ownerState) {
+            const haveSlotClasses = !!options.slotClasses;
+            const compose = () => {
+                if (!options.slotClasses)
+                    throw new Error(`'slotClasses' option is not defined`);
+                if (!options.utilityClass)
+                    throw new Error(`'utilityClass' option is not defined`);
+                return composeClasses(options.slotClasses(ownerState), options.utilityClass, ownerState["classes"] ?? "");
+            };
+            const classes = createMutable({});
+            if (haveSlotClasses)
+                createComputed(() => {
+                    const result = compose();
+                    batch(() => {
+                        for (const slot in result)
+                            classes[slot] = result[slot];
+                    });
+                });
+            return classes;
         }
+        function splitInProps(allProps) {
+            const [props, otherProps] = splitProps(allProps, options.selfPropNames);
+            return { allProps, props, otherProps };
+        }
+        function useThemeProps$1(input) {
+            return useThemeProps({
+                propDefaults: options.propDefaults,
+                ...input,
+                name: options.name,
+            });
+        }
+        function useProps(props) {
+            const themeProps = useThemeProps$1({ props });
+            return splitInProps(themeProps);
+        }
+        function defineComponent(cb) {
+            cb.toString = () => `${options.name}-root`;
+            return componentTrap(cb);
+        }
+        function component(cb) {
+            const Component = defineComponent(function Component(inProps) {
+                const { allProps, otherProps, props } = useProps(inProps);
+                const classes = (options.autoCallUseClasses ?? true)
+                    ? useClasses(allProps)
+                    : {};
+                return cb({
+                    allProps,
+                    otherProps,
+                    props,
+                    classes,
+                });
+            });
+            Object.defineProperty(Component, "name", { value: cb.name });
+            return Component;
+        }
+        return {
+            name: options.name,
+            selfPropNames: options.selfPropNames,
+            component,
+            defineComponent,
+            useClasses,
+            useThemeProps: useThemeProps$1,
+            useProps,
+            splitInProps,
+        };
     };
-    return [value, setValueIfUncontrolled];
 }
+
+const $$p = createComponentFactory()({
+  name: "MuiBox",
+  selfPropNames: [],
+  utilityClass: slot => `MuiBox-${slot}`,
+  slotClasses: () => ({
+    root: ["root"]
+  })
+});
+const Box = $$p.component(function Box2({
+  otherProps,
+  classes
+}) {
+  const theme = useTheme$1();
+  return createComponent$1(Box$1, mergeProps({
+    theme: theme
+  }, otherProps, {
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    }
+  }));
+});
+
+__astro_tag_component__(Box, "@astrojs/solid-js");
+
+const _tmpl$$8 = ["<span", "></span>"];
+const $$o = createComponentFactory()({
+  name: "MuiRipple",
+  selfPropNames: ["class", "classes", "pulsate", "rippleX", "rippleY", "rippleSize", "in", "onExited", "timeout"],
+  propDefaults: ({
+    set
+  }) => set({
+    pulsate: false,
+    classes: {}
+  })
+});
+const Ripple = $$o.component(function Ripple2({
+  props,
+  otherProps
+}) {
+  const [leaving, setLeaving] = createSignal(false);
+  const rippleClassName = createMemo(() => clsx(props.class, props.classes.ripple, props.classes.rippleVisible, props.classes.ripplePulsate && {
+    [props.classes.ripplePulsate]: props.pulsate
+  }));
+  const rippleStyles = createMemo(() => ({
+    width: `${props.rippleSize}px`,
+    height: `${props.rippleSize}px`,
+    top: `${-(props.rippleSize / 2) + props.rippleY}px`,
+    left: `${-(props.rippleSize / 2) + props.rippleX}px`
+  }));
+  const childClassName = createMemo(() => clsx(props.classes.child, props.classes.childLeaving && {
+    [props.classes.childLeaving]: leaving()
+  }, props.classes.childPulsate && {
+    [props.classes.childPulsate]: props.pulsate
+  }));
+  let timeoutId;
+  onCleanup(() => clearTimeout(timeoutId));
+  return createComponent$1(Box, {
+    component: "span",
+    get ["class"]() {
+      return rippleClassName();
+    },
+    get style() {
+      return rippleStyles();
+    },
+    get sx() {
+      return otherProps.sx;
+    },
+    get children() {
+      return ssr(_tmpl$$8, ssrHydrationKey() + ssrAttribute("class", escape(childClassName(), true), false));
+    }
+  });
+});
+
+__astro_tag_component__(Ripple, "@astrojs/solid-js");
 
 const defaultGenerator = (componentName) => componentName;
 const createClassNameGenerator = () => {
@@ -5695,59 +5799,15 @@ function generateUtilityClasses(componentName, slots) {
 __astro_tag_component__(generateUtilityClasses, "@astrojs/solid-js");
 __astro_tag_component__(generateUtilityClass, "@astrojs/solid-js");
 
-function getInputBaseUtilityClass(slot) {
-    return generateUtilityClass("MuiInputBase", slot);
-}
-const inputBaseClasses = generateUtilityClasses("MuiInputBase", [
+const touchRippleClasses = generateUtilityClasses("MuiTouchRipple", [
     "root",
-    "formControl",
-    "focused",
-    "disabled",
-    "adornedStart",
-    "adornedEnd",
-    "error",
-    "sizeSmall",
-    "multiline",
-    "colorSecondary",
-    "fullWidth",
-    "hiddenLabel",
-    "input",
-    "inputSizeSmall",
-    "inputMultiline",
-    "inputTypeSearch",
-    "inputAdornedStart",
-    "inputAdornedEnd",
-    "inputHiddenLabel",
+    "ripple",
+    "rippleVisible",
+    "ripplePulsate",
+    "child",
+    "childLeaving",
+    "childPulsate",
 ]);
-
-// Supports determination of isControlled().
-// Controlled input accepts its current value as a prop.
-//
-// @see https://facebook.github.io/react/docs/forms.html#controlled-components
-// @param value
-// @returns {boolean} true if string (including '') or number (including zero)
-function hasValue(value) {
-    return value != null && !(Array.isArray(value) && value.length === 0);
-}
-// Determine if field is empty or filled.
-// Response determines if label is presented above field or as placeholder.
-//
-// @param obj
-// @param SSR
-// @returns {boolean} False when not present or empty string.
-//                    True when any number or string with length.
-function isFilled(obj, SSR = false) {
-    return (obj &&
-        ((hasValue(obj.value) && obj.value !== "") ||
-            (SSR && hasValue(obj.defaultValue) && obj.defaultValue !== "")));
-}
-
-/**
- * Determines if a given element is a DOM element name (i.e. not a React component).
- */
-function isHostComponent(element) {
-    return typeof element === "string";
-}
 
 function createRef(input) {
     const cb = (e) => {
@@ -5765,994 +5825,11 @@ function createRef(input) {
     return cb;
 }
 
-const $$a = createComponentFactory()({
-  name: "MuiInputBase",
-  propDefaults: ({
-    set
-  }) => set({
-    components: {},
-    componentsProps: {},
-    fullWidth: false,
-    inputComponent: "input",
-    inputProps: {},
-    multiline: false,
-    type: "text",
-    disableInjectingGlobalStyles: false
-  }),
-  selfPropNames: ["aria-describedby", "autoComplete", "autoFocus", "classes", "color", "components", "componentsProps", "defaultValue", "disableInjectingGlobalStyles", "disabled", "endAdornment", "error", "fullWidth", "id", "inputComponent", "inputProps", "inputProps", "inputRef", "margin", "maxRows", "minRows", "multiline", "name", "onBlur", "onChange", "onFocus", "onKeyDown", "onKeyUp", "placeholder", "readOnly", "renderSuffix", "required", "rows", "size", "startAdornment", "type", "value"],
-  utilityClass: getInputBaseUtilityClass,
-  autoCallUseClasses: false,
-  slotClasses: ownerState => ({
-    root: ["root", `color${capitalize(ownerState.color)}`, !!ownerState.disabled && "disabled", !!ownerState.error && "error", !!ownerState.fullWidth && "fullWidth", ownerState.focused && "focused", !!ownerState.formControl && "formControl", ownerState.size === "small" && "sizeSmall", ownerState.multiline && "multiline", !!ownerState.startAdornment && "adornedStart", !!ownerState.endAdornment && "adornedEnd", !!ownerState.hiddenLabel && "hiddenLabel"],
-    input: ["input", !!ownerState.disabled && "disabled", ownerState.type === "search" && "inputTypeSearch", ownerState.multiline && "inputMultiline", ownerState.size === "small" && "inputSizeSmall", !!ownerState.hiddenLabel && "inputHiddenLabel", !!ownerState.startAdornment && "inputAdornedStart", !!ownerState.endAdornment && "inputAdornedEnd"]
-  })
-});
-const rootOverridesResolver = (props, styles) => {
-  const ownerState = props.ownerState;
-  return [styles.root, !!ownerState.formControl && styles.formControl, !!ownerState.startAdornment && styles.adornedStart, !!ownerState.endAdornment && styles.adornedEnd, !!ownerState.error && styles.error, ownerState.size === "small" && styles.sizeSmall, ownerState.multiline && styles.multiline, ownerState.color && styles[`color${capitalize(ownerState.color)}`], !!ownerState.fullWidth && styles.fullWidth, !!ownerState.hiddenLabel && styles.hiddenLabel];
-};
-const inputOverridesResolver = (props, styles) => {
-  const ownerState = props.ownerState;
-  return [styles.input, ownerState.size === "small" && styles.inputSizeSmall, ownerState.multiline && styles.inputMultiline, ownerState.type === "search" && styles.inputTypeSearch, !!ownerState.startAdornment && styles.inputAdornedStart, !!ownerState.endAdornment && styles.inputAdornedEnd, !!ownerState.hiddenLabel && styles.inputHiddenLabel];
-};
-const InputBaseRoot = _hoc_function$2("div", {
-  name: "MuiInputBase",
-  slot: "Root",
-  overridesResolver: rootOverridesResolver
-})(({
-  theme,
-  ownerState
-}) => ({
-  ...theme.typography.body1,
-  color: theme.palette.text.primary,
-  lineHeight: "1.4375em",
-  boxSizing: "border-box",
-  position: "relative",
-  cursor: "text",
-  display: "inline-flex",
-  alignItems: "center",
-  [`&.${inputBaseClasses.disabled}`]: {
-    color: theme.palette.text.disabled,
-    cursor: "default"
-  },
-  ...(ownerState.multiline && {
-    padding: "4px 0 5px",
-    ...(ownerState.size === "small" && {
-      paddingTop: 1
-    })
-  }),
-  ...(ownerState.fullWidth && {
-    width: "100%"
-  })
-}));
-const InputBaseComponent = _hoc_function$2("input", {
-  name: "MuiInputBase",
-  slot: "Input",
-  overridesResolver: inputOverridesResolver
-})(({
-  theme,
-  ownerState
-}) => {
-  const light = theme.palette.mode === "light";
-  const placeholder = {
-    color: "currentColor",
-    opacity: light ? 0.42 : 0.5,
-    transition: theme.transitions.create("opacity", {
-      duration: theme.transitions.duration.shorter
-    })
-  };
-  const placeholderHidden = {
-    opacity: "0 !important"
-  };
-  const placeholderVisible = {
-    opacity: light ? 0.42 : 0.5
-  };
-  return {
-    font: "inherit",
-    letterSpacing: "inherit",
-    color: "currentColor",
-    padding: "4px 0 5px",
-    border: 0,
-    boxSizing: "content-box",
-    background: "none",
-    height: "1.4375em",
-    margin: 0,
-    WebkitTapHighlightColor: "transparent",
-    display: "block",
-    minWidth: 0,
-    width: "100%",
-    animationName: "mui-auto-fill-cancel",
-    animationDuration: "10ms",
-    "&::-webkit-input-placeholder": placeholder,
-    "&::-moz-placeholder": placeholder,
-    "&:-ms-input-placeholder": placeholder,
-    "&::-ms-input-placeholder": placeholder,
-    "&:focus": {
-      outline: 0
-    },
-    "&:invalid": {
-      boxShadow: "none"
-    },
-    "&::-webkit-search-decoration": {
-      WebkitAppearance: "none"
-    },
-    [`label[data-shrink=false] + .${inputBaseClasses.formControl} &`]: {
-      "&::-webkit-input-placeholder": placeholderHidden,
-      "&::-moz-placeholder": placeholderHidden,
-      "&:-ms-input-placeholder": placeholderHidden,
-      "&::-ms-input-placeholder": placeholderHidden,
-      "&:focus::-webkit-input-placeholder": placeholderVisible,
-      "&:focus::-moz-placeholder": placeholderVisible,
-      "&:focus:-ms-input-placeholder": placeholderVisible,
-      "&:focus::-ms-input-placeholder": placeholderVisible
-    },
-    [`&.${inputBaseClasses.disabled}`]: {
-      opacity: 1,
-      WebkitTextFillColor: theme.palette.text.disabled
-    },
-    "&:-webkit-autofill": {
-      animationDuration: "5000s",
-      animationName: "mui-auto-fill"
-    },
-    ...(ownerState.size === "small" && {
-      paddingTop: 1
-    }),
-    ...(ownerState.multiline && {
-      height: "auto",
-      resize: "none",
-      padding: 0,
-      paddingTop: 0
-    }),
-    ...(ownerState.type === "search" && {
-      MozAppearance: "textfield"
-    })
-  };
-});
-const inputGlobalStyles = () => createComponent$1(GlobalStyles, {
-  styles: {
-    "@keyframes mui-auto-fill": {
-      from: {
-        display: "block"
-      }
-    },
-    "@keyframes mui-auto-fill-cancel": {
-      from: {
-        display: "block"
-      }
-    }
-  }
-});
-const InputBase = $$a.component(function InputBase2({
-  allProps,
-  otherProps,
-  props
-}) {
-  const inputValue = () => props.inputProps.value != null ? props.inputProps.value : props.value;
-  const isControlled = (inputValue() ?? null) !== null;
-  const [value, setValue] = useControlled({
-    controlled: () => inputValue(),
-    default: () => props.defaultValue,
-    name: "InputBase"
-  });
-  const inputRef = createRef({
-    ref: instance => {
-      if (process.env.NODE_ENV !== "production") {
-        if (instance && instance.nodeName !== "INPUT" && !instance.focus) {
-          console.error(["MUI: You have provided a `inputComponent` to the input component", "that does not correctly handle the `ref` prop.", "Make sure the `ref` prop is called with a HTMLInputElement."].join("\n"));
-        }
-      }
-      if (typeof props.inputRef === "function") props.inputRef(instance);
-    }
-  });
-  const [focused, setFocused] = createSignal(false);
-  const muiFormControl = useFormControl();
-  if (process.env.NODE_ENV !== "production") ;
-  const partialFcs = formControlState({
-    props: allProps,
-    muiFormControl,
-    states: ["color", "disabled", "error", "hiddenLabel", "size", "required", "filled"]
-  });
-  const fcs = mergeProps(partialFcs, {
-    get focused() {
-      return muiFormControl ? muiFormControl.focused : focused();
-    }
-  });
-  const onFilled = () => muiFormControl && muiFormControl.onFilled;
-  const onEmpty = () => muiFormControl && muiFormControl.onEmpty;
-  const checkDirty = obj => {
-    if (isFilled(obj)) {
-      onFilled()?.();
-    } else {
-      onEmpty()?.();
-    }
-  };
-  createRenderEffect(() => {
-    if (isControlled) {
-      checkDirty({
-        value: value()
-      });
-    }
-  });
-  const isMultilineInput = () => props.multiline && props.inputComponent === "input";
-  const InputComponent = () => {
-    const InputComponent2 = props.inputComponent;
-    if (isMultilineInput()) ;
-    return InputComponent2;
-  };
-  const inputProps = createMemo(() => {
-    let inputProps2 = props.inputProps;
-    if (isMultilineInput()) {
-      if (props.rows) {
-        if (process.env.NODE_ENV !== "production") {
-          if (props.minRows || props.maxRows) {
-            console.warn("MUI: You can not use the `minRows` or `maxRows` props when the input `rows` prop is set.");
-          }
-        }
-        inputProps2 = {
-          type: void 0,
-          ["minRows"]: props.rows,
-          ["maxRows"]: props.rows,
-          ...inputProps2
-        };
-      } else {
-        inputProps2 = {
-          type: void 0,
-          ["maxRows"]: props.maxRows,
-          ["minRows"]: props.minRows,
-          ...inputProps2
-        };
-      }
-    }
-    return mergeProps(inputProps2, () => props.componentsProps.input || {});
-  });
-  const ownerState = mergeProps(allProps, {
-    get color() {
-      return fcs.color || "primary";
-    },
-    get disabled() {
-      return fcs.disabled;
-    },
-    get error() {
-      return fcs.error;
-    },
-    get focused() {
-      return fcs.focused;
-    },
-    get formControl() {
-      return muiFormControl;
-    },
-    get hiddenLabel() {
-      return fcs.hiddenLabel;
-    },
-    get size() {
-      return fcs.size;
-    }
-  });
-  const classes = $$a.useClasses(ownerState);
-  const Root = () => props.components.Root || InputBaseRoot;
-  const rootProps = () => props.componentsProps.root || {};
-  const Input = () => props.components.Input || InputBaseComponent;
-  const rootOwnerState = mergeProps(ownerState, () => rootProps()["ownerState"] || {});
-  const inputOwnerState = mergeProps(ownerState, () => inputProps()["ownerState"] || {});
-  const renderSuffixProps = mergeProps(fcs, {
-    get startAdornment() {
-      return props.startAdornment;
-    }
-  });
-  const suffix = createMemo(() => props.renderSuffix?.(renderSuffixProps));
-  return [!props.disableInjectingGlobalStyles && inputGlobalStyles(), createComponent$1(Dynamic, mergeProps(rootProps, otherProps, {
-    get component() {
-      return Root();
-    }
-  }, () => !isHostComponent(Root()) && {
-    ownerState: rootOwnerState
-  }, {
-    onClick: event => {
-      if (inputRef.ref && event.currentTarget === event.target) {
-        inputRef.ref.focus();
-      }
-      if (typeof otherProps.onClick === "function") {
-        otherProps.onClick(event);
-      }
-    },
-    get ["class"]() {
-      return clsx(classes.root, rootProps().class, otherProps.class);
-    },
-    get children() {
-      return [props.startAdornment, createComponent$1(FormControlContext.Provider, {
-        value: void 0,
-        get children() {
-          return createComponent$1(Dynamic, mergeProps({
-            get component() {
-              return Input();
-            },
-            ownerState: ownerState,
-            get ["aria-invalid"]() {
-              return fcs.error;
-            },
-            get ["aria-describedby"]() {
-              return props["aria-describedby"];
-            },
-            get autocomplete() {
-              return props.autoComplete;
-            },
-            get autofocus() {
-              return props.autoFocus;
-            },
-            get disabled() {
-              return fcs.disabled;
-            },
-            get id() {
-              return props.id;
-            },
-            onAnimationStart: event => {
-              checkDirty(event.animationName === "mui-auto-fill-cancel" ? inputRef.ref : {
-                value: "x"
-              });
-            },
-            get name() {
-              return props.name;
-            },
-            get placeholder() {
-              return props.placeholder;
-            },
-            get readOnly() {
-              return props.readOnly;
-            },
-            get required() {
-              return fcs.required;
-            }
-          }, () => ({
-            rows: props.rows
-          }), {
-            get onKeyDown() {
-              return props.onKeyDown;
-            },
-            get onKeyUp() {
-              return props.onKeyUp;
-            },
-            get type() {
-              return props.type;
-            }
-          }, inputProps, () => !isHostComponent(Input()) && {
-            as: InputComponent(),
-            ownerState: inputOwnerState
-          }, {
-            get ["class"]() {
-              return clsx(classes.input, inputProps().class);
-            },
-            onBlur: event => {
-              props.onBlur?.(event);
-              if (typeof props.inputProps.onBlur === "function") {
-                props.inputProps.onBlur(event);
-              }
-              if (muiFormControl && muiFormControl.onBlur) {
-                muiFormControl.onBlur();
-              } else {
-                setFocused(false);
-              }
-            },
-            onInput: event => {
-              if (!isControlled) {
-                const element = event.target || inputRef.ref;
-                if (element == null) {
-                  throw new Error("MUI: Expected valid input target. Did you use a custom `inputComponent` and forget to forward refs? See https://mui.com/r/input-component-ref-interface for more info.");
-                }
-                checkDirty({
-                  value: element.value
-                });
-              }
-            },
-            onFocus: event => {
-              if (fcs.disabled) {
-                event.stopPropagation();
-                return;
-              }
-              if (typeof props.onFocus === "function") {
-                props.onFocus(event);
-              }
-              if (typeof props.inputProps.onFocus === "function") {
-                props.inputProps.onFocus(event);
-              }
-              if (muiFormControl && muiFormControl.onFocus) {
-                muiFormControl.onFocus();
-              } else {
-                setFocused(true);
-              }
-            }
-          }));
-        }
-      }), props.endAdornment, suffix()];
-    }
-  }))];
-});
-
-__astro_tag_component__(rootOverridesResolver, "@astrojs/solid-js");
-__astro_tag_component__(inputOverridesResolver, "@astrojs/solid-js");
-__astro_tag_component__(InputBase, "@astrojs/solid-js");
-
-function getInputUtilityClass(slot) {
-    return generateUtilityClass("MuiInput", slot);
-}
-const inputClasses = {
-    ...inputBaseClasses,
-    ...generateUtilityClasses("MuiInput", ["root", "underline", "input"]),
-};
-
-const $$9 = createComponentFactory()({
-  name: "MuiInput",
-  propDefaults: ({
-    set
-  }) => set({
-    components: {},
-    fullWidth: false,
-    inputComponent: "input",
-    multiline: false,
-    type: "text"
-  }),
-  selfPropNames: ["classes", "disableUnderline"],
-  utilityClass: getInputUtilityClass,
-  slotClasses: ownerState => ({
-    root: ["root", !ownerState.disableUnderline && "underline"],
-    input: ["input"]
-  })
-});
-const InputRoot = _hoc_function$2(InputBaseRoot, {
-  skipProps: skipRootProps.filter(v => v !== "classes"),
-  name: "MuiInput",
-  slot: "Root",
-  overridesResolver: (props, styles) => {
-    const {
-      ownerState
-    } = props;
-    return [...rootOverridesResolver(props, styles), !ownerState.disableUnderline && styles.underline];
-  }
-})(({
-  theme,
-  ownerState
-}) => {
-  const light = theme.palette.mode === "light";
-  const bottomLineColor = light ? "rgba(0, 0, 0, 0.42)" : "rgba(255, 255, 255, 0.7)";
-  return {
-    position: "relative",
-    ...(ownerState.formControl && {
-      "label + &": {
-        marginTop: 16
-      }
-    }),
-    ...(!ownerState.disableUnderline && {
-      "&:after": {
-        borderBottom: `2px solid ${theme.palette[ownerState.color].main}`,
-        left: 0,
-        bottom: 0,
-        content: '""',
-        position: "absolute",
-        right: 0,
-        transform: "scaleX(0)",
-        transition: theme.transitions.create("transform", {
-          duration: theme.transitions.duration.shorter,
-          easing: theme.transitions.easing.easeOut
-        }),
-        pointerEvents: "none"
-      },
-      [`&.${inputClasses.focused}:after`]: {
-        transform: "scaleX(1)"
-      },
-      [`&.${inputClasses.error}:after`]: {
-        borderBottomColor: theme.palette.error.main,
-        transform: "scaleX(1)"
-      },
-      "&:before": {
-        borderBottom: `1px solid ${bottomLineColor}`,
-        left: 0,
-        bottom: 0,
-        content: '"\\00a0"',
-        position: "absolute",
-        right: 0,
-        transition: theme.transitions.create("border-bottom-color", {
-          duration: theme.transitions.duration.shorter
-        }),
-        pointerEvents: "none"
-      },
-      [`&:hover:not(.${inputClasses.disabled}):before`]: {
-        borderBottom: `2px solid ${theme.palette.text.primary}`,
-        "@media (hover: none)": {
-          borderBottom: `1px solid ${bottomLineColor}`
-        }
-      },
-      [`&.${inputClasses.disabled}:before`]: {
-        borderBottomStyle: "dotted"
-      }
-    })
-  };
-});
-const InputInput = _hoc_function$2(InputBaseComponent, {
-  name: "MuiInput",
-  slot: "Input",
-  overridesResolver: inputOverridesResolver
-})({});
-const Input = $$9.component(function Input2({
-  classes,
-  otherProps,
-  props
-}) {
-  const componentsProps = createMemo(() => {
-    const ownerState = {
-      disableUnderline: props.disableUnderline
-    };
-    const inputComponentsProps = {
-      root: {
-        ownerState
-      }
-    };
-    return otherProps.componentsProps ? deepmerge(otherProps.componentsProps, inputComponentsProps) : inputComponentsProps;
-  });
-  const allClasses = mergeProps(classes, () => props.classes || {});
-  return createComponent$1(InputBase, mergeProps(otherProps, {
-    get components() {
-      return {
-        Root: InputRoot,
-        Input: InputInput,
-        ...(otherProps.components || {})
-      };
-    },
-    get componentsProps() {
-      return componentsProps();
-    },
-    classes: allClasses
-  }));
-});
-
-__astro_tag_component__(Input, "@astrojs/solid-js");
-
-function getFormLabelUtilityClasses(slot) {
-    return generateUtilityClass("MuiFormLabel", slot);
-}
-const formLabelClasses = generateUtilityClasses("MuiFormLabel", [
-    "root",
-    "colorSecondary",
-    "focused",
-    "disabled",
-    "error",
-    "filled",
-    "required",
-    "asterisk",
-]);
-
-const $$8 = createComponentFactory()({
-  name: "MuiFormLabel",
-  propDefaults: ({
-    set
-  }) => set({
-    component: "label"
-  }),
-  selfPropNames: ["children", "classes", "color", "disabled", "error", "filled", "focused", "required"],
-  autoCallUseClasses: false,
-  utilityClass: getFormLabelUtilityClasses,
-  slotClasses: ownerState => ({
-    root: ["root", `color${capitalize(ownerState.color)}`, !!ownerState.disabled && "disabled", !!ownerState.error && "error", !!ownerState.filled && "filled", !!ownerState.focused && "focused", !!ownerState.required && "required"],
-    asterisk: ["asterisk", !!ownerState.error && "error"]
-  })
-});
-const FormLabelRoot = _hoc_function$2("label", {
-  name: "MuiFormLabel",
-  slot: "Root",
-  overridesResolver: ({
-    ownerState
-  }, styles) => {
-    return {
-      ...styles.root,
-      ...(ownerState.color === "secondary" && styles.colorSecondary),
-      ...(ownerState.filled && styles.filled)
-    };
-  }
-})(({
-  theme,
-  ownerState
-}) => ({
-  color: theme.palette.text.secondary,
-  ...theme.typography.body1,
-  lineHeight: "1.4375em",
-  padding: 0,
-  position: "relative",
-  [`&.${formLabelClasses.focused}`]: {
-    color: theme.palette[ownerState.color].main
-  },
-  [`&.${formLabelClasses.disabled}`]: {
-    color: theme.palette.text.disabled
-  },
-  [`&.${formLabelClasses.error}`]: {
-    color: theme.palette.error.main
-  }
-}));
-const AsteriskComponent = _hoc_function$2("span", {
-  name: "MuiFormLabel",
-  slot: "Asterisk",
-  overridesResolver: (props, styles) => styles.asterisk
-})(({
-  theme
-}) => ({
-  [`&.${formLabelClasses.error}`]: {
-    color: theme.palette.error.main
-  }
-}));
-const FormLabel = $$8.component(function FormLabel2({
-  allProps,
-  otherProps,
-  props
-}) {
-  const muiFormControl = useFormControl();
-  const fcs = formControlState({
-    props: allProps,
-    muiFormControl,
-    states: ["color", "required", "focused", "disabled", "error", "filled"]
-  });
-  const ownerState = mergeProps(allProps, {
-    get color() {
-      return fcs.color || "primary";
-    },
-    get disabled() {
-      return fcs.disabled;
-    },
-    get error() {
-      return fcs.error;
-    },
-    get filled() {
-      return fcs.filled;
-    },
-    get focused() {
-      return fcs.focused;
-    },
-    get required() {
-      return fcs.required;
-    }
-  });
-  const classes = $$8.useClasses(ownerState);
-  return createComponent$1(FormLabelRoot, mergeProps(otherProps, {
-    get as() {
-      return otherProps.component;
-    },
-    ownerState: ownerState,
-    get ["class"]() {
-      return clsx(classes.root, otherProps.class);
-    },
-    get children() {
-      return [props.children, createComponent$1(Show, {
-        get when() {
-          return fcs.required;
-        },
-        get children() {
-          return createComponent$1(AsteriskComponent, {
-            ownerState: ownerState,
-            "aria-hidden": true,
-            get ["class"]() {
-              return classes.asterisk;
-            },
-            get children() {
-              return ["\u2009", "*"];
-            }
-          });
-        }
-      })];
-    }
-  }));
-});
-
-__astro_tag_component__(FormLabel, "@astrojs/solid-js");
-
-function getInputLabelUtilityClasses(slot) {
-    return generateUtilityClass("MuiInputLabel", slot);
-}
-generateUtilityClasses("MuiInputLabel", [
-    "root",
-    "focused",
-    "disabled",
-    "error",
-    "required",
-    "asterisk",
-    "formControl",
-    "sizeSmall",
-    "shrink",
-    "animated",
-    "standard",
-    "filled",
-    "outlined",
-]);
-
-const $$7 = createComponentFactory()({
-  name: "MuiInputLabel",
-  propDefaults: ({
-    set
-  }) => set({
-    disableAnimation: false
-  }),
-  selfPropNames: ["children", "classes", "color", "disableAnimation", "disabled", "error", "focused", "margin", "required", "shrink", "variant"],
-  autoCallUseClasses: false,
-  utilityClass: getInputLabelUtilityClasses,
-  slotClasses: ownerState => ({
-    root: ["root", !!ownerState.formControl && "formControl", !ownerState.disableAnimation && "animated", !!ownerState.shrink && "shrink", ownerState.size === "small" && "sizeSmall", !!ownerState.variant && ownerState.variant],
-    asterisk: [!!ownerState.required && "asterisk"]
-  })
-});
-const InputLabelRoot = _hoc_function$2(FormLabel, {
-  skipProps: skipRootProps.filter(v => v !== "classes"),
-  name: "MuiInputLabel",
-  slot: "Root",
-  overridesResolver: (props, styles) => {
-    const {
-      ownerState
-    } = props;
-    return [{
-      [`& .${formLabelClasses.asterisk}`]: styles.asterisk
-    }, styles.root, ownerState.formControl && styles.formControl, ownerState.size === "small" && styles.sizeSmall, ownerState.shrink && styles.shrink, !ownerState.disableAnimation && styles.animated, styles[ownerState.variant]];
-  }
-})(({
-  theme,
-  ownerState
-}) => ({
-  display: "block",
-  transformOrigin: "top left",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  maxWidth: "100%",
-  ...(ownerState.formControl && {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    transform: "translate(0, 20px) scale(1)"
-  }),
-  ...(ownerState.size === "small" && {
-    transform: "translate(0, 17px) scale(1)"
-  }),
-  ...(ownerState.shrink && {
-    transform: "translate(0, -1.5px) scale(0.75)",
-    transformOrigin: "top left",
-    maxWidth: "133%"
-  }),
-  ...(!ownerState.disableAnimation && {
-    transition: theme.transitions.create(["color", "transform", "max-width"], {
-      duration: theme.transitions.duration.shorter,
-      easing: theme.transitions.easing.easeOut
-    })
-  }),
-  ...(ownerState.variant === "filled" && {
-    zIndex: 1,
-    pointerEvents: "none",
-    transform: "translate(12px, 16px) scale(1)",
-    maxWidth: "calc(100% - 24px)",
-    ...(ownerState.size === "small" && {
-      transform: "translate(12px, 13px) scale(1)"
-    }),
-    ...(ownerState.shrink && {
-      userSelect: "none",
-      pointerEvents: "auto",
-      transform: "translate(12px, 7px) scale(0.75)",
-      maxWidth: "calc(133% - 24px)",
-      ...(ownerState.size === "small" && {
-        transform: "translate(12px, 4px) scale(0.75)"
-      })
-    })
-  }),
-  ...(ownerState.variant === "outlined" && {
-    zIndex: 1,
-    pointerEvents: "none",
-    transform: "translate(14px, 16px) scale(1)",
-    maxWidth: "calc(100% - 24px)",
-    ...(ownerState.size === "small" && {
-      transform: "translate(14px, 9px) scale(1)"
-    }),
-    ...(ownerState.shrink && {
-      userSelect: "none",
-      pointerEvents: "auto",
-      maxWidth: "calc(133% - 24px)",
-      transform: "translate(14px, -9px) scale(0.75)"
-    })
-  })
-}));
-const InputLabel = $$7.component(function InputLabel2({
-  allProps,
-  props
-}) {
-  const muiFormControl = useFormControl();
-  const [, baseProps] = splitProps(allProps, ["disableAnimation", "margin", "shrink", "variant"]);
-  const shrink = () => {
-    let shrink2 = props.shrink;
-    if (typeof shrink2 === "undefined" && muiFormControl) {
-      shrink2 = muiFormControl.filled || muiFormControl.focused || muiFormControl.adornedStart;
-    }
-    return shrink2;
-  };
-  const fcs = formControlState({
-    props: allProps,
-    muiFormControl,
-    states: ["size", "variant", "required"]
-  });
-  const ownerState = mergeProps(allProps, {
-    get formControl() {
-      return muiFormControl;
-    },
-    get shrink() {
-      return shrink();
-    },
-    get size() {
-      return fcs.size;
-    },
-    get variant() {
-      return fcs.variant;
-    },
-    get required() {
-      return fcs.required;
-    }
-  });
-  const classes = $$7.useClasses(ownerState);
-  const allClasses = mergeProps(classes, () => props.classes || {});
-  return createComponent$1(InputLabelRoot, mergeProps(baseProps, {
-    get ["data-shrink"]() {
-      return shrink();
-    },
-    ownerState: ownerState,
-    classes: allClasses
-  }));
-});
-
-__astro_tag_component__(InputLabel, "@astrojs/solid-js");
-
-const _tmpl$$6 = ["<p", "><!--#-->", "<!--/--><!--#-->", "<!--/--></p>"];
-const StringInput = ({
-  disabled,
-  label,
-  value,
-  onChange,
-  inputProps = {},
-  customStyle = {}
-}) => {
-  return ssr(_tmpl$$6, ssrHydrationKey(), label && escape(createComponent$1(InputLabel, {
-    get sx() {
-      return style("text");
-    },
-    children: label
-  })), escape(createComponent$1(Input, mergeProps(inputProps, {
-    get value() {
-      return value();
-    },
-    onChange: (_e, value2) => {
-      onChange(value2);
-    },
-    required: true,
-    disabled: disabled,
-    get sx() {
-      return style("input", customStyle);
-    }
-  }))));
-};
-
-__astro_tag_component__(StringInput, "@astrojs/solid-js");
-
-const readyAtom = computed([businessReady.atom, Theme$1.atom], (ready, theme) => ready && theme);
-
-const NameInput = () => {
-  const properties = useStore(propertiesMap);
-  const state = useStore(stateAtom);
-  const ready = useStore(readyAtom);
-  return createComponent$1(Show, {
-    get when() {
-      return ready();
-    },
-    get children() {
-      return createComponent$1(StringInput, {
-        label: "Jm\xE9no",
-        value: () => {
-          console.log("properties().name", properties().name);
-          return properties().name;
-        },
-        get disabled() {
-          return state() === "saving";
-        },
-        onChange: name => propertiesMap.setKey("name", name),
-        inputProps: {
-          placeholder: "Zadejte n\xE1zev postavy"
-        },
-        customStyle: {
-          width: "100%"
-        }
-      });
-    }
-  });
-};
-
-__astro_tag_component__(NameInput, "@astrojs/solid-js");
-
-const $$6 = createComponentFactory()({
-  name: "MuiBox",
-  selfPropNames: [],
-  utilityClass: slot => `MuiBox-${slot}`,
-  slotClasses: () => ({
-    root: ["root"]
-  })
-});
-const Box = $$6.component(function Box2({
-  otherProps,
-  classes
-}) {
-  const theme = useTheme();
-  return createComponent$1(Box$1, mergeProps({
-    theme: theme
-  }, otherProps, {
-    get ["class"]() {
-      return clsx(classes.root, otherProps.class);
-    }
-  }));
-});
-
-__astro_tag_component__(Box, "@astrojs/solid-js");
-
-const _tmpl$$5 = ["<span", "></span>"];
-const $$5 = createComponentFactory()({
-  name: "MuiRipple",
-  selfPropNames: ["class", "classes", "pulsate", "rippleX", "rippleY", "rippleSize", "in", "onExited", "timeout"],
-  propDefaults: ({
-    set
-  }) => set({
-    pulsate: false,
-    classes: {}
-  })
-});
-const Ripple = $$5.component(function Ripple2({
-  props,
-  otherProps
-}) {
-  const [leaving, setLeaving] = createSignal(false);
-  const rippleClassName = createMemo(() => clsx(props.class, props.classes.ripple, props.classes.rippleVisible, props.classes.ripplePulsate && {
-    [props.classes.ripplePulsate]: props.pulsate
-  }));
-  const rippleStyles = createMemo(() => ({
-    width: `${props.rippleSize}px`,
-    height: `${props.rippleSize}px`,
-    top: `${-(props.rippleSize / 2) + props.rippleY}px`,
-    left: `${-(props.rippleSize / 2) + props.rippleX}px`
-  }));
-  const childClassName = createMemo(() => clsx(props.classes.child, props.classes.childLeaving && {
-    [props.classes.childLeaving]: leaving()
-  }, props.classes.childPulsate && {
-    [props.classes.childPulsate]: props.pulsate
-  }));
-  let timeoutId;
-  onCleanup(() => clearTimeout(timeoutId));
-  return createComponent$1(Box, {
-    component: "span",
-    get ["class"]() {
-      return rippleClassName();
-    },
-    get style() {
-      return rippleStyles();
-    },
-    get sx() {
-      return otherProps.sx;
-    },
-    get children() {
-      return ssr(_tmpl$$5, ssrHydrationKey() + ssrAttribute("class", escape(childClassName(), true), false));
-    }
-  });
-});
-
-__astro_tag_component__(Ripple, "@astrojs/solid-js");
-
-const touchRippleClasses = generateUtilityClasses("MuiTouchRipple", [
-    "root",
-    "ripple",
-    "rippleVisible",
-    "ripplePulsate",
-    "child",
-    "childLeaving",
-    "childPulsate",
-]);
-
 function createElementRef(props) {
     return createRef(props);
 }
 
-const $$4 = createComponentFactory()({
+const $$n = createComponentFactory()({
   name: "MuiTouchRipple",
   selfPropNames: ["center", "classes", "ref"],
   propDefaults: ({
@@ -6764,7 +5841,7 @@ const $$4 = createComponentFactory()({
 });
 const DURATION = 550;
 const DELAY_RIPPLE = 80;
-const TouchRippleRoot = _hoc_function$2("span", {
+const TouchRippleRoot = _hoc_function$5("span", {
   name: "MuiTouchRipple",
   slot: "Root"
 })({
@@ -6778,7 +5855,7 @@ const TouchRippleRoot = _hoc_function$2("span", {
   left: 0,
   borderRadius: "inherit"
 });
-const TouchRippleRipple = _hoc_function$2(Ripple, {
+const TouchRippleRipple = _hoc_function$5(Ripple, {
   name: "MuiTouchRipple",
   slot: "Ripple"
 })(({
@@ -6849,7 +5926,7 @@ const TouchRippleRipple = _hoc_function$2(Ripple, {
     animationDelay: "200ms"
   }
 }));
-const TouchRipple = $$4.component(function TouchRipple2({
+const TouchRipple = $$n.component(function TouchRipple2({
   props,
   otherProps
 }) {
@@ -7166,7 +6243,7 @@ function useIsFocusVisible() {
     };
 }
 
-const $$3 = createComponentFactory()({
+const $$m = createComponentFactory()({
   name: "MuiButtonBase",
   selfPropNames: ["LinkComponent", "TouchRippleProps", "action", "centerRipple", "children", "classes", "disableRipple", "disableRipple", "disableTouchRipple", "disabled", "focusRipple", "focusVisibleClassName", "onFocusVisible", "tabIndex", "touchRippleRef"],
   propDefaults: ({
@@ -7187,7 +6264,7 @@ const $$3 = createComponentFactory()({
     root: ["root", ownerState.disabled && "disabled", ownerState.focusVisible && "focusVisible"]
   })
 });
-const ButtonBaseRoot = _hoc_function$2("button", {
+const ButtonBaseRoot = _hoc_function$5("button", {
   name: "MuiButtonBase",
   slot: "Root",
   overridesResolver: (props, styles) => styles.root
@@ -7222,7 +6299,7 @@ const ButtonBaseRoot = _hoc_function$2("button", {
     colorAdjust: "exact"
   }
 });
-const ButtonBase = $$3.component(function ButtonBase2({
+const ButtonBase = $$m.component(function ButtonBase2({
   allProps,
   props,
   otherProps
@@ -7238,7 +6315,7 @@ const ButtonBase = $$3.component(function ButtonBase2({
       return focusVisible();
     }
   });
-  const classes = $$3.useClasses(ownerState);
+  const classes = $$m.useClasses(ownerState);
   function useRippleHandler(rippleAction, eventCallback, skipRippleAction = props.disableTouchRipple) {
     return event => {
       if (typeof eventCallback === "function") {
@@ -7398,6 +6475,1850 @@ const ButtonBase = $$3.component(function ButtonBase2({
 
 __astro_tag_component__(ButtonBase, "@astrojs/solid-js");
 
+// It should to be noted that this function isn't equivalent to `text-transform: capitalize`.
+//
+// A strict capitalization should uppercase the first letter of each word in the sentence.
+// We only handle the first word.
+function capitalize(string) {
+    if (typeof string !== "string") {
+        throw new Error("MUI: `capitalize(string)` expects a string argument.");
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * @ignore - internal component.
+ */
+const ButtonGroupContext = createContext({});
+
+function getButtonUtilityClass(slot) {
+    return generateUtilityClass("MuiButton", slot);
+}
+const buttonClasses = generateUtilityClasses("MuiButton", [
+    "root",
+    "text",
+    "textInherit",
+    "textPrimary",
+    "textSecondary",
+    "outlined",
+    "outlinedInherit",
+    "outlinedPrimary",
+    "outlinedSecondary",
+    "contained",
+    "containedInherit",
+    "containedPrimary",
+    "containedSecondary",
+    "disableElevation",
+    "focusVisible",
+    "disabled",
+    "colorInherit",
+    "textSizeSmall",
+    "textSizeMedium",
+    "textSizeLarge",
+    "outlinedSizeSmall",
+    "outlinedSizeMedium",
+    "outlinedSizeLarge",
+    "containedSizeSmall",
+    "containedSizeMedium",
+    "containedSizeLarge",
+    "sizeMedium",
+    "sizeSmall",
+    "sizeLarge",
+    "fullWidth",
+    "startIcon",
+    "endIcon",
+    "iconSizeSmall",
+    "iconSizeMedium",
+    "iconSizeLarge",
+]);
+
+const $$l = createComponentFactory()({
+  name: "MuiButton",
+  selfPropNames: ["children", "classes", "color", "disableElevation", "disableFocusRipple", "disabled", "endIcon", "fullWidth", "href", "size", "startIcon", "variant"],
+  propDefaults: ({
+    set
+  }) => {
+    const contextProps = useContext(ButtonGroupContext);
+    return set({
+      get color() {
+        return contextProps.color ?? "primary";
+      },
+      component: "button",
+      get disabled() {
+        return contextProps.disabled ?? false;
+      },
+      get disableElevation() {
+        return contextProps.disableElevation ?? false;
+      },
+      get disableFocusRipple() {
+        return contextProps.disableFocusRipple ?? false;
+      },
+      get fullWidth() {
+        return contextProps.fullWidth ?? false;
+      },
+      get size() {
+        return contextProps.size ?? "medium";
+      },
+      get variant() {
+        return contextProps.variant ?? "text";
+      }
+    });
+  },
+  utilityClass: getButtonUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.variant, `${ownerState.variant}${capitalize(ownerState.color)}`, `size${capitalize(ownerState.size)}`, `${ownerState.variant}Size${capitalize(ownerState.size)}`, ownerState.color === "inherit" && "colorInherit", ownerState.disableElevation && "disableElevation", ownerState.fullWidth && "fullWidth"],
+    label: ["label"],
+    startIcon: ["startIcon", `iconSize${capitalize(ownerState.size)}`],
+    endIcon: ["endIcon", `iconSize${capitalize(ownerState.size)}`]
+  })
+});
+const commonIconStyles = ownerState => ({
+  ...(ownerState.size === "small" && {
+    "& > *:nth-of-type(1)": {
+      fontSize: 18
+    }
+  }),
+  ...(ownerState.size === "medium" && {
+    "& > *:nth-of-type(1)": {
+      fontSize: 20
+    }
+  }),
+  ...(ownerState.size === "large" && {
+    "& > *:nth-of-type(1)": {
+      fontSize: 22
+    }
+  })
+});
+const ButtonRoot = _hoc_function$5(ButtonBase, {
+  skipProps: skipRootProps.filter(v => v !== "classes"),
+  name: "MuiButton",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, styles[ownerState.variant], styles[`${ownerState.variant}${capitalize(ownerState.color)}`], styles[`size${capitalize(ownerState.size)}`], styles[`${ownerState.variant}Size${capitalize(ownerState.size)}`], ownerState.color === "inherit" && styles.colorInherit, ownerState.disableElevation && styles.disableElevation, ownerState.fullWidth && styles.fullWidth];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  ...theme.typography.button,
+  minWidth: 64,
+  padding: "6px 16px",
+  borderRadius: theme.shape.borderRadius,
+  transition: theme.transitions.create(["background-color", "box-shadow", "border-color", "color"], {
+    duration: theme.transitions.duration.short
+  }),
+  "&:hover": {
+    textDecoration: "none",
+    backgroundColor: alpha(theme.palette.text.primary, theme.palette.action.hoverOpacity),
+    "@media (hover: none)": {
+      backgroundColor: "transparent"
+    },
+    ...(ownerState.variant === "text" && ownerState.color !== "inherit" && {
+      backgroundColor: alpha(theme.palette[ownerState.color].main, theme.palette.action.hoverOpacity),
+      "@media (hover: none)": {
+        backgroundColor: "transparent"
+      }
+    }),
+    ...(ownerState.variant === "outlined" && ownerState.color !== "inherit" && {
+      border: `1px solid ${theme.palette[ownerState.color].main}`,
+      backgroundColor: alpha(theme.palette[ownerState.color].main, theme.palette.action.hoverOpacity),
+      "@media (hover: none)": {
+        backgroundColor: "transparent"
+      }
+    }),
+    ...(ownerState.variant === "contained" && {
+      backgroundColor: theme.palette.grey.A100,
+      boxShadow: theme.shadows[4],
+      "@media (hover: none)": {
+        boxShadow: theme.shadows[2],
+        backgroundColor: theme.palette.grey[300]
+      }
+    }),
+    ...(ownerState.variant === "contained" && ownerState.color !== "inherit" && {
+      backgroundColor: theme.palette[ownerState.color].dark,
+      "@media (hover: none)": {
+        backgroundColor: theme.palette[ownerState.color].main
+      }
+    })
+  },
+  "&:active": {
+    ...(ownerState.variant === "contained" && {
+      boxShadow: theme.shadows[8]
+    })
+  },
+  [`&.${buttonClasses.focusVisible}`]: {
+    ...(ownerState.variant === "contained" && {
+      boxShadow: theme.shadows[6]
+    })
+  },
+  [`&.${buttonClasses.disabled}`]: {
+    color: theme.palette.action.disabled,
+    ...(ownerState.variant === "outlined" && {
+      border: `1px solid ${theme.palette.action.disabledBackground}`
+    }),
+    ...(ownerState.variant === "outlined" && ownerState.color === "secondary" && {
+      border: `1px solid ${theme.palette.action.disabled}`
+    }),
+    ...(ownerState.variant === "contained" && {
+      color: theme.palette.action.disabled,
+      boxShadow: theme.shadows[0],
+      backgroundColor: theme.palette.action.disabledBackground
+    })
+  },
+  ...(ownerState.variant === "text" && {
+    padding: "6px 8px"
+  }),
+  ...(ownerState.variant === "text" && ownerState.color !== "inherit" && {
+    color: theme.palette[ownerState.color].main
+  }),
+  ...(ownerState.variant === "outlined" && {
+    padding: "5px 15px",
+    border: `1px solid ${theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.23)" : "rgba(255, 255, 255, 0.23)"}`
+  }),
+  ...(ownerState.variant === "outlined" && ownerState.color !== "inherit" && {
+    color: theme.palette[ownerState.color].main,
+    border: `1px solid ${alpha(theme.palette[ownerState.color].main, 0.5)}`
+  }),
+  ...(ownerState.variant === "contained" && {
+    color: theme.palette.getContrastText(theme.palette.grey[300]),
+    backgroundColor: theme.palette.grey[300],
+    boxShadow: theme.shadows[2]
+  }),
+  ...(ownerState.variant === "contained" && ownerState.color !== "inherit" && {
+    color: theme.palette[ownerState.color].contrastText,
+    backgroundColor: theme.palette[ownerState.color].main
+  }),
+  ...(ownerState.color === "inherit" && {
+    color: "inherit",
+    borderColor: "currentColor"
+  }),
+  ...(ownerState.size === "small" && ownerState.variant === "text" && {
+    padding: "4px 5px",
+    fontSize: theme.typography.pxToRem(13)
+  }),
+  ...(ownerState.size === "large" && ownerState.variant === "text" && {
+    padding: "8px 11px",
+    fontSize: theme.typography.pxToRem(15)
+  }),
+  ...(ownerState.size === "small" && ownerState.variant === "outlined" && {
+    padding: "3px 9px",
+    fontSize: theme.typography.pxToRem(13)
+  }),
+  ...(ownerState.size === "large" && ownerState.variant === "outlined" && {
+    padding: "7px 21px",
+    fontSize: theme.typography.pxToRem(15)
+  }),
+  ...(ownerState.size === "small" && ownerState.variant === "contained" && {
+    padding: "4px 10px",
+    fontSize: theme.typography.pxToRem(13)
+  }),
+  ...(ownerState.size === "large" && ownerState.variant === "contained" && {
+    padding: "8px 22px",
+    fontSize: theme.typography.pxToRem(15)
+  }),
+  ...(ownerState.fullWidth && {
+    width: "100%"
+  })
+}), ({
+  ownerState
+}) => ({
+  ...(ownerState.disableElevation && {
+    boxShadow: "none",
+    "&:hover": {
+      boxShadow: "none"
+    },
+    [`&.${buttonClasses.focusVisible}`]: {
+      boxShadow: "none"
+    },
+    "&:active": {
+      boxShadow: "none"
+    },
+    [`&.${buttonClasses.disabled}`]: {
+      boxShadow: "none"
+    }
+  })
+}));
+const ButtonStartIcon = _hoc_function$5("span", {
+  name: "MuiButton",
+  slot: "StartIcon",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.startIcon, styles[`iconSize${capitalize(ownerState.size)}`]];
+  }
+})(({
+  ownerState
+}) => ({
+  display: "inherit",
+  marginRight: 8,
+  marginLeft: -4,
+  ...(ownerState.size === "small" && {
+    marginLeft: -2
+  }),
+  ...commonIconStyles(ownerState)
+}));
+const ButtonEndIcon = _hoc_function$5("span", {
+  name: "MuiButton",
+  slot: "EndIcon",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.endIcon, styles[`iconSize${capitalize(ownerState.size)}`]];
+  }
+})(({
+  ownerState
+}) => ({
+  display: "inherit",
+  marginRight: -4,
+  marginLeft: 8,
+  ...(ownerState.size === "small" && {
+    marginRight: -2
+  }),
+  ...commonIconStyles(ownerState)
+}));
+const Button = $$l.component(function Button2({
+  allProps,
+  otherProps,
+  props,
+  classes
+}) {
+  const contextProps = useContext(ButtonGroupContext);
+  return createComponent$1(ButtonRoot, mergeProps({
+    ownerState: allProps,
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class, contextProps.class);
+    },
+    get disabled() {
+      return props.disabled;
+    },
+    get focusRipple() {
+      return !props.disableFocusRipple;
+    },
+    get focusVisibleClassName() {
+      return clsx(props.classes?.focusVisible, otherProps.focusVisibleClassName);
+    },
+    get type() {
+      return otherProps.type;
+    },
+    get href() {
+      return props.href;
+    }
+  }, otherProps, {
+    get classes() {
+      return props.classes;
+    },
+    get children() {
+      return [createComponent$1(Show, {
+        get when() {
+          return !!props.startIcon;
+        },
+        get children() {
+          return createComponent$1(ButtonStartIcon, {
+            get ["class"]() {
+              return classes.startIcon;
+            },
+            ownerState: allProps,
+            get children() {
+              return props.startIcon;
+            }
+          });
+        }
+      }), props.children, createComponent$1(Show, {
+        get when() {
+          return !!props.endIcon;
+        },
+        get children() {
+          return createComponent$1(ButtonEndIcon, {
+            get ["class"]() {
+              return classes.endIcon;
+            },
+            ownerState: allProps,
+            get children() {
+              return props.endIcon;
+            }
+          });
+        }
+      })];
+    }
+  }));
+});
+
+__astro_tag_component__(Button, "@astrojs/solid-js");
+
+const ResetButton = () => {
+  const state = useStore(stateAtom);
+  return createComponent$1(Button, {
+    color: "error",
+    variant: "outlined",
+    type: "reset",
+    get disabled() {
+      return state() !== "dirty";
+    },
+    get sx() {
+      return state() !== "dirty" ? {
+        color: "#B82D2E !important"
+      } : {};
+    },
+    onClick: () => PubSub.publish(M.uiReset),
+    children: "\u2716"
+  });
+};
+
+__astro_tag_component__(ResetButton, "@astrojs/solid-js");
+
+function getCircularProgressUtilityClass(slot) {
+    return generateUtilityClass("MuiCircularProgress", slot);
+}
+generateUtilityClasses("MuiCircularProgress", [
+    "root",
+    "determinate",
+    "indeterminate",
+    "colorPrimary",
+    "colorSecondary",
+    "svg",
+    "circle",
+    "circleDeterminate",
+    "circleIndeterminate",
+    "circleDisableShrink",
+]);
+
+const $$k = createComponentFactory()({
+  name: "MuiCircularProgress",
+  propDefaults: ({
+    set
+  }) => set({
+    color: "primary",
+    disableShrink: false,
+    size: 40,
+    thickness: 3.6,
+    value: 0,
+    variant: "indeterminate"
+  }),
+  selfPropNames: ["classes", "color", "disableShrink", "size", "thickness", "value", "variant"],
+  utilityClass: getCircularProgressUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.variant, `color${capitalize(ownerState.color)}`],
+    svg: ["svg"],
+    circle: ["circle", `circle${capitalize(ownerState.variant)}`, ownerState.disableShrink && "circleDisableShrink"]
+  })
+});
+const SIZE = 44;
+const animationId = randomString();
+const CircularProgressRoot = _hoc_function$5("span", {
+  name: "MuiCircularProgress",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, styles[ownerState.variant], styles[`color${capitalize(ownerState.color)}`]];
+  }
+})(({
+  ownerState,
+  theme
+}) => ({
+  display: "inline-block",
+  ...(ownerState.variant === "determinate" && {
+    transition: theme.transitions.create("transform")
+  }),
+  ...(ownerState.color !== "inherit" && {
+    color: theme.palette[ownerState.color].main
+  })
+}), ({
+  ownerState
+}) => ownerState.variant === "indeterminate" && {
+  [`@keyframes circular-rotate-${animationId}`]: {
+    0: {
+      transform: "rotate(0deg)"
+    },
+    100: {
+      transform: "rotate(360deg)"
+    }
+  },
+  animation: `circular-rotate-${animationId} 1.4s linear infinite`
+});
+const CircularProgressSVG = _hoc_function$5("svg", {
+  name: "MuiCircularProgress",
+  slot: "Svg",
+  overridesResolver: (props, styles) => styles.svg
+})({
+  display: "block"
+});
+const CircularProgressCircle = _hoc_function$5("circle", {
+  name: "MuiCircularProgress",
+  slot: "Circle",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.circle, styles[`circle${capitalize(ownerState.variant)}`], ownerState.disableShrink && styles.circleDisableShrink];
+  }
+})(({
+  ownerState,
+  theme
+}) => ({
+  stroke: "currentColor",
+  ...(ownerState.variant === "determinate" && {
+    transition: theme.transitions.create("stroke-dashoffset")
+  }),
+  ...(ownerState.variant === "indeterminate" && {
+    strokeDasharray: "80px, 200px",
+    strokeDashoffset: 0
+  })
+}), ({
+  ownerState
+}) => ownerState.variant === "indeterminate" && !ownerState.disableShrink && {
+  [`@keyframes circular-dash-${animationId}`]: {
+    0: {
+      strokeDasharray: "1px, 200px",
+      strokeDashoffset: 0
+    },
+    50: {
+      strokeDasharray: "100px, 200px",
+      strokeDashoffset: "-15px"
+    },
+    100: {
+      strokeDasharray: "100px, 200px",
+      strokeDashoffset: "-125px"
+    }
+  },
+  animation: `circular-dash-${animationId} 1.4s ease-in-out infinite`
+});
+const CircularProgress = $$k.component(function CircularProgress2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  const circleStyle = createMemo(() => {
+    if (props.variant !== "determinate") return {};
+    const circumference = 2 * Math.PI * ((SIZE - props.thickness) / 2);
+    return {
+      strokeDasharray: circumference.toFixed(3),
+      strokeDashoffset: `${((100 - props.value) / 100 * circumference).toFixed(3)}px`
+    };
+  });
+  const rootStyle = () => {
+    if (props.variant !== "determinate") return {};
+    return {
+      transform: "rotate(-90deg)"
+    };
+  };
+  const rootProps = () => {
+    if (props.variant !== "determinate") return {};
+    return {
+      "aria-valuenow": Math.round(props.value)
+    };
+  };
+  return createComponent$1(CircularProgressRoot, mergeProps({
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    get sx() {
+      return {
+        width: props.size,
+        height: props.size,
+        ...rootStyle()
+      };
+    },
+    ownerState: allProps,
+    role: "progressbar"
+  }, rootProps, otherProps, {
+    get children() {
+      return createComponent$1(CircularProgressSVG, {
+        get ["class"]() {
+          return classes.svg;
+        },
+        ownerState: allProps,
+        viewBox: `${SIZE / 2} ${SIZE / 2} ${SIZE} ${SIZE}`,
+        get children() {
+          return createComponent$1(CircularProgressCircle, {
+            get ["class"]() {
+              return classes.circle;
+            },
+            get sx() {
+              return circleStyle();
+            },
+            ownerState: allProps,
+            cx: SIZE,
+            cy: SIZE,
+            get r() {
+              return (SIZE - props.thickness) / 2;
+            },
+            fill: "none",
+            get ["stroke-width"]() {
+              return props.thickness;
+            }
+          });
+        }
+      });
+    }
+  }));
+});
+
+__astro_tag_component__(CircularProgress, "@astrojs/solid-js");
+
+const SaveButton = () => {
+  const state = useStore(stateAtom);
+  return createComponent$1(Button, {
+    color: "success",
+    variant: "contained",
+    type: "submit",
+    get disabled() {
+      return state() !== "dirty";
+    },
+    get sx() {
+      return state() !== "dirty" ? {
+        backgroundColor: "green !important",
+        color: "white !important"
+      } : {};
+    },
+    onClick: () => PubSub.publish(M.uiSaveAction),
+    get children() {
+      return state() === "saving" ? createComponent$1(CircularProgress, {
+        color: "inherit",
+        size: "1.5rem"
+      }) : "\u2713";
+    }
+  });
+};
+
+__astro_tag_component__(SaveButton, "@astrojs/solid-js");
+
+function mergeSxObjects(object, ...sources) {
+    return sources.reduce((target, source, index) => deepmerge(target, source, {
+        clone: !!index,
+        sortKeys: true,
+    }), object);
+}
+
+const $$j = createComponentFactory()({
+  name: "MuiStack",
+  selfPropNames: ["children", "direction", "divider", "spacing"],
+  propDefaults: ({
+    set
+  }) => set({
+    component: "div",
+    direction: "column",
+    spacing: 0
+  })
+});
+function joinChildren(children, separator) {
+  const childrenArray = (Array.isArray(children) ? children : [children]).filter(Boolean);
+  return childrenArray.reduce((output, child, index) => {
+    output.push(child);
+    if (index < childrenArray.length - 1) {
+      output.push(separator);
+    }
+    return output;
+  }, []);
+}
+const getSideFromDirection = direction => {
+  return {
+    row: "Left",
+    "row-reverse": "Right",
+    column: "Top",
+    "column-reverse": "Bottom"
+  }[direction];
+};
+const StackRoot = _hoc_function$5("div", {
+  name: "MuiStack",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    return [styles.root];
+  }
+})(({
+  theme,
+  ownerState
+}) => {
+  let styles = {
+    display: "flex",
+    ...handleBreakpoints({
+      theme
+    }, resolveBreakpointValues({
+      values: ownerState.direction,
+      breakpoints: theme.breakpoints.values
+    }), propValue => ({
+      flexDirection: propValue
+    }))
+  };
+  if (ownerState.spacing) {
+    const transformer = createUnarySpacing(theme);
+    const base = theme.breakpoints.keys.reduce((acc, breakpoint) => {
+      if (ownerState.spacing[breakpoint] != null || ownerState.direction[breakpoint] != null) {
+        acc[breakpoint] = true;
+      }
+      return acc;
+    }, {});
+    const directionValues = resolveBreakpointValues({
+      values: ownerState.direction,
+      base
+    });
+    const spacingValues = resolveBreakpointValues({
+      values: ownerState.spacing,
+      base
+    });
+    const styleFromPropValue = (propValue, breakpoint) => {
+      return {
+        "& > :not(style) + :not(style)": {
+          margin: 0,
+          [`margin${getSideFromDirection(breakpoint ? directionValues[breakpoint] : ownerState.direction)}`]: transformer(propValue)
+        }
+      };
+    };
+    styles = mergeSxObjects(styles, handleBreakpoints({
+      theme
+    }, spacingValues, styleFromPropValue));
+  }
+  return styles;
+});
+const Stack = $$j.component(function Stack2({
+  allProps,
+  otherProps,
+  props
+}) {
+  otherProps = extendSxProp(otherProps);
+  return createComponent$1(StackRoot, mergeProps({
+    get as() {
+      return otherProps.component;
+    },
+    ownerState: allProps
+  }, otherProps, {
+    get children() {
+      return createComponent$1(Show, {
+        get when() {
+          return !!props.divider;
+        },
+        get fallback() {
+          return props.children;
+        },
+        get children() {
+          return joinChildren(props.children, props.divider);
+        }
+      });
+    }
+  }));
+});
+
+__astro_tag_component__(Stack, "@astrojs/solid-js");
+
+const FormControls = () => [createComponent$1(Stack, {
+  direction: "row",
+  justifyContent: "flex-end",
+  alignItems: "center",
+  spacing: 2,
+  get children() {
+    return [createComponent$1(SaveButton, {}), " ", createComponent$1(ResetButton, {})];
+  }
+}), createComponent$1(Toaster, {
+  position: "bottom-right",
+  toastOptions: {
+    duration: 5e3
+  }
+})];
+
+__astro_tag_component__(FormControls, "@astrojs/solid-js");
+
+class BusinessReady {
+  atom = atom(false);
+  resources = /* @__PURE__ */ new Set();
+  resourceToLoad(resource) {
+    this.resources.add(resource);
+    console.log("TO LOAD", resource);
+    console.log("this.resources.size", this.resources.size);
+  }
+  resourceLoaded(resource) {
+    this.resources.delete(resource);
+    console.log("LOADED", resource);
+    console.log("this.resources.size", this.resources.size);
+    if (this.resources.size === 0) {
+      this.atom.set(true);
+    }
+  }
+}
+const businessReady = new BusinessReady();
+
+class ResourceAtom {
+  atom = atom();
+  constructor(resource) {
+    businessReady.resourceToLoad(resource);
+    PubSub.subscribe(resource, (_msg, target) => {
+      this.atom.set(target);
+      businessReady.resourceLoaded(resource);
+    });
+  }
+}
+class FormData {
+  data;
+  map = map();
+  dirtyKeys = /* @__PURE__ */ new Set();
+  constructor(resource) {
+    businessReady.resourceToLoad(resource);
+    PubSub.subscribe(resource, (_msg, data) => {
+      this.data = data;
+      this.map.set({ ...data });
+      this.dirtyKeys.clear();
+      PubSub.publish(M.uiDirty, false);
+      console.log("resource loaded: " + resource, this.map.get());
+      businessReady.resourceLoaded(resource);
+    });
+    this.map.listen((value, changedKey) => {
+      const changed = JSON.stringify(this.data[changedKey]) !== JSON.stringify(value[changedKey]);
+      if (changed) {
+        const wasDirty = this.dirtyKeys.size > 0;
+        this.dirtyKeys.add(changedKey);
+        if (!wasDirty) {
+          PubSub.publish(M.uiDirty, true);
+        }
+      } else {
+        this.dirtyKeys.delete(changedKey);
+        const isDirty = this.dirtyKeys.size > 0;
+        if (!isDirty) {
+          PubSub.publish(M.uiDirty, false);
+        }
+      }
+    });
+  }
+}
+
+const properties = new FormData(M.uiProperties);
+const propertiesMap = properties.map;
+
+/**
+ * @ignore - internal component.
+ */
+const FormControlContext = createContext();
+
+function formControlState(data) {
+    const compose = () => {
+        return data.states.reduce((acc, state) => {
+            acc[state] = data.props[state];
+            if (data.muiFormControl) {
+                if (typeof data.props[state] === "undefined") {
+                    acc[state] = data.muiFormControl[state];
+                }
+            }
+            return acc;
+        }, {});
+    };
+    const object = createMutable({});
+    createComputed(() => {
+        const newObject = compose();
+        batch(() => {
+            for (const key in newObject) {
+                if (object[key] !== newObject[key])
+                    object[key] = newObject[key];
+            }
+            const newKeys = Object.keys(newObject);
+            for (const key in object) {
+                if (!newKeys.includes(key))
+                    delete object[key];
+            }
+        });
+    });
+    return object;
+}
+
+function useFormControl() {
+    return useContext(FormControlContext);
+}
+
+const $$i = createComponentFactory()({
+  name: "MuiGlobalStyles",
+  selfPropNames: ["styles"]
+});
+const GlobalStyles = $$i.component(function GlobalStyles2({
+  props
+}) {
+  createStyle(() => ({
+    "@global": props.styles || {}
+  }));
+  return [];
+});
+
+__astro_tag_component__(GlobalStyles, "@astrojs/solid-js");
+
+function useControlled(props) {
+    // isControlled is ignored in the hook dependency lists as it should never change.
+    const isControlled = props.controlled() !== undefined;
+    const [valueState, setValue] = createSignal(props.default());
+    const value = createMemo(() => isControlled ? props.controlled() : valueState());
+    if (process.env.NODE_ENV !== "production") {
+        let first = true;
+        createEffect(on(() => props.default(), () => {
+            if (first) {
+                first = false;
+                return;
+            }
+            else if (!isControlled) {
+                console.error([
+                    `MUI: A component is changing the default ${props.state ?? "value"} state of an uncontrolled ${props.name} after being initialized. ` +
+                        `To suppress this warning opt to use a controlled ${props.name}.`,
+                ].join("\n"));
+            }
+        }));
+    }
+    const setValueIfUncontrolled = (newValue) => {
+        if (!isControlled) {
+            setValue(newValue);
+        }
+    };
+    return [value, setValueIfUncontrolled];
+}
+
+function getInputBaseUtilityClass(slot) {
+    return generateUtilityClass("MuiInputBase", slot);
+}
+const inputBaseClasses = generateUtilityClasses("MuiInputBase", [
+    "root",
+    "formControl",
+    "focused",
+    "disabled",
+    "adornedStart",
+    "adornedEnd",
+    "error",
+    "sizeSmall",
+    "multiline",
+    "colorSecondary",
+    "fullWidth",
+    "hiddenLabel",
+    "input",
+    "inputSizeSmall",
+    "inputMultiline",
+    "inputTypeSearch",
+    "inputAdornedStart",
+    "inputAdornedEnd",
+    "inputHiddenLabel",
+]);
+
+// Supports determination of isControlled().
+// Controlled input accepts its current value as a prop.
+//
+// @see https://facebook.github.io/react/docs/forms.html#controlled-components
+// @param value
+// @returns {boolean} true if string (including '') or number (including zero)
+function hasValue(value) {
+    return value != null && !(Array.isArray(value) && value.length === 0);
+}
+// Determine if field is empty or filled.
+// Response determines if label is presented above field or as placeholder.
+//
+// @param obj
+// @param SSR
+// @returns {boolean} False when not present or empty string.
+//                    True when any number or string with length.
+function isFilled(obj, SSR = false) {
+    return (obj &&
+        ((hasValue(obj.value) && obj.value !== "") ||
+            (SSR && hasValue(obj.defaultValue) && obj.defaultValue !== "")));
+}
+
+/**
+ * Determines if a given element is a DOM element name (i.e. not a React component).
+ */
+function isHostComponent(element) {
+    return typeof element === "string";
+}
+
+const $$h = createComponentFactory()({
+  name: "MuiInputBase",
+  propDefaults: ({
+    set
+  }) => set({
+    components: {},
+    componentsProps: {},
+    fullWidth: false,
+    inputComponent: "input",
+    inputProps: {},
+    multiline: false,
+    type: "text",
+    disableInjectingGlobalStyles: false
+  }),
+  selfPropNames: ["aria-describedby", "autoComplete", "autoFocus", "classes", "color", "components", "componentsProps", "defaultValue", "disableInjectingGlobalStyles", "disabled", "endAdornment", "error", "fullWidth", "id", "inputComponent", "inputProps", "inputProps", "inputRef", "margin", "maxRows", "minRows", "multiline", "name", "onBlur", "onChange", "onFocus", "onKeyDown", "onKeyUp", "placeholder", "readOnly", "renderSuffix", "required", "rows", "size", "startAdornment", "type", "value"],
+  utilityClass: getInputBaseUtilityClass,
+  autoCallUseClasses: false,
+  slotClasses: ownerState => ({
+    root: ["root", `color${capitalize(ownerState.color)}`, !!ownerState.disabled && "disabled", !!ownerState.error && "error", !!ownerState.fullWidth && "fullWidth", ownerState.focused && "focused", !!ownerState.formControl && "formControl", ownerState.size === "small" && "sizeSmall", ownerState.multiline && "multiline", !!ownerState.startAdornment && "adornedStart", !!ownerState.endAdornment && "adornedEnd", !!ownerState.hiddenLabel && "hiddenLabel"],
+    input: ["input", !!ownerState.disabled && "disabled", ownerState.type === "search" && "inputTypeSearch", ownerState.multiline && "inputMultiline", ownerState.size === "small" && "inputSizeSmall", !!ownerState.hiddenLabel && "inputHiddenLabel", !!ownerState.startAdornment && "inputAdornedStart", !!ownerState.endAdornment && "inputAdornedEnd"]
+  })
+});
+const rootOverridesResolver = (props, styles) => {
+  const ownerState = props.ownerState;
+  return [styles.root, !!ownerState.formControl && styles.formControl, !!ownerState.startAdornment && styles.adornedStart, !!ownerState.endAdornment && styles.adornedEnd, !!ownerState.error && styles.error, ownerState.size === "small" && styles.sizeSmall, ownerState.multiline && styles.multiline, ownerState.color && styles[`color${capitalize(ownerState.color)}`], !!ownerState.fullWidth && styles.fullWidth, !!ownerState.hiddenLabel && styles.hiddenLabel];
+};
+const inputOverridesResolver = (props, styles) => {
+  const ownerState = props.ownerState;
+  return [styles.input, ownerState.size === "small" && styles.inputSizeSmall, ownerState.multiline && styles.inputMultiline, ownerState.type === "search" && styles.inputTypeSearch, !!ownerState.startAdornment && styles.inputAdornedStart, !!ownerState.endAdornment && styles.inputAdornedEnd, !!ownerState.hiddenLabel && styles.inputHiddenLabel];
+};
+const InputBaseRoot = _hoc_function$5("div", {
+  name: "MuiInputBase",
+  slot: "Root",
+  overridesResolver: rootOverridesResolver
+})(({
+  theme,
+  ownerState
+}) => ({
+  ...theme.typography.body1,
+  color: theme.palette.text.primary,
+  lineHeight: "1.4375em",
+  boxSizing: "border-box",
+  position: "relative",
+  cursor: "text",
+  display: "inline-flex",
+  alignItems: "center",
+  [`&.${inputBaseClasses.disabled}`]: {
+    color: theme.palette.text.disabled,
+    cursor: "default"
+  },
+  ...(ownerState.multiline && {
+    padding: "4px 0 5px",
+    ...(ownerState.size === "small" && {
+      paddingTop: 1
+    })
+  }),
+  ...(ownerState.fullWidth && {
+    width: "100%"
+  })
+}));
+const InputBaseComponent = _hoc_function$5("input", {
+  name: "MuiInputBase",
+  slot: "Input",
+  overridesResolver: inputOverridesResolver
+})(({
+  theme,
+  ownerState
+}) => {
+  const light = theme.palette.mode === "light";
+  const placeholder = {
+    color: "currentColor",
+    opacity: light ? 0.42 : 0.5,
+    transition: theme.transitions.create("opacity", {
+      duration: theme.transitions.duration.shorter
+    })
+  };
+  const placeholderHidden = {
+    opacity: "0 !important"
+  };
+  const placeholderVisible = {
+    opacity: light ? 0.42 : 0.5
+  };
+  return {
+    font: "inherit",
+    letterSpacing: "inherit",
+    color: "currentColor",
+    padding: "4px 0 5px",
+    border: 0,
+    boxSizing: "content-box",
+    background: "none",
+    height: "1.4375em",
+    margin: 0,
+    WebkitTapHighlightColor: "transparent",
+    display: "block",
+    minWidth: 0,
+    width: "100%",
+    animationName: "mui-auto-fill-cancel",
+    animationDuration: "10ms",
+    "&::-webkit-input-placeholder": placeholder,
+    "&::-moz-placeholder": placeholder,
+    "&:-ms-input-placeholder": placeholder,
+    "&::-ms-input-placeholder": placeholder,
+    "&:focus": {
+      outline: 0
+    },
+    "&:invalid": {
+      boxShadow: "none"
+    },
+    "&::-webkit-search-decoration": {
+      WebkitAppearance: "none"
+    },
+    [`label[data-shrink=false] + .${inputBaseClasses.formControl} &`]: {
+      "&::-webkit-input-placeholder": placeholderHidden,
+      "&::-moz-placeholder": placeholderHidden,
+      "&:-ms-input-placeholder": placeholderHidden,
+      "&::-ms-input-placeholder": placeholderHidden,
+      "&:focus::-webkit-input-placeholder": placeholderVisible,
+      "&:focus::-moz-placeholder": placeholderVisible,
+      "&:focus:-ms-input-placeholder": placeholderVisible,
+      "&:focus::-ms-input-placeholder": placeholderVisible
+    },
+    [`&.${inputBaseClasses.disabled}`]: {
+      opacity: 1,
+      WebkitTextFillColor: theme.palette.text.disabled
+    },
+    "&:-webkit-autofill": {
+      animationDuration: "5000s",
+      animationName: "mui-auto-fill"
+    },
+    ...(ownerState.size === "small" && {
+      paddingTop: 1
+    }),
+    ...(ownerState.multiline && {
+      height: "auto",
+      resize: "none",
+      padding: 0,
+      paddingTop: 0
+    }),
+    ...(ownerState.type === "search" && {
+      MozAppearance: "textfield"
+    })
+  };
+});
+const inputGlobalStyles = () => createComponent$1(GlobalStyles, {
+  styles: {
+    "@keyframes mui-auto-fill": {
+      from: {
+        display: "block"
+      }
+    },
+    "@keyframes mui-auto-fill-cancel": {
+      from: {
+        display: "block"
+      }
+    }
+  }
+});
+const InputBase = $$h.component(function InputBase2({
+  allProps,
+  otherProps,
+  props
+}) {
+  const inputValue = () => props.inputProps.value != null ? props.inputProps.value : props.value;
+  const isControlled = (inputValue() ?? null) !== null;
+  const [value, setValue] = useControlled({
+    controlled: () => inputValue(),
+    default: () => props.defaultValue,
+    name: "InputBase"
+  });
+  const inputRef = createRef({
+    ref: instance => {
+      if (process.env.NODE_ENV !== "production") {
+        if (instance && instance.nodeName !== "INPUT" && !instance.focus) {
+          console.error(["MUI: You have provided a `inputComponent` to the input component", "that does not correctly handle the `ref` prop.", "Make sure the `ref` prop is called with a HTMLInputElement."].join("\n"));
+        }
+      }
+      if (typeof props.inputRef === "function") props.inputRef(instance);
+    }
+  });
+  const [focused, setFocused] = createSignal(false);
+  const muiFormControl = useFormControl();
+  if (process.env.NODE_ENV !== "production") ;
+  const partialFcs = formControlState({
+    props: allProps,
+    muiFormControl,
+    states: ["color", "disabled", "error", "hiddenLabel", "size", "required", "filled"]
+  });
+  const fcs = mergeProps(partialFcs, {
+    get focused() {
+      return muiFormControl ? muiFormControl.focused : focused();
+    }
+  });
+  const onFilled = () => muiFormControl && muiFormControl.onFilled;
+  const onEmpty = () => muiFormControl && muiFormControl.onEmpty;
+  const checkDirty = obj => {
+    if (isFilled(obj)) {
+      onFilled()?.();
+    } else {
+      onEmpty()?.();
+    }
+  };
+  createRenderEffect(() => {
+    if (isControlled) {
+      checkDirty({
+        value: value()
+      });
+    }
+  });
+  const isMultilineInput = () => props.multiline && props.inputComponent === "input";
+  const InputComponent = () => {
+    const InputComponent2 = props.inputComponent;
+    if (isMultilineInput()) ;
+    return InputComponent2;
+  };
+  const inputProps = createMemo(() => {
+    let inputProps2 = props.inputProps;
+    if (isMultilineInput()) {
+      if (props.rows) {
+        if (process.env.NODE_ENV !== "production") {
+          if (props.minRows || props.maxRows) {
+            console.warn("MUI: You can not use the `minRows` or `maxRows` props when the input `rows` prop is set.");
+          }
+        }
+        inputProps2 = {
+          type: void 0,
+          ["minRows"]: props.rows,
+          ["maxRows"]: props.rows,
+          ...inputProps2
+        };
+      } else {
+        inputProps2 = {
+          type: void 0,
+          ["maxRows"]: props.maxRows,
+          ["minRows"]: props.minRows,
+          ...inputProps2
+        };
+      }
+    }
+    return mergeProps(inputProps2, () => props.componentsProps.input || {});
+  });
+  const ownerState = mergeProps(allProps, {
+    get color() {
+      return fcs.color || "primary";
+    },
+    get disabled() {
+      return fcs.disabled;
+    },
+    get error() {
+      return fcs.error;
+    },
+    get focused() {
+      return fcs.focused;
+    },
+    get formControl() {
+      return muiFormControl;
+    },
+    get hiddenLabel() {
+      return fcs.hiddenLabel;
+    },
+    get size() {
+      return fcs.size;
+    }
+  });
+  const classes = $$h.useClasses(ownerState);
+  const Root = () => props.components.Root || InputBaseRoot;
+  const rootProps = () => props.componentsProps.root || {};
+  const Input = () => props.components.Input || InputBaseComponent;
+  const rootOwnerState = mergeProps(ownerState, () => rootProps()["ownerState"] || {});
+  const inputOwnerState = mergeProps(ownerState, () => inputProps()["ownerState"] || {});
+  const renderSuffixProps = mergeProps(fcs, {
+    get startAdornment() {
+      return props.startAdornment;
+    }
+  });
+  const suffix = createMemo(() => props.renderSuffix?.(renderSuffixProps));
+  return [!props.disableInjectingGlobalStyles && inputGlobalStyles(), createComponent$1(Dynamic, mergeProps(rootProps, otherProps, {
+    get component() {
+      return Root();
+    }
+  }, () => !isHostComponent(Root()) && {
+    ownerState: rootOwnerState
+  }, {
+    onClick: event => {
+      if (inputRef.ref && event.currentTarget === event.target) {
+        inputRef.ref.focus();
+      }
+      if (typeof otherProps.onClick === "function") {
+        otherProps.onClick(event);
+      }
+    },
+    get ["class"]() {
+      return clsx(classes.root, rootProps().class, otherProps.class);
+    },
+    get children() {
+      return [props.startAdornment, createComponent$1(FormControlContext.Provider, {
+        value: void 0,
+        get children() {
+          return createComponent$1(Dynamic, mergeProps({
+            get component() {
+              return Input();
+            },
+            ownerState: ownerState,
+            get ["aria-invalid"]() {
+              return fcs.error;
+            },
+            get ["aria-describedby"]() {
+              return props["aria-describedby"];
+            },
+            get autocomplete() {
+              return props.autoComplete;
+            },
+            get autofocus() {
+              return props.autoFocus;
+            },
+            get disabled() {
+              return fcs.disabled;
+            },
+            get id() {
+              return props.id;
+            },
+            onAnimationStart: event => {
+              checkDirty(event.animationName === "mui-auto-fill-cancel" ? inputRef.ref : {
+                value: "x"
+              });
+            },
+            get name() {
+              return props.name;
+            },
+            get placeholder() {
+              return props.placeholder;
+            },
+            get readOnly() {
+              return props.readOnly;
+            },
+            get required() {
+              return fcs.required;
+            }
+          }, () => ({
+            rows: props.rows
+          }), {
+            get onKeyDown() {
+              return props.onKeyDown;
+            },
+            get onKeyUp() {
+              return props.onKeyUp;
+            },
+            get type() {
+              return props.type;
+            }
+          }, inputProps, () => !isHostComponent(Input()) && {
+            as: InputComponent(),
+            ownerState: inputOwnerState
+          }, {
+            get ["class"]() {
+              return clsx(classes.input, inputProps().class);
+            },
+            onBlur: event => {
+              props.onBlur?.(event);
+              if (typeof props.inputProps.onBlur === "function") {
+                props.inputProps.onBlur(event);
+              }
+              if (muiFormControl && muiFormControl.onBlur) {
+                muiFormControl.onBlur();
+              } else {
+                setFocused(false);
+              }
+            },
+            onInput: event => {
+              if (!isControlled) {
+                const element = event.target || inputRef.ref;
+                if (element == null) {
+                  throw new Error("MUI: Expected valid input target. Did you use a custom `inputComponent` and forget to forward refs? See https://mui.com/r/input-component-ref-interface for more info.");
+                }
+                checkDirty({
+                  value: element.value
+                });
+              }
+            },
+            onFocus: event => {
+              if (fcs.disabled) {
+                event.stopPropagation();
+                return;
+              }
+              if (typeof props.onFocus === "function") {
+                props.onFocus(event);
+              }
+              if (typeof props.inputProps.onFocus === "function") {
+                props.inputProps.onFocus(event);
+              }
+              if (muiFormControl && muiFormControl.onFocus) {
+                muiFormControl.onFocus();
+              } else {
+                setFocused(true);
+              }
+            }
+          }));
+        }
+      }), props.endAdornment, suffix()];
+    }
+  }))];
+});
+
+__astro_tag_component__(rootOverridesResolver, "@astrojs/solid-js");
+__astro_tag_component__(inputOverridesResolver, "@astrojs/solid-js");
+__astro_tag_component__(InputBase, "@astrojs/solid-js");
+
+function getInputUtilityClass(slot) {
+    return generateUtilityClass("MuiInput", slot);
+}
+const inputClasses = {
+    ...inputBaseClasses,
+    ...generateUtilityClasses("MuiInput", ["root", "underline", "input"]),
+};
+
+const $$g = createComponentFactory()({
+  name: "MuiInput",
+  propDefaults: ({
+    set
+  }) => set({
+    components: {},
+    fullWidth: false,
+    inputComponent: "input",
+    multiline: false,
+    type: "text"
+  }),
+  selfPropNames: ["classes", "disableUnderline"],
+  utilityClass: getInputUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", !ownerState.disableUnderline && "underline"],
+    input: ["input"]
+  })
+});
+const InputRoot = _hoc_function$5(InputBaseRoot, {
+  skipProps: skipRootProps.filter(v => v !== "classes"),
+  name: "MuiInput",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [...rootOverridesResolver(props, styles), !ownerState.disableUnderline && styles.underline];
+  }
+})(({
+  theme,
+  ownerState
+}) => {
+  const light = theme.palette.mode === "light";
+  const bottomLineColor = light ? "rgba(0, 0, 0, 0.42)" : "rgba(255, 255, 255, 0.7)";
+  return {
+    position: "relative",
+    ...(ownerState.formControl && {
+      "label + &": {
+        marginTop: 16
+      }
+    }),
+    ...(!ownerState.disableUnderline && {
+      "&:after": {
+        borderBottom: `2px solid ${theme.palette[ownerState.color].main}`,
+        left: 0,
+        bottom: 0,
+        content: '""',
+        position: "absolute",
+        right: 0,
+        transform: "scaleX(0)",
+        transition: theme.transitions.create("transform", {
+          duration: theme.transitions.duration.shorter,
+          easing: theme.transitions.easing.easeOut
+        }),
+        pointerEvents: "none"
+      },
+      [`&.${inputClasses.focused}:after`]: {
+        transform: "scaleX(1)"
+      },
+      [`&.${inputClasses.error}:after`]: {
+        borderBottomColor: theme.palette.error.main,
+        transform: "scaleX(1)"
+      },
+      "&:before": {
+        borderBottom: `1px solid ${bottomLineColor}`,
+        left: 0,
+        bottom: 0,
+        content: '"\\00a0"',
+        position: "absolute",
+        right: 0,
+        transition: theme.transitions.create("border-bottom-color", {
+          duration: theme.transitions.duration.shorter
+        }),
+        pointerEvents: "none"
+      },
+      [`&:hover:not(.${inputClasses.disabled}):before`]: {
+        borderBottom: `2px solid ${theme.palette.text.primary}`,
+        "@media (hover: none)": {
+          borderBottom: `1px solid ${bottomLineColor}`
+        }
+      },
+      [`&.${inputClasses.disabled}:before`]: {
+        borderBottomStyle: "dotted"
+      }
+    })
+  };
+});
+const InputInput = _hoc_function$5(InputBaseComponent, {
+  name: "MuiInput",
+  slot: "Input",
+  overridesResolver: inputOverridesResolver
+})({});
+const Input = $$g.component(function Input2({
+  classes,
+  otherProps,
+  props
+}) {
+  const componentsProps = createMemo(() => {
+    const ownerState = {
+      disableUnderline: props.disableUnderline
+    };
+    const inputComponentsProps = {
+      root: {
+        ownerState
+      }
+    };
+    return otherProps.componentsProps ? deepmerge(otherProps.componentsProps, inputComponentsProps) : inputComponentsProps;
+  });
+  const allClasses = mergeProps(classes, () => props.classes || {});
+  return createComponent$1(InputBase, mergeProps(otherProps, {
+    get components() {
+      return {
+        Root: InputRoot,
+        Input: InputInput,
+        ...(otherProps.components || {})
+      };
+    },
+    get componentsProps() {
+      return componentsProps();
+    },
+    classes: allClasses
+  }));
+});
+
+__astro_tag_component__(Input, "@astrojs/solid-js");
+
+function getFormLabelUtilityClasses(slot) {
+    return generateUtilityClass("MuiFormLabel", slot);
+}
+const formLabelClasses = generateUtilityClasses("MuiFormLabel", [
+    "root",
+    "colorSecondary",
+    "focused",
+    "disabled",
+    "error",
+    "filled",
+    "required",
+    "asterisk",
+]);
+
+const $$f = createComponentFactory()({
+  name: "MuiFormLabel",
+  propDefaults: ({
+    set
+  }) => set({
+    component: "label"
+  }),
+  selfPropNames: ["children", "classes", "color", "disabled", "error", "filled", "focused", "required"],
+  autoCallUseClasses: false,
+  utilityClass: getFormLabelUtilityClasses,
+  slotClasses: ownerState => ({
+    root: ["root", `color${capitalize(ownerState.color)}`, !!ownerState.disabled && "disabled", !!ownerState.error && "error", !!ownerState.filled && "filled", !!ownerState.focused && "focused", !!ownerState.required && "required"],
+    asterisk: ["asterisk", !!ownerState.error && "error"]
+  })
+});
+const FormLabelRoot = _hoc_function$5("label", {
+  name: "MuiFormLabel",
+  slot: "Root",
+  overridesResolver: ({
+    ownerState
+  }, styles) => {
+    return {
+      ...styles.root,
+      ...(ownerState.color === "secondary" && styles.colorSecondary),
+      ...(ownerState.filled && styles.filled)
+    };
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  color: theme.palette.text.secondary,
+  ...theme.typography.body1,
+  lineHeight: "1.4375em",
+  padding: 0,
+  position: "relative",
+  [`&.${formLabelClasses.focused}`]: {
+    color: theme.palette[ownerState.color].main
+  },
+  [`&.${formLabelClasses.disabled}`]: {
+    color: theme.palette.text.disabled
+  },
+  [`&.${formLabelClasses.error}`]: {
+    color: theme.palette.error.main
+  }
+}));
+const AsteriskComponent = _hoc_function$5("span", {
+  name: "MuiFormLabel",
+  slot: "Asterisk",
+  overridesResolver: (props, styles) => styles.asterisk
+})(({
+  theme
+}) => ({
+  [`&.${formLabelClasses.error}`]: {
+    color: theme.palette.error.main
+  }
+}));
+const FormLabel = $$f.component(function FormLabel2({
+  allProps,
+  otherProps,
+  props
+}) {
+  const muiFormControl = useFormControl();
+  const fcs = formControlState({
+    props: allProps,
+    muiFormControl,
+    states: ["color", "required", "focused", "disabled", "error", "filled"]
+  });
+  const ownerState = mergeProps(allProps, {
+    get color() {
+      return fcs.color || "primary";
+    },
+    get disabled() {
+      return fcs.disabled;
+    },
+    get error() {
+      return fcs.error;
+    },
+    get filled() {
+      return fcs.filled;
+    },
+    get focused() {
+      return fcs.focused;
+    },
+    get required() {
+      return fcs.required;
+    }
+  });
+  const classes = $$f.useClasses(ownerState);
+  return createComponent$1(FormLabelRoot, mergeProps(otherProps, {
+    get as() {
+      return otherProps.component;
+    },
+    ownerState: ownerState,
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    get children() {
+      return [props.children, createComponent$1(Show, {
+        get when() {
+          return fcs.required;
+        },
+        get children() {
+          return createComponent$1(AsteriskComponent, {
+            ownerState: ownerState,
+            "aria-hidden": true,
+            get ["class"]() {
+              return classes.asterisk;
+            },
+            get children() {
+              return ["\u2009", "*"];
+            }
+          });
+        }
+      })];
+    }
+  }));
+});
+
+__astro_tag_component__(FormLabel, "@astrojs/solid-js");
+
+function getInputLabelUtilityClasses(slot) {
+    return generateUtilityClass("MuiInputLabel", slot);
+}
+generateUtilityClasses("MuiInputLabel", [
+    "root",
+    "focused",
+    "disabled",
+    "error",
+    "required",
+    "asterisk",
+    "formControl",
+    "sizeSmall",
+    "shrink",
+    "animated",
+    "standard",
+    "filled",
+    "outlined",
+]);
+
+const $$e = createComponentFactory()({
+  name: "MuiInputLabel",
+  propDefaults: ({
+    set
+  }) => set({
+    disableAnimation: false
+  }),
+  selfPropNames: ["children", "classes", "color", "disableAnimation", "disabled", "error", "focused", "margin", "required", "shrink", "variant"],
+  autoCallUseClasses: false,
+  utilityClass: getInputLabelUtilityClasses,
+  slotClasses: ownerState => ({
+    root: ["root", !!ownerState.formControl && "formControl", !ownerState.disableAnimation && "animated", !!ownerState.shrink && "shrink", ownerState.size === "small" && "sizeSmall", !!ownerState.variant && ownerState.variant],
+    asterisk: [!!ownerState.required && "asterisk"]
+  })
+});
+const InputLabelRoot = _hoc_function$5(FormLabel, {
+  skipProps: skipRootProps.filter(v => v !== "classes"),
+  name: "MuiInputLabel",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${formLabelClasses.asterisk}`]: styles.asterisk
+    }, styles.root, ownerState.formControl && styles.formControl, ownerState.size === "small" && styles.sizeSmall, ownerState.shrink && styles.shrink, !ownerState.disableAnimation && styles.animated, styles[ownerState.variant]];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  display: "block",
+  transformOrigin: "top left",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  maxWidth: "100%",
+  ...(ownerState.formControl && {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    transform: "translate(0, 20px) scale(1)"
+  }),
+  ...(ownerState.size === "small" && {
+    transform: "translate(0, 17px) scale(1)"
+  }),
+  ...(ownerState.shrink && {
+    transform: "translate(0, -1.5px) scale(0.75)",
+    transformOrigin: "top left",
+    maxWidth: "133%"
+  }),
+  ...(!ownerState.disableAnimation && {
+    transition: theme.transitions.create(["color", "transform", "max-width"], {
+      duration: theme.transitions.duration.shorter,
+      easing: theme.transitions.easing.easeOut
+    })
+  }),
+  ...(ownerState.variant === "filled" && {
+    zIndex: 1,
+    pointerEvents: "none",
+    transform: "translate(12px, 16px) scale(1)",
+    maxWidth: "calc(100% - 24px)",
+    ...(ownerState.size === "small" && {
+      transform: "translate(12px, 13px) scale(1)"
+    }),
+    ...(ownerState.shrink && {
+      userSelect: "none",
+      pointerEvents: "auto",
+      transform: "translate(12px, 7px) scale(0.75)",
+      maxWidth: "calc(133% - 24px)",
+      ...(ownerState.size === "small" && {
+        transform: "translate(12px, 4px) scale(0.75)"
+      })
+    })
+  }),
+  ...(ownerState.variant === "outlined" && {
+    zIndex: 1,
+    pointerEvents: "none",
+    transform: "translate(14px, 16px) scale(1)",
+    maxWidth: "calc(100% - 24px)",
+    ...(ownerState.size === "small" && {
+      transform: "translate(14px, 9px) scale(1)"
+    }),
+    ...(ownerState.shrink && {
+      userSelect: "none",
+      pointerEvents: "auto",
+      maxWidth: "calc(133% - 24px)",
+      transform: "translate(14px, -9px) scale(0.75)"
+    })
+  })
+}));
+const InputLabel = $$e.component(function InputLabel2({
+  allProps,
+  props
+}) {
+  const muiFormControl = useFormControl();
+  const [, baseProps] = splitProps(allProps, ["disableAnimation", "margin", "shrink", "variant"]);
+  const shrink = () => {
+    let shrink2 = props.shrink;
+    if (typeof shrink2 === "undefined" && muiFormControl) {
+      shrink2 = muiFormControl.filled || muiFormControl.focused || muiFormControl.adornedStart;
+    }
+    return shrink2;
+  };
+  const fcs = formControlState({
+    props: allProps,
+    muiFormControl,
+    states: ["size", "variant", "required"]
+  });
+  const ownerState = mergeProps(allProps, {
+    get formControl() {
+      return muiFormControl;
+    },
+    get shrink() {
+      return shrink();
+    },
+    get size() {
+      return fcs.size;
+    },
+    get variant() {
+      return fcs.variant;
+    },
+    get required() {
+      return fcs.required;
+    }
+  });
+  const classes = $$e.useClasses(ownerState);
+  const allClasses = mergeProps(classes, () => props.classes || {});
+  return createComponent$1(InputLabelRoot, mergeProps(baseProps, {
+    get ["data-shrink"]() {
+      return shrink();
+    },
+    ownerState: ownerState,
+    classes: allClasses
+  }));
+});
+
+__astro_tag_component__(InputLabel, "@astrojs/solid-js");
+
+const StringInput = ({
+  disabled,
+  label,
+  value,
+  onChange,
+  inputProps = {},
+  customStyle = {}
+}) => {
+  return [label && createComponent$1(InputLabel, {
+    get sx() {
+      return style("text");
+    },
+    children: label
+  }), createComponent$1(Input, mergeProps(inputProps, {
+    get value() {
+      return value();
+    },
+    onChange: (_e, value2) => {
+      onChange(value2);
+    },
+    required: true,
+    disabled: disabled,
+    get sx() {
+      return style("input", customStyle);
+    }
+  }))];
+};
+
+__astro_tag_component__(StringInput, "@astrojs/solid-js");
+
+const readyAtom = computed([businessReady.atom, themeHolder.atom], (ready, theme) => ready && theme);
+
+const NameInput = () => {
+  const properties = useStore(propertiesMap);
+  const state = useStore(stateAtom);
+  const ready = useStore(readyAtom);
+  return createComponent$1(Show, {
+    get when() {
+      return ready();
+    },
+    get children() {
+      return createComponent$1(StringInput, {
+        label: "Jm\xE9no",
+        value: () => properties().name,
+        get disabled() {
+          return state() === "saving";
+        },
+        onChange: name => propertiesMap.setKey("name", name),
+        inputProps: {
+          placeholder: "Zadejte n\xE1zev postavy"
+        },
+        customStyle: {
+          width: "100%"
+        }
+      });
+    }
+  });
+};
+
+__astro_tag_component__(NameInput, "@astrojs/solid-js");
+
 const SvgIconContext = createContext();
 
 __astro_tag_component__(SvgIconContext, "@astrojs/solid-js");
@@ -7418,8 +8339,8 @@ generateUtilityClasses("MuiSvgIcon", [
     "fontSizeLarge",
 ]);
 
-const _tmpl$$4 = ["<title", ">", "</title>"];
-const $$2 = createComponentFactory()({
+const _tmpl$$7 = ["<title", ">", "</title>"];
+const $$d = createComponentFactory()({
   name: "MuiSvgIcon",
   selfPropNames: ["children", "classes", "color", "fontSize", "htmlColor", "inheritViewBox", "shapeRendering", "titleAccess", "viewBox"],
   propDefaults: ({
@@ -7441,7 +8362,7 @@ const $$2 = createComponentFactory()({
     root: ["root", o.color !== "inherit" && `color${capitalize(o.color)}`, `fontSize${capitalize(o.fontSize)}`]
   })
 });
-const SvgIconRoot = _hoc_function$2("svg", {
+const SvgIconRoot = _hoc_function$5("svg", {
   name: "MuiSvgIcon",
   slot: "Root",
   overridesResolver: (props, styles) => {
@@ -7475,7 +8396,7 @@ const SvgIconRoot = _hoc_function$2("svg", {
     inherit: void 0
   }[ownerState.color]
 }));
-const SvgIcon = $$2.component(function SvgIcon2({
+const SvgIcon = $$d.component(function SvgIcon2({
   allProps,
   props,
   otherProps,
@@ -7508,7 +8429,7 @@ const SvgIcon = $$2.component(function SvgIcon2({
           return !!props.titleAccess;
         },
         get children() {
-          return ssr(_tmpl$$4, ssrHydrationKey(), escape(props.titleAccess));
+          return ssr(_tmpl$$7, ssrHydrationKey(), escape(props.titleAccess));
         }
       })];
     }
@@ -7528,10 +8449,10 @@ function createSvgIcon(path, displayName) {
 
 __astro_tag_component__(createSvgIcon, "@astrojs/solid-js");
 
-const _tmpl$$3 = ["<path", " d=\"M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z\"></path>"];
-const _hoc_function$1 = createSvgIcon(() => ssr(_tmpl$$3, ssrHydrationKey()), "Cancel");
+const _tmpl$$6 = ["<path", " d=\"M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z\"></path>"];
+const _hoc_function$4 = createSvgIcon(() => ssr(_tmpl$$6, ssrHydrationKey()), "Cancel");
 
-__astro_tag_component__(_hoc_function$1, "@astrojs/solid-js");
+__astro_tag_component__(_hoc_function$4, "@astrojs/solid-js");
 
 function getChipUtilityClass(slot) {
     return generateUtilityClass("MuiChip", slot);
@@ -7576,7 +8497,7 @@ const chipClasses = generateUtilityClasses("MuiChip", [
     "focusVisible",
 ]);
 
-const $$1 = createComponentFactory()({
+const $$c = createComponentFactory()({
   name: "MuiChip",
   propDefaults: ({
     set
@@ -7596,7 +8517,7 @@ const $$1 = createComponentFactory()({
     deleteIcon: ["deleteIcon", `deleteIcon${capitalize(ownerState.size)}`, `deleteIconColor${capitalize(ownerState.color)}`, `deleteIconOutlinedColor${capitalize(ownerState.color)}`]
   })
 });
-const ChipRoot = _hoc_function$2("div", {
+const ChipRoot = _hoc_function$5("div", {
   name: "MuiChip",
   slot: "Root",
   overridesResolver: (props, styles) => {
@@ -7808,7 +8729,7 @@ const ChipRoot = _hoc_function$2("div", {
     }
   })
 }));
-const ChipLabel = _hoc_function$2("span", {
+const ChipLabel = _hoc_function$5("span", {
   name: "MuiChip",
   slot: "Label",
   overridesResolver: (props, styles) => {
@@ -7836,7 +8757,7 @@ const ChipLabel = _hoc_function$2("span", {
 function isDeleteKeyboardEvent(keyboardEvent) {
   return keyboardEvent.key === "Backspace" || keyboardEvent.key === "Delete";
 }
-const Chip = $$1.component(function Chip2({
+const Chip = $$c.component(function Chip2({
   allProps,
   classes,
   otherProps,
@@ -7878,7 +8799,7 @@ const Chip = $$1.component(function Chip2({
       node.setAttribute("class", clsx(node.getAttribute("class"), classes.deleteIcon));
       if (node instanceof SVGElement || node instanceof HTMLElement) node.onclick = handleDeleteIconClick;
     } else {
-      return createComponent$1(_hoc_function$1, {
+      return createComponent$1(_hoc_function$4, {
         get ["class"]() {
           return classes.deleteIcon;
         },
@@ -7938,10 +8859,10 @@ const Chip = $$1.component(function Chip2({
 
 __astro_tag_component__(Chip, "@astrojs/solid-js");
 
-const _tmpl$$2 = ["<path", " d=\"M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\"></path>"];
-const _hoc_function = createSvgIcon(() => ssr(_tmpl$$2, ssrHydrationKey()), "Person");
+const _tmpl$$5 = ["<path", " d=\"M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\"></path>"];
+const _hoc_function$3 = createSvgIcon(() => ssr(_tmpl$$5, ssrHydrationKey()), "Person");
 
-__astro_tag_component__(_hoc_function, "@astrojs/solid-js");
+__astro_tag_component__(_hoc_function$3, "@astrojs/solid-js");
 
 function getAvatarUtilityClass(slot) {
     return generateUtilityClass("MuiAvatar", slot);
@@ -7956,7 +8877,7 @@ generateUtilityClasses("MuiAvatar", [
     "fallback",
 ]);
 
-const $ = createComponentFactory()({
+const $$b = createComponentFactory()({
   name: "MuiAvatar",
   selfPropNames: ["alt", "children", "classes", "imgProps", "sizes", "src", "srcSet", "variant"],
   utilityClass: getAvatarUtilityClass,
@@ -7966,7 +8887,7 @@ const $ = createComponentFactory()({
     fallback: ["fallback"]
   })
 });
-const AvatarRoot = _hoc_function$2("div", {
+const AvatarRoot = _hoc_function$5("div", {
   name: "MuiAvatar",
   slot: "Root",
   overridesResolver: (props, styles) => {
@@ -8003,7 +8924,7 @@ const AvatarRoot = _hoc_function$2("div", {
     backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[400] : theme.palette.grey[600]
   })
 }));
-const AvatarImg = _hoc_function$2("img", {
+const AvatarImg = _hoc_function$5("img", {
   name: "MuiAvatar",
   slot: "Img",
   overridesResolver: (props, styles) => styles.img
@@ -8015,7 +8936,7 @@ const AvatarImg = _hoc_function$2("img", {
   color: "transparent",
   textIndent: "10000"
 });
-const AvatarFallback = _hoc_function$2(_hoc_function, {
+const AvatarFallback = _hoc_function$5(_hoc_function$3, {
   name: "MuiAvatar",
   slot: "Fallback",
   overridesResolver: (props, styles) => styles.fallback
@@ -8056,8 +8977,8 @@ function useLoaded(props) {
   }));
   return loaded;
 }
-const Avatar = $.defineComponent(function Avatar2(inProps) {
-  const props = $.useThemeProps({
+const Avatar = $$b.defineComponent(function Avatar2(inProps) {
+  const props = $$b.useThemeProps({
     props: inProps
   });
   const [, other] = splitProps(props, ["alt", "children", "class", "component", "imgProps", "sizes", "src", "srcSet", "variant"]);
@@ -8086,7 +9007,7 @@ const Avatar = $.defineComponent(function Avatar2(inProps) {
       return baseProps.variant;
     }
   });
-  const classes = $.useClasses(ownerState);
+  const classes = $$b.useClasses(ownerState);
   const children = () => {
     if (hasImgNotFailing()) {
       return createComponent$1(AvatarImg, mergeProps({
@@ -8211,10 +9132,10 @@ const MoneyDisplay = ({
 
 __astro_tag_component__(MoneyDisplay, "@astrojs/solid-js");
 
-const MDXLayout$6 = async function ({
+const MDXLayout$8 = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/FormLayout.901608f8.mjs')).default;
+  const Layout = (await import('./chunks/FormLayout.f8dbe823.mjs')).default;
   const {
     layout,
     ...content
@@ -8254,8 +9175,8 @@ const frontmatter$9 = {
 function getHeadings$9() {
   return [{
     "depth": 2,
-    "slug": "vlastnosti",
-    "text": "Vlastnosti"
+    "slug": "profil",
+    "text": "Profil"
   }];
 }
 function _createMdxContent$9(props) {
@@ -8263,46 +9184,55 @@ function _createMdxContent$9(props) {
       h2: "h2"
     }, props.components),
     {
-      Row
+      Form,
+      Row,
+      Gap
     } = _components;
-  if (!Row) _missingMdxReference$3("Row", true);
+  if (!Form) _missingMdxReference$2("Form", true);
+  if (!Gap) _missingMdxReference$2("Gap", true);
+  if (!Row) _missingMdxReference$2("Row", true);
   return createVNode(Fragment, {
     children: [createVNode(_components.h2, {
-      id: "vlastnosti",
-      children: "Vlastnosti"
-    }), "\n", "\n", createVNode(Row, {
-      justifyContent: "flex-end",
-      children: [createVNode("astro-client-only", {
-        "client:only": "solid-js",
-        "client:display-name": "PointDisplay",
-        "client:component-path": "@portal/components/PointDisplay",
-        "client:component-export": "default",
-        "client:component-hydration": true
+      id: "profil",
+      children: "Profil"
+    }), "\n", "\n", createVNode(Form, {
+      height: "170px",
+      children: [createVNode(Row, {
+        justifyContent: "flex-end",
+        children: [createVNode("astro-client-only", {
+          "client:only": "solid-js",
+          "client:display-name": "PointDisplay",
+          "client:component-path": "@portal/components/PointDisplay",
+          "client:component-export": "default",
+          "client:component-hydration": true
+        }), createVNode("astro-client-only", {
+          "client:only": "solid-js",
+          "client:display-name": "MoneyDisplay",
+          "client:component-path": "@portal/components/MoneyDisplay",
+          "client:component-export": "default",
+          "client:component-hydration": true
+        })]
+      }), createVNode(Gap, {
+        height: 3
       }), createVNode("astro-client-only", {
         "client:only": "solid-js",
-        "client:display-name": "MoneyDisplay",
-        "client:component-path": "@portal/components/MoneyDisplay",
+        "client:display-name": "NameInput",
+        "client:component-path": "@portal/components/properties/NameInput",
         "client:component-export": "default",
         "client:component-hydration": true
       })]
-    }), "\n", createVNode("astro-client-only", {
-      "client:only": "solid-js",
-      "client:display-name": "NameInput",
-      "client:component-path": "@portal/components/properties/NameInput",
-      "client:component-export": "default",
-      "client:component-hydration": true
     })]
   });
 }
 function MDXContent$9(props = {}) {
-  return createVNode(MDXLayout$6, {
+  return createVNode(MDXLayout$8, {
     ...props,
     children: createVNode(_createMdxContent$9, {
       ...props
     })
   });
 }
-function _missingMdxReference$3(id, component) {
+function _missingMdxReference$2(id, component) {
   throw new Error("Expected " + (component ? "component" : "object") + " `" + id + "` to be defined: you likely forgot to import, pass, or provide it.");
 }
 __astro_tag_component__(getHeadings$9, "astro:jsx");
@@ -8312,9 +9242,9 @@ const url$8 = "src/projects/rpg/builder/ui/portal/blocks/properties.mdx";
 const file$8 = "C:/work/killman/rpg-store/src/projects/rpg/builder/ui/portal/blocks/properties.mdx";
 const Content$8 = MDXContent$9;
 
-const $$Astro$l = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/box.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$p = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/box.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$Box = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$l, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$p, $$props, $$slots);
   Astro2.self = $$Box;
   const props = Astro2.props;
   return renderTemplate`${maybeRenderHead($$result)}<div${addAttribute(style("box", props), "style")}>
@@ -8322,20 +9252,20 @@ const $$Box = createComponent(async ($$result, $$props, $$slots) => {
 </div>`;
 });
 
-const $$Astro$k = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/row.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$o = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/row.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$Row = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$k, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$o, $$props, $$slots);
   Astro2.self = $$Row;
   const { display = "flex", flexWrap = "wrap", rowGap = 3, columnGap = 3, ...props } = Astro2.props;
   return renderTemplate`${renderComponent($$result, "Box", $$Box, { "display": display, "flexWrap": flexWrap, "rowGap": rowGap, "columnGap": columnGap, ...props }, { "default": () => renderTemplate`${renderSlot($$result, $$slots["default"])}` })}`;
 });
 
-const $$Astro$j = createAstro("C:/work/killman/rpg-store/src/pages/builder/BlockList.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$n = createAstro("C:/work/killman/rpg-store/src/pages/builder/BlockList.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$BlockList = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$j, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$n, $$props, $$slots);
   Astro2.self = $$BlockList;
   const blocks = [
-    { url: "/builder/blocks/races", header: "Races", action: "Set races", type: "races" },
+    { url: "/builder/blocks/races", header: "Rasa", action: "Vybrat rasu", type: "races" },
     {
       url: "/builder/blocks/equipments",
       header: "Equipments",
@@ -8344,8 +9274,8 @@ const $$BlockList = createComponent(async ($$result, $$props, $$slots) => {
     },
     {
       url: "/builder/blocks/advantages",
-      header: "Advantages",
-      action: "Set advantages",
+      header: "V\xFDhody - nev\xFDhody",
+      action: "Nastavit",
       type: "advantages"
     }
   ];
@@ -8362,9 +9292,9 @@ const _page2 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   url: $$url$5
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const $$Astro$i = createAstro("C:/work/killman/rpg-store/src/styles/components/html/h1.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$m = createAstro("C:/work/killman/rpg-store/src/styles/components/html/h1.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$H1 = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$i, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$m, $$props, $$slots);
   Astro2.self = $$H1;
   const props = Astro2.props;
   return renderTemplate`${maybeRenderHead($$result)}<h1${addAttribute(style("h1", props), "style")}>
@@ -8372,9 +9302,9 @@ const $$H1 = createComponent(async ($$result, $$props, $$slots) => {
 </h1>`;
 });
 
-const $$Astro$h = createAstro("C:/work/killman/rpg-store/src/styles/components/html/h2.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$l = createAstro("C:/work/killman/rpg-store/src/styles/components/html/h2.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$H2 = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$h, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$l, $$props, $$slots);
   Astro2.self = $$H2;
   const props = Astro2.props;
   return renderTemplate`${maybeRenderHead($$result)}<h2${addAttribute(style("h2", props), "style")}>
@@ -8382,9 +9312,9 @@ const $$H2 = createComponent(async ($$result, $$props, $$slots) => {
 </h2>`;
 });
 
-const $$Astro$g = createAstro("C:/work/killman/rpg-store/src/styles/components/html/p.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$k = createAstro("C:/work/killman/rpg-store/src/styles/components/html/p.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$P = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$g, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$k, $$props, $$slots);
   Astro2.self = $$P;
   const props = Astro2.props;
   return renderTemplate`${maybeRenderHead($$result)}<p${addAttribute(style("p", props), "style")}>
@@ -8392,9 +9322,9 @@ const $$P = createComponent(async ($$result, $$props, $$slots) => {
 </p>`;
 });
 
-const $$Astro$f = createAstro("C:/work/killman/rpg-store/src/styles/components/html/a.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$j = createAstro("C:/work/killman/rpg-store/src/styles/components/html/a.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$A = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$f, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$j, $$props, $$slots);
   Astro2.self = $$A;
   const { href, ...props } = Astro2.props;
   return renderTemplate`${maybeRenderHead($$result)}<a${addAttribute(href, "href")}${addAttribute(style("a", props), "style")}>
@@ -8402,15 +9332,36 @@ const $$A = createComponent(async ($$result, $$props, $$slots) => {
 </a>`;
 });
 
-const $$Astro$e = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/quote.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Astro$i = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/form.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Form = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$i, $$props, $$slots);
+  Astro2.self = $$Form;
+  const props = Astro2.props;
+  return renderTemplate`${maybeRenderHead($$result)}<div${addAttribute(style("form", props), "style")}>
+  ${renderSlot($$result, $$slots["default"])}
+  <div${addAttribute(style("formControls"), "style")}>
+    ${renderComponent($$result, "FormControls", null, { "client:only": "solid-js", "client:component-hydration": "only", "client:component-path": "@widgets/form/FormControls", "client:component-export": "default" })}
+  </div>
+</div>`;
+});
+
+const $$Astro$h = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/gap.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$Gap = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$h, $$props, $$slots);
+  Astro2.self = $$Gap;
+  const { width, height } = Astro2.props;
+  return renderTemplate`${renderComponent($$result, "Box", $$Box, { "marginBottom": height, "marginRight": width })}`;
+});
+
+const $$Astro$g = createAstro("C:/work/killman/rpg-store/src/styles/components/custom/quote.astro", "", "file:///C:/work/killman/rpg-store/");
 const $$Quote = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$e, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$g, $$props, $$slots);
   Astro2.self = $$Quote;
   const { isRed } = Astro2.props;
   return renderTemplate`
 
 ${maybeRenderHead($$result)}<div${addAttribute([["box", { red: isRed }], "astro-EW4G6WVL"], "class:list")}>
-  ${renderComponent($$result, "Box", $$Box, { "padding": Theme$1.getTheme().spaces[5], "class": "astro-EW4G6WVL" }, { "default": () => renderTemplate`<div class="astro-EW4G6WVL">QUOTE START</div><pre class="astro-EW4G6WVL">${renderSlot($$result, $$slots["default"])}</pre><div class="astro-EW4G6WVL">QUOTE END</div>` })}
+  ${renderComponent($$result, "Box", $$Box, { "padding": themeHolder.getTheme().spaces[5], "class": "astro-EW4G6WVL" }, { "default": () => renderTemplate`<div class="astro-EW4G6WVL">QUOTE START</div><pre class="astro-EW4G6WVL">${renderSlot($$result, $$slots["default"])}</pre><div class="astro-EW4G6WVL">QUOTE END</div>` })}
 </div>`;
 });
 
@@ -8425,6 +9376,8 @@ const components = {
   a: $$A,
   Box: $$Box,
   Row: $$Row,
+  Form: $$Form,
+  Gap: $$Gap,
   Quote: $$Quote
 };
 function _createMdxContent$8(props) {
@@ -8445,10 +9398,10 @@ __astro_tag_component__(getHeadings$8, "astro:jsx");
 __astro_tag_component__(MDXContent$8, "astro:jsx");
 MDXContent$8[Symbol.for('astro.needsHeadRendering')] = !Boolean(frontmatter$8.layout);
 
-const MDXLayout$5 = async function ({
+const MDXLayout$7 = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/BuilderLayout.97769b25.mjs')).default;
+  const Layout = (await import('./chunks/BuilderLayout.e7e13e1a.mjs')).default;
   const {
     layout,
     ...content
@@ -8502,10 +9455,18 @@ function _createMdxContent$7(props) {
       id: "tvorba-postavy",
       children: "Tvorba Postavy"
     }), "\n", createVNode(_components.p, {
-      children: ["Vytvo\u0159en\xED postavy je asi nejd\u016Fle\u017Eit\u011Bj\u0161\xED funkc\xED pravidel.", createVNode("br", {}), "\r\nObecn\u011B vzato, nejlep\u0161\xED zp\u016Fsob jak vytvo\u0159it postavu, je v sou\u010Dinnosti s P\xE1nem jeskyn\u011B.", createVNode("br", {}), "\r\nZku\u0161en\u011Bj\u0161\xED hr\xE1\u010D RPG\u010Dek by nem\u011Bl m\xEDt probl\xE9m vytvo\u0159it podle t\u011Bchto pravidel postavu (a\u017E to bude kompletn\xED), ale k\xE1men \xFArazu je v tom, \u017Ee pravidla nejsou to jedin\xE9, co je t\u0159eba p\u0159i tvorb\u011B postavy zohlednit.", createVNode("br", {}), "\r\nNejd\u0159\xEDve je dobr\xE9 se zamyslet nad t\xEDm, jak postava zapadne do zam\xFD\u0161len\xE9ho ", createVNode(_components.a, {
+      children: "Vytvo\u0159en\xED postavy je asi nejd\u016Fle\u017Eit\u011Bj\u0161\xED funkc\xED pravidel."
+    }), "\n", createVNode(_components.p, {
+      children: "Obecn\u011B vzato, nejlep\u0161\xED zp\u016Fsob jak vytvo\u0159it postavu, je v sou\u010Dinnosti s P\xE1nem jeskyn\u011B."
+    }), "\n", createVNode(_components.p, {
+      children: "Zku\u0161en\u011Bj\u0161\xED hr\xE1\u010D RPG\u010Dek by nem\u011Bl m\xEDt probl\xE9m vytvo\u0159it podle t\u011Bchto pravidel postavu (a\u017E to bude kompletn\xED), ale k\xE1men \xFArazu je v tom, \u017Ee pravidla nejsou to jedin\xE9, co je t\u0159eba p\u0159i tvorb\u011B postavy zohlednit."
+    }), "\n", createVNode(_components.p, {
+      children: ["Nejd\u0159\xEDve je dobr\xE9 se zamyslet nad t\xEDm, jak postava zapadne do zam\xFD\u0161len\xE9ho ", createVNode(_components.a, {
         href: "http://www.odria.eu/wiki/index.php/Kategorie:Settingy",
         children: "settingu"
-      }), " a stylu hry, a mo\u017En\xE1 i vz\xEDt v \xFAvahu jak\xE9 postavy budou ve h\u0159e stran ostatn\xEDch hr\xE1\u010D\u016F.", createVNode("br", {}), "\r\nDal\u0161\xED v\u011Bc\xED na zv\xE1\u017Een\xED je z\xE1bavnost a zvl\xE1dnutelnost hran\xED zam\xFD\u0161len\xE9 postavy. Hr\xE1\u010D by si m\u011Bl dob\u0159e rozmyslet, jestli dok\xE1\u017Ee zahr\xE1t zejm\xE9na opa\u010Dn\xE9 pohlav\xED \u010Di nelidskou rasu, a jestli jej to bude bavit hr\xE1t t\u0159eba i za p\u016Fl roku - pokud je pl\xE1nov\xE1na kampa\u0148."]
+      }), " a stylu hry, a mo\u017En\xE1 i vz\xEDt v \xFAvahu jak\xE9 postavy budou ve h\u0159e stran ostatn\xEDch hr\xE1\u010D\u016F."]
+    }), "\n", createVNode(_components.p, {
+      children: "Dal\u0161\xED v\u011Bc\xED na zv\xE1\u017Een\xED je z\xE1bavnost a zvl\xE1dnutelnost hran\xED zam\xFD\u0161len\xE9 postavy. Hr\xE1\u010D by si m\u011Bl dob\u0159e rozmyslet, jestli dok\xE1\u017Ee zahr\xE1t zejm\xE9na opa\u010Dn\xE9 pohlav\xED \u010Di nelidskou rasu, a jestli jej to bude bavit hr\xE1t t\u0159eba i za p\u016Fl roku - pokud je pl\xE1nov\xE1na kampa\u0148."
     }), "\n", createVNode(_components.p, {
       children: ["V\xEDce informac\xED: ", createVNode(_components.a, {
         href: "http://www.odria.eu/wiki/index.php/Tvorba_postavy",
@@ -8517,7 +9478,7 @@ function _createMdxContent$7(props) {
   });
 }
 function MDXContent$7(props = {}) {
-  return createVNode(MDXLayout$5, {
+  return createVNode(MDXLayout$7, {
     ...props,
     children: createVNode(_createMdxContent$7, {
       ...props
@@ -8545,10 +9506,1703 @@ const _page1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   Content: Content$7
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const MDXLayout$4 = async function ({
+/**
+ * @ignore - internal component.
+ */
+const GridContext = createContext();
+
+function getGridUtilityClass(slot) {
+    return generateUtilityClass("MuiGrid", slot);
+}
+const SPACINGS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const DIRECTIONS = ["column-reverse", "column", "row-reverse", "row"];
+const WRAPS = ["nowrap", "wrap-reverse", "wrap"];
+const GRID_SIZES = [
+    "auto",
+    true,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+];
+const gridClasses = generateUtilityClasses("MuiGrid", [
+    "root",
+    "container",
+    "item",
+    "zeroMinWidth",
+    // spacings
+    ...SPACINGS.map((spacing) => `spacing-xs-${spacing}`),
+    // direction values
+    ...DIRECTIONS.map((direction) => `direction-xs-${direction}`),
+    // wrap values
+    ...WRAPS.map((wrap) => `wrap-xs-${wrap}`),
+    // grid sizes for all breakpoints
+    ...GRID_SIZES.map((size) => `grid-xs-${size}`),
+    ...GRID_SIZES.map((size) => `grid-sm-${size}`),
+    ...GRID_SIZES.map((size) => `grid-md-${size}`),
+    ...GRID_SIZES.map((size) => `grid-lg-${size}`),
+    ...GRID_SIZES.map((size) => `grid-xl-${size}`),
+]);
+
+const $$a = createComponentFactory()({
+  name: "MuiGrid",
+  selfPropNames: ["children", "classes", "columnSpacing", "columns", "container", "direction", "item", "lg", "md", "rowSpacing", "sm", "spacing", "wrap", "xl", "xs", "zeroMinWidth"],
+  propDefaults: ({
+    set,
+    inProps
+  }) => set({
+    get columns() {
+      const columnsContext = useContext(GridContext);
+      return inProps.columns || columnsContext || 12;
+    },
+    component: "div",
+    container: false,
+    direction: "row",
+    item: false,
+    lg: false,
+    md: false,
+    sm: false,
+    spacing: 0,
+    wrap: "wrap",
+    xl: false,
+    xs: false,
+    zeroMinWidth: false,
+    get rowSpacing() {
+      return inProps.rowSpacing ?? inProps.spacing ?? 0;
+    },
+    get columnSpacing() {
+      return inProps.columnSpacing ?? inProps.spacing ?? 0;
+    }
+  }),
+  utilityClass: getGridUtilityClass,
+  slotClasses: o => ({
+    root: ["root", o.container && "container", o.item && "item", o.zeroMinWidth && "zeroMinWidth", ...resolveSpacingClasses(o.spacing, o.container), o.direction !== "row" && `direction-xs-${String(o.direction)}`, o.wrap !== "wrap" && `wrap-xs-${String(o.wrap)}`, o.xs !== false && `grid-xs-${String(o.xs)}`, o.sm !== false && `grid-sm-${String(o.sm)}`, o.md !== false && `grid-md-${String(o.md)}`, o.lg !== false && `grid-lg-${String(o.lg)}`, o.xl !== false && `grid-xl-${String(o.xl)}`]
+  })
+});
+function getOffset(val) {
+  const parse = parseFloat(val);
+  return `${parse}${String(val).replace(String(parse), "") || "px"}`;
+}
+function generateGrid(input) {
+  const {
+    theme,
+    ownerState
+  } = input;
+  let size;
+  return theme.breakpoints.keys.reduce((globalStyles, breakpoint) => {
+    let styles = {};
+    if (ownerState[breakpoint]) {
+      size = ownerState[breakpoint];
+    }
+    if (!size) {
+      return globalStyles;
+    }
+    if (size === true) {
+      styles = {
+        flexBasis: 0,
+        flexGrow: 1,
+        maxWidth: "100%"
+      };
+    } else if (size === "auto") {
+      styles = {
+        flexBasis: "auto",
+        flexGrow: 0,
+        flexShrink: 0,
+        maxWidth: "none",
+        width: "auto"
+      };
+    } else {
+      const columnsBreakpointValues = resolveBreakpointValues({
+        values: ownerState.columns,
+        breakpoints: theme.breakpoints.values
+      });
+      const columnValue = typeof columnsBreakpointValues === "object" ? columnsBreakpointValues[breakpoint] : columnsBreakpointValues;
+      if (columnValue === void 0 || columnValue === null) {
+        return globalStyles;
+      }
+      const width = `${Math.round(size / columnValue * 1e8) / 1e6}%`;
+      let more = {};
+      if (ownerState.container && ownerState.item && ownerState.columnSpacing !== 0) {
+        const themeSpacing = theme.spacing(ownerState.columnSpacing);
+        if (themeSpacing !== "0px") {
+          const fullWidth = `calc(${width} + ${getOffset(themeSpacing)})`;
+          more = {
+            flexBasis: fullWidth,
+            maxWidth: fullWidth
+          };
+        }
+      }
+      styles = {
+        flexBasis: width,
+        flexGrow: 0,
+        maxWidth: width,
+        ...more
+      };
+    }
+    if (theme.breakpoints.values[breakpoint] === 0) {
+      Object.assign(globalStyles, styles);
+    } else {
+      globalStyles = {
+        ...globalStyles,
+        ...{
+          [theme.breakpoints.up(breakpoint)]: styles
+        }
+      };
+    }
+    return globalStyles;
+  }, {});
+}
+function generateDirection(input) {
+  const {
+    theme,
+    ownerState
+  } = input;
+  const directionValues = resolveBreakpointValues({
+    values: ownerState.direction,
+    breakpoints: theme.breakpoints.values
+  });
+  return handleBreakpoints({
+    theme
+  }, directionValues, propValue => {
+    let output = {
+      flexDirection: propValue
+    };
+    if (propValue.indexOf("column") === 0) {
+      output = {
+        ...output,
+        ...{
+          [`& > .${gridClasses.item}`]: {
+            maxWidth: "none"
+          }
+        }
+      };
+    }
+    return output;
+  });
+}
+function generateRowGap(input) {
+  const {
+    theme,
+    ownerState
+  } = input;
+  const {
+    container,
+    rowSpacing
+  } = ownerState;
+  let styles = {};
+  if (container && rowSpacing !== 0) {
+    const rowSpacingValues = resolveBreakpointValues({
+      values: rowSpacing,
+      breakpoints: theme.breakpoints.values
+    });
+    styles = handleBreakpoints({
+      theme
+    }, rowSpacingValues, propValue => {
+      const themeSpacing = theme.spacing(propValue);
+      if (themeSpacing !== "0px") {
+        return {
+          marginTop: `-${getOffset(themeSpacing)}`,
+          [`& > .${gridClasses.item}`]: {
+            paddingTop: getOffset(themeSpacing)
+          }
+        };
+      }
+      return {};
+    });
+  }
+  return styles;
+}
+function generateColumnGap(input) {
+  const {
+    theme,
+    ownerState
+  } = input;
+  const {
+    container,
+    columnSpacing
+  } = ownerState;
+  let styles = {};
+  if (container && columnSpacing !== 0) {
+    const columnSpacingValues = resolveBreakpointValues({
+      values: columnSpacing,
+      breakpoints: theme.breakpoints.values
+    });
+    styles = handleBreakpoints({
+      theme
+    }, columnSpacingValues, propValue => {
+      const themeSpacing = theme.spacing(propValue);
+      if (themeSpacing !== "0px") {
+        return {
+          width: `calc(100% + ${getOffset(themeSpacing)})`,
+          marginLeft: `-${getOffset(themeSpacing)}`,
+          [`& > .${gridClasses.item}`]: {
+            paddingLeft: getOffset(themeSpacing)
+          }
+        };
+      }
+      return {};
+    });
+  }
+  return styles;
+}
+function resolveSpacingClasses(spacing, container, styles = {}) {
+  if (!container || !spacing || spacing <= 0) {
+    return [];
+  }
+  if (typeof spacing === "string" && !Number.isNaN(Number(spacing)) || typeof spacing === "number") {
+    return [styles[`spacing-xs-${String(spacing)}`] || `spacing-xs-${String(spacing)}`];
+  } else if (typeof spacing === "string" || Array.isArray(spacing)) {
+    return [];
+  }
+  const xs = spacing.xs;
+  const sm = spacing.sm;
+  const md = spacing.md;
+  const lg = spacing.lg;
+  const xl = spacing.xl;
+  return [Number(xs) > 0 && (styles[`spacing-xs-${String(xs)}`] || `spacing-xs-${String(xs)}`), Number(sm) > 0 && (styles[`spacing-sm-${String(sm)}`] || `spacing-sm-${String(sm)}`), Number(md) > 0 && (styles[`spacing-md-${String(md)}`] || `spacing-md-${String(md)}`), Number(lg) > 0 && (styles[`spacing-lg-${String(lg)}`] || `spacing-lg-${String(lg)}`), Number(xl) > 0 && (styles[`spacing-xl-${String(xl)}`] || `spacing-xl-${String(xl)}`)];
+}
+const GridRoot = _hoc_function$5("div", {
+  name: "MuiGrid",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      container,
+      direction,
+      item,
+      lg,
+      md,
+      sm,
+      spacing,
+      wrap,
+      xl,
+      xs,
+      zeroMinWidth
+    } = props.ownerState;
+    return [styles.root, container && styles.container, item && styles.item, zeroMinWidth && styles.zeroMinWidth, ...resolveSpacingClasses(spacing, container, styles), direction !== "row" && styles[`direction-xs-${String(direction)}`], wrap !== "wrap" && styles[`wrap-xs-${String(wrap)}`], xs !== false && styles[`grid-xs-${String(xs)}`], sm !== false && styles[`grid-sm-${String(sm)}`], md !== false && styles[`grid-md-${String(md)}`], lg !== false && styles[`grid-lg-${String(lg)}`], xl !== false && styles[`grid-xl-${String(xl)}`]];
+  }
+})(({
+  ownerState
+}) => ({
+  boxSizing: "border-box",
+  ...(ownerState.container && {
+    display: "flex",
+    flexWrap: "wrap",
+    width: "100%"
+  }),
+  ...(ownerState.item && {
+    margin: 0
+  }),
+  ...(ownerState.zeroMinWidth && {
+    minWidth: 0
+  }),
+  ...(ownerState.wrap !== "wrap" && {
+    flexWrap: ownerState.wrap
+  })
+}), generateDirection, generateRowGap, generateColumnGap, generateGrid);
+const Grid = $$a.component(function Grid2({
+  allProps,
+  props,
+  otherProps,
+  classes
+}) {
+  otherProps = extendSxProp(otherProps);
+  const RootElement = () => createComponent$1(GridRoot, mergeProps({
+    ownerState: allProps,
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    }
+  }, otherProps, {
+    get children() {
+      return props.children;
+    }
+  }));
+  return createComponent$1(Show, {
+    get when() {
+      return props.columns !== 12;
+    },
+    get fallback() {
+      return createComponent$1(RootElement, {});
+    },
+    get children() {
+      return createComponent$1(GridContext.Provider, {
+        get value() {
+          return props.columns;
+        },
+        get children() {
+          return createComponent$1(RootElement, {});
+        }
+      });
+    }
+  });
+});
+
+__astro_tag_component__(generateGrid, "@astrojs/solid-js");
+__astro_tag_component__(generateDirection, "@astrojs/solid-js");
+__astro_tag_component__(generateRowGap, "@astrojs/solid-js");
+__astro_tag_component__(generateColumnGap, "@astrojs/solid-js");
+__astro_tag_component__(resolveSpacingClasses, "@astrojs/solid-js");
+__astro_tag_component__(Grid, "@astrojs/solid-js");
+
+const ListContext = createContext({
+    dense: false,
+});
+function useListContext() {
+    return useContext(ListContext);
+}
+
+function getListUtilityClass(slot) {
+    return generateUtilityClass("MuiList", slot);
+}
+generateUtilityClasses("MuiList", [
+    "root",
+    "padding",
+    "dense",
+    "subheader",
+]);
+
+const $$9 = createComponentFactory()({
+  name: "MuiList",
+  selfPropNames: ["children", "classes", "dense", "disablePadding", "subheader"],
+  propDefaults: ({
+    set
+  }) => set({
+    component: "ul",
+    dense: false,
+    disablePadding: false
+  }),
+  utilityClass: getListUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", !ownerState.disablePadding && "padding", ownerState.dense && "dense", !!ownerState.subheader && "subheader"]
+  })
+});
+const ListRoot = _hoc_function$5("ul", {
+  name: "MuiList",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, !ownerState.disablePadding && styles.padding, ownerState.dense && styles.dense, ownerState.subheader && styles.subheader];
+  }
+})(({
+  ownerState
+}) => ({
+  listStyle: "none",
+  margin: 0,
+  padding: 0,
+  position: "relative",
+  ...(!ownerState.disablePadding && {
+    paddingTop: 8,
+    paddingBottom: 8
+  }),
+  ...(ownerState.subheader && {
+    paddingTop: 0
+  })
+}));
+const List = $$9.component(function List2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  return createComponent$1(ListContext.Provider, {
+    value: {
+      get dense() {
+        return props.dense;
+      }
+    },
+    get children() {
+      return createComponent$1(ListRoot, mergeProps(otherProps, {
+        get ["class"]() {
+          return clsx(classes.root, otherProps.class);
+        },
+        ownerState: allProps,
+        get children() {
+          return [props.subheader, props.children];
+        }
+      }));
+    }
+  });
+});
+
+__astro_tag_component__(List, "@astrojs/solid-js");
+
+function getListItemButtonUtilityClass(slot) {
+    return generateUtilityClass("MuiListItemButton", slot);
+}
+const listItemButtonClasses = generateUtilityClasses("MuiListItemButton", [
+    "root",
+    "focusVisible",
+    "dense",
+    "alignItemsFlexStart",
+    "disabled",
+    "divider",
+    "gutters",
+    "selected",
+]);
+
+const $$8 = createComponentFactory()({
+  name: "MuiListItemButton",
+  selfPropNames: ["alignItems", "autoFocus", "children", "classes", "dense", "disableGutters", "disabled", "divider", "selected"],
+  propDefaults: ({
+    set
+  }) => set({
+    alignItems: "center",
+    autoFocus: false,
+    component: "div",
+    dense: false,
+    disableGutters: false,
+    divider: false,
+    selected: false,
+    disabled: false
+  }),
+  utilityClass: getListItemButtonUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.dense && "dense", !ownerState.disableGutters && "gutters", ownerState.divider && "divider", ownerState.disabled && "disabled", ownerState.alignItems === "flex-start" && "alignItemsFlexStart", ownerState.selected && "selected"]
+  })
+});
+const ListItemButtonRoot = _hoc_function$5(ButtonBase, {
+  skipProps: skipRootProps.filter(v => v !== "classes"),
+  name: "MuiListItemButton",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    return [styles.root, props.ownerState.dense && styles.dense, props.ownerState.alignItems === "flex-start" && styles.alignItemsFlexStart, props.ownerState.divider && styles.divider, !props.ownerState.disableGutters && styles.gutters];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  display: "flex",
+  flexGrow: 1,
+  justifyContent: "flex-start",
+  alignItems: "center",
+  position: "relative",
+  textDecoration: "none",
+  boxSizing: "border-box",
+  textAlign: "left",
+  paddingTop: 8,
+  paddingBottom: 8,
+  transition: theme.transitions.create("background-color", {
+    duration: theme.transitions.duration.shortest
+  }),
+  "&:hover": {
+    textDecoration: "none",
+    backgroundColor: theme.palette.action.hover,
+    "@media (hover: none)": {
+      backgroundColor: "transparent"
+    }
+  },
+  [`&.${listItemButtonClasses.selected}`]: {
+    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    [`&.${listItemButtonClasses.focusVisible}`]: {
+      backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+    }
+  },
+  [`&.${listItemButtonClasses.selected}:hover`]: {
+    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity),
+    "@media (hover: none)": {
+      backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
+    }
+  },
+  [`&.${listItemButtonClasses.focusVisible}`]: {
+    backgroundColor: theme.palette.action.focus
+  },
+  [`&.${listItemButtonClasses.disabled}`]: {
+    opacity: theme.palette.action.disabledOpacity
+  },
+  ...(ownerState.divider && {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundClip: "padding-box"
+  }),
+  ...(ownerState.alignItems === "flex-start" && {
+    alignItems: "flex-start"
+  }),
+  ...(!ownerState.disableGutters && {
+    paddingLeft: 16,
+    paddingRight: 16
+  }),
+  ...(ownerState.dense && {
+    paddingTop: 4,
+    paddingBottom: 4
+  })
+}));
+const ListItemButton = $$8.component(function ListItemButton2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  const context = useListContext();
+  const childContext = {
+    get dense() {
+      return props.dense || context.dense || false;
+    },
+    get alignItems() {
+      return props.alignItems;
+    },
+    get disableGutters() {
+      return props.disableGutters;
+    }
+  };
+  const ownerState = mergeProps(allProps, {
+    get dense() {
+      return childContext.dense;
+    }
+  });
+  return createComponent$1(ListContext.Provider, {
+    value: childContext,
+    get children() {
+      return createComponent$1(ListItemButtonRoot, mergeProps(otherProps, {
+        get focusVisibleClassName() {
+          return clsx(props.classes?.focusVisible, otherProps.focusVisibleClassName);
+        },
+        ownerState: ownerState,
+        classes: classes,
+        get children() {
+          return props.children;
+        }
+      }));
+    }
+  });
+});
+
+__astro_tag_component__(ListItemButton, "@astrojs/solid-js");
+
+function getListItemSecondaryActionClassesUtilityClass(slot) {
+    return generateUtilityClass("MuiListItemSecondaryAction", slot);
+}
+generateUtilityClasses("MuiListItemSecondaryAction", [
+    "root",
+    "disableGutters",
+]);
+
+const $$7 = createComponentFactory()({
+  name: "MuiListItemSecondaryAction",
+  selfPropNames: ["alignItems", "children", "classes"],
+  propDefaults: ({
+    set
+  }) => set({}),
+  autoCallUseClasses: false,
+  utilityClass: getListItemSecondaryActionClassesUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.disableGutters && "disableGutters"]
+  })
+});
+const ListItemSecondaryActionRoot = _hoc_function$5("div", {
+  name: "MuiListItemSecondaryAction",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.disableGutters && styles.disableGutters];
+  }
+})(({
+  ownerState
+}) => ({
+  position: "absolute",
+  right: 16,
+  top: "50%",
+  transform: "translateY(-50%)",
+  ...(ownerState.disableGutters && {
+    right: 0
+  })
+}));
+const ListItemSecondaryAction = $$7.component(function ListItemSecondaryAction2({
+  allProps,
+  otherProps,
+  props
+}) {
+  const context = useListContext();
+  const ownerState = mergeProps({
+    get disableGutters() {
+      return !!context.disableGutters;
+    }
+  }, allProps);
+  const classes = $$7.useClasses(ownerState);
+  return createComponent$1(ListItemSecondaryActionRoot, mergeProps(otherProps, {
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    ownerState: ownerState,
+    get children() {
+      return props.children;
+    }
+  }));
+});
+
+__astro_tag_component__(ListItemSecondaryAction, "@astrojs/solid-js");
+
+function getListItemUtilityClass(slot) {
+    return generateUtilityClass("MuiListItem", slot);
+}
+const listItemClasses = generateUtilityClasses("MuiListItem", [
+    "root",
+    "container",
+    "focusVisible",
+    "dense",
+    "alignItemsFlexStart",
+    "disabled",
+    "divider",
+    "gutters",
+    "padding",
+    "button",
+    "secondaryAction",
+    "selected",
+]);
+
+const $$6 = createComponentFactory()({
+  name: "MuiListItem",
+  selfPropNames: ["alignItems", "autoFocus", "children", "classes", "components", "componentsProps", "dense", "disableGutters", "disablePadding", "divider", "secondaryAction"],
+  propDefaults: ({
+    set
+  }) => set({
+    component: "li",
+    alignItems: "center",
+    autoFocus: false,
+    components: {},
+    componentsProps: {},
+    dense: false,
+    disableGutters: false,
+    disablePadding: false,
+    divider: false
+  }),
+  utilityClass: getListItemUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.dense && "dense", !ownerState.disableGutters && "gutters", !ownerState.disablePadding && "padding", ownerState.divider && "divider", ownerState.alignItems === "flex-start" && "alignItemsFlexStart"],
+    container: ["container"]
+  })
+});
+const ListItemRoot = _hoc_function$5("div", {
+  name: "MuiListItem",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.dense && styles.dense, ownerState.alignItems === "flex-start" && styles.alignItemsFlexStart, ownerState.divider && styles.divider, !ownerState.disableGutters && styles.gutters, !ownerState.disablePadding && styles.padding, ownerState.button && styles.button];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  position: "relative",
+  textDecoration: "none",
+  width: "100%",
+  boxSizing: "border-box",
+  textAlign: "left",
+  ...(!ownerState.disablePadding && {
+    paddingTop: 8,
+    paddingBottom: 8,
+    ...(ownerState.dense && {
+      paddingTop: 4,
+      paddingBottom: 4
+    }),
+    ...(!ownerState.disableGutters && {
+      paddingLeft: 16,
+      paddingRight: 16
+    }),
+    ...(!!ownerState.secondaryAction && {
+      paddingRight: 48
+    })
+  }),
+  ...(!!ownerState.secondaryAction && {
+    [`& > .${listItemButtonClasses.root}`]: {
+      paddingRight: 48
+    }
+  }),
+  [`&.${listItemClasses.focusVisible}`]: {
+    backgroundColor: theme.palette.action.focus
+  },
+  [`&.${listItemClasses.selected}`]: {
+    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    [`&.${listItemClasses.focusVisible}`]: {
+      backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+    }
+  },
+  [`&.${listItemClasses.disabled}`]: {
+    opacity: theme.palette.action.disabledOpacity
+  },
+  ...(ownerState.alignItems === "flex-start" && {
+    alignItems: "flex-start"
+  }),
+  ...(ownerState.divider && {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundClip: "padding-box"
+  })
+}));
+const ListItem = $$6.component(function ListItem2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  const context = useListContext();
+  const childContext = {
+    get dense() {
+      return props.dense || context.dense || false;
+    },
+    get alignItems() {
+      return props.alignItems;
+    },
+    get disableGutters() {
+      return props.disableGutters;
+    }
+  };
+  const ownerState = mergeProps(allProps, {
+    get dense() {
+      return childContext.dense;
+    }
+  });
+  const Root = () => props.components.Root || ListItemRoot;
+  const rootProps = () => props.componentsProps.root || {};
+  const [, componentProps] = splitProps(mergeProps({
+    get class() {
+      return clsx(classes.root, rootProps().class, otherProps.class);
+    }
+  }, otherProps), ["component", "ref"]);
+  return createComponent$1(ListContext.Provider, {
+    value: childContext,
+    get children() {
+      return createComponent$1(Dynamic, mergeProps({
+        get component() {
+          return Root();
+        },
+        get as() {
+          return otherProps.component;
+        },
+        ownerState: ownerState
+      }, () => !isHostComponent(Root()) && {
+        ownerState: mergeProps(ownerState, () => rootProps().ownerState || {})
+      }, componentProps, {
+        get children() {
+          return [props.children, createComponent$1(Show, {
+            get when() {
+              return !!props.secondaryAction;
+            },
+            get children() {
+              return createComponent$1(ListItemSecondaryAction, {
+                get children() {
+                  return props.secondaryAction;
+                }
+              });
+            }
+          })];
+        }
+      }));
+    }
+  });
+});
+
+__astro_tag_component__(ListItem, "@astrojs/solid-js");
+
+function getListItemIconUtilityClass(slot) {
+    return generateUtilityClass("MuiListItemIcon", slot);
+}
+generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]);
+
+const $$5 = createComponentFactory()({
+  name: "MuiListItemIcon",
+  selfPropNames: ["alignItems", "children", "classes"],
+  propDefaults: ({
+    set
+  }) => set({
+    component: "div"
+  }),
+  utilityClass: getListItemIconUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.alignItems === "flex-start" && "alignItemsFlexStart"]
+  })
+});
+const ListItemIconRoot = _hoc_function$5("div", {
+  name: "MuiListItemIcon",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.alignItems === "flex-start" && styles.alignItemsFlexStart];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  minWidth: 56,
+  color: theme.palette.action.active,
+  flexShrink: 0,
+  display: "inline-flex",
+  ...(ownerState.alignItems === "flex-start" && {
+    marginTop: 8
+  })
+}));
+const ListItemIcon = $$5.component(function ListItemIcon2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  const context = useListContext();
+  const ownerState = mergeProps({
+    get alignItems() {
+      return context.alignItems;
+    }
+  }, allProps);
+  return createComponent$1(ListItemIconRoot, mergeProps(otherProps, {
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    ownerState: ownerState,
+    get children() {
+      return props.children;
+    }
+  }));
+});
+
+__astro_tag_component__(ListItemIcon, "@astrojs/solid-js");
+
+function getTypographyUtilityClass(slot) {
+    return generateUtilityClass("MuiTypography", slot);
+}
+generateUtilityClasses("MuiTypography", [
+    "root",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "subtitle1",
+    "subtitle2",
+    "body1",
+    "body2",
+    "inherit",
+    "button",
+    "caption",
+    "overline",
+    "alignLeft",
+    "alignRight",
+    "alignCenter",
+    "alignJustify",
+    "noWrap",
+    "gutterBottom",
+    "paragraph",
+]);
+
+const $$4 = createComponentFactory()({
+  name: "MuiTypography",
+  selfPropNames: ["align", "children", "classes", "gutterBottom", "noWrap", "paragraph", "variant", "variantMapping"],
+  propDefaults: ({
+    set
+  }) => set({
+    align: "inherit",
+    gutterBottom: false,
+    noWrap: false,
+    paragraph: false,
+    variant: "body1",
+    variantMapping: {}
+  }),
+  utilityClass: getTypographyUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.variant, ownerState.align !== "inherit" && `align${capitalize(ownerState.align)}`, ownerState.gutterBottom && "gutterBottom", ownerState.noWrap && "noWrap", ownerState.paragraph && "paragraph"]
+  })
+});
+const TypographyRoot = _hoc_function$5("span", {
+  name: "MuiTypography",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.variant && styles[ownerState.variant], ownerState.align !== "inherit" && styles[`align${capitalize(ownerState.align)}`], ownerState.noWrap && styles.noWrap, ownerState.gutterBottom && styles.gutterBottom, ownerState.paragraph && styles.paragraph];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  margin: 0,
+  color: ownerState.color,
+  ...(ownerState.variant && theme.typography[ownerState.variant]),
+  ...(ownerState.align !== "inherit" && {
+    textAlign: ownerState.align
+  }),
+  ...(ownerState.noWrap && {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap"
+  }),
+  ...(ownerState.gutterBottom && {
+    marginBottom: "0.35em"
+  }),
+  ...(ownerState.paragraph && {
+    marginBottom: 16
+  })
+}));
+const defaultVariantMapping = {
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  subtitle1: "h6",
+  subtitle2: "h6",
+  body1: "p",
+  body2: "p",
+  inherit: "p"
+};
+const colorTransformations = {
+  primary: "primary.main",
+  textPrimary: "text.primary",
+  secondary: "secondary.main",
+  textSecondary: "text.secondary",
+  error: "error.main"
+};
+const transformDeprecatedColors = color => {
+  return colorTransformations[color] || color;
+};
+const Typography = $$4.component(function Typography2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  const Component = () => otherProps.component || (props.paragraph ? "p" : props.variantMapping[props.variant] || defaultVariantMapping[props.variant]) || "span";
+  const colorProps = mergeProps(() => {
+    const color = transformDeprecatedColors(allProps.color);
+    return color ? {
+      color
+    } : {};
+  });
+  const ownerState = mergeProps(allProps, colorProps);
+  otherProps = extendSxProp(mergeProps(otherProps, colorProps));
+  return createComponent$1(TypographyRoot, mergeProps(otherProps, {
+    get component() {
+      return Component();
+    },
+    ownerState: ownerState,
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    get children() {
+      return props.children;
+    }
+  }));
+});
+
+__astro_tag_component__(Typography, "@astrojs/solid-js");
+
+function getListItemTextUtilityClass(slot) {
+    return generateUtilityClass("MuiListItemText", slot);
+}
+const listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]);
+
+const $$3 = createComponentFactory()({
+  name: "MuiListItemText",
+  selfPropNames: ["children", "classes", "disableTypography", "inset", "primary", "primaryTypographyProps", "secondary", "secondaryTypographyProps"],
+  propDefaults: ({
+    set
+  }) => set({
+    disableTypography: false,
+    inset: false
+  }),
+  utilityClass: getListItemTextUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.inset && "inset", ownerState.dense && "dense", !!ownerState.primary && !!ownerState.secondary && "multiline"],
+    primary: ["primary"],
+    secondary: ["secondary"]
+  })
+});
+const ListItemTextRoot = _hoc_function$5("div", {
+  name: "MuiListItemText",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${listItemTextClasses.primary}`]: styles.primary
+    }, {
+      [`& .${listItemTextClasses.secondary}`]: styles.secondary
+    }, styles.root, ownerState.inset && styles.inset, ownerState.primary && ownerState.secondary && styles.multiline, ownerState.dense && styles.dense];
+  }
+})(({
+  ownerState
+}) => ({
+  flex: "1 1 auto",
+  minWidth: 0,
+  marginTop: 4,
+  marginBottom: 4,
+  ...(ownerState.primary && ownerState.secondary && {
+    marginTop: 6,
+    marginBottom: 6
+  }),
+  ...(ownerState.inset && {
+    paddingLeft: 56
+  })
+}));
+const ListItemText = $$3.component(function ListItemText2({
+  allProps,
+  classes,
+  otherProps,
+  props
+}) {
+  const context = useListContext();
+  const ownerState = mergeProps(allProps, {
+    get dense() {
+      return context.dense;
+    }
+  });
+  const isDefined = v => v !== "undefined" && v !== null;
+  const isTypography = v => v instanceof HTMLElement && v.classList.contains(Typography.toString());
+  const primary = createMemo(() => {
+    const primary2 = children(() => props.primary ?? props.children)();
+    if (isDefined(primary2) && !isTypography(primary2) && !props.disableTypography) {
+      return createComponent$1(Typography, mergeProps({
+        get variant() {
+          return context.dense ? "body2" : "body1";
+        },
+        get ["class"]() {
+          return classes.primary;
+        },
+        component: "span",
+        display: "block"
+      }, () => props.primaryTypographyProps || {}, {
+        children: primary2
+      }));
+    } else {
+      return primary2;
+    }
+  });
+  const secondary = createMemo(() => {
+    const secondary2 = children(() => props.secondary)();
+    if (isDefined(secondary2) && !isTypography(secondary2) && !props.disableTypography) {
+      return createComponent$1(Typography, mergeProps({
+        variant: "body2",
+        get ["class"]() {
+          return classes.secondary;
+        },
+        sx: {
+          display: "block",
+          color: "text.secondary"
+        }
+      }, () => props.secondaryTypographyProps || {}, {
+        get component() {
+          return props.secondaryTypographyProps?.component ?? "p";
+        },
+        children: secondary2
+      }));
+    } else {
+      return secondary2;
+    }
+  });
+  return createComponent$1(ListItemTextRoot, mergeProps(otherProps, {
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    ownerState: ownerState,
+    get children() {
+      return [primary(), secondary()];
+    }
+  }));
+});
+
+__astro_tag_component__(ListItemText, "@astrojs/solid-js");
+
+/**
+ * @ignore - internal component.
+ */
+const FormControlLabelContext = createContext();
+
+function useFormControlLabel() {
+    return useContext(FormControlLabelContext);
+}
+
+function getSwitchBaseUtilityClass(slot) {
+    return generateUtilityClass("PrivateSwitchBase", slot);
+}
+generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
+
+const $$2 = createComponentFactory()({
+  name: "MuiSwitchBase",
+  selfPropNames: ["autoFocus", "checked", "checkedIcon", "classes", "defaultChecked", "disableFocusRipple", "disableRipple", "disabled", "edge", "icon", "id", "inputProps", "inputRef", "name", "onChange", "readOnly", "required", "tabIndex", "type", "value"],
+  autoCallUseClasses: false,
+  propDefaults: ({
+    set
+  }) => set({
+    disableFocusRipple: false,
+    edge: false
+  }),
+  utilityClass: getSwitchBaseUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", !!ownerState.checked && "checked", !!ownerState.disabled && "disabled", ownerState.edge && `edge${capitalize(ownerState.edge)}`],
+    input: ["input"]
+  })
+});
+const SwitchBaseRoot = _hoc_function$5(ButtonBase)(({
+  ownerState
+}) => ({
+  padding: 9,
+  borderRadius: "50%",
+  ...(ownerState.edge === "start" && {
+    marginLeft: ownerState.size === "small" ? -3 : -12
+  }),
+  ...(ownerState.edge === "end" && {
+    marginRight: ownerState.size === "small" ? -3 : -12
+  })
+}));
+const SwitchBaseInput = _hoc_function$5("input")({
+  cursor: "inherit",
+  position: "absolute",
+  opacity: 0,
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0,
+  margin: 0,
+  padding: 0,
+  zIndex: 1
+});
+const SwitchBase = $$2.component(function SwitchBase2({
+  allProps,
+  otherProps,
+  props
+}) {
+  const formControlLabel = useFormControlLabel();
+  const [checked, setCheckedState] = useControlled({
+    controlled: () => props.checked ?? formControlLabel?.checked,
+    default: () => Boolean(props.defaultChecked),
+    name: "SwitchBase",
+    state: "checked"
+  });
+  const muiFormControl = useFormControl();
+  const disabled = () => {
+    if (typeof formControlLabel?.disabled !== "undefined") {
+      return formControlLabel.disabled;
+    } else if (muiFormControl && typeof props.disabled === "undefined") {
+      return muiFormControl.disabled;
+    } else {
+      return props.disabled;
+    }
+  };
+  const hasLabelFor = () => props.type === "checkbox" || props.type === "radio";
+  const ownerState = mergeProps(allProps, {
+    get checked() {
+      return checked();
+    },
+    get disabled() {
+      return disabled();
+    }
+  });
+  const classes = $$2.useClasses(ownerState);
+  const inputValue = () => props.value ?? formControlLabel?.value;
+  return createComponent$1(SwitchBaseRoot, mergeProps(otherProps, {
+    component: "span",
+    get ["class"]() {
+      return clsx(classes.root, otherProps.class);
+    },
+    centerRipple: true,
+    get focusRipple() {
+      return !props.disableFocusRipple;
+    },
+    get disabled() {
+      return disabled();
+    },
+    tabIndex: null,
+    role: void 0,
+    onFocus: event => {
+      if (typeof otherProps.onFocus === "function") {
+        otherProps.onFocus(event);
+      }
+      muiFormControl?.onFocus?.();
+    },
+    onBlur: event => {
+      if (typeof otherProps.onBlur === "function") {
+        otherProps.onBlur(event);
+      }
+      muiFormControl?.onBlur?.();
+    },
+    ownerState: ownerState,
+    get children() {
+      return [createComponent$1(SwitchBaseInput, mergeProps({
+        component: "input",
+        get autofocus() {
+          return props.autoFocus;
+        },
+        get ["class"]() {
+          return classes.input;
+        },
+        get disabled() {
+          return disabled();
+        },
+        get id() {
+          return hasLabelFor() ? props.id : void 0;
+        },
+        get name() {
+          return props.name ?? formControlLabel?.name;
+        },
+        onClick: event => {
+          if (event.defaultPrevented) {
+            return;
+          }
+          const newChecked = event.currentTarget.checked;
+          event.currentTarget.checked = !newChecked;
+          setCheckedState(newChecked);
+          if (typeof props.onChange === "function") {
+            props.onChange(event, newChecked);
+          } else {
+            formControlLabel?.onChange?.(event, newChecked);
+          }
+          if (typeof otherProps.onClick === "function") otherProps.onClick(event);
+        },
+        get readOnly() {
+          return props.readOnly;
+        },
+        get required() {
+          return props.required;
+        },
+        ownerState: ownerState,
+        get tabIndex() {
+          return props.tabIndex;
+        },
+        get type() {
+          return props.type;
+        },
+        get value() {
+          return inputValue();
+        }
+      }, () => props.inputProps || {})), checked() ? props.checkedIcon : props.icon, otherProps.children];
+    }
+  }));
+});
+
+__astro_tag_component__(SwitchBase, "@astrojs/solid-js");
+
+const _tmpl$$4 = ["<path", " d=\"M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\"></path>"];
+const _hoc_function$2 = createSvgIcon(() => ssr(_tmpl$$4, ssrHydrationKey()), "CheckBox");
+
+__astro_tag_component__(_hoc_function$2, "@astrojs/solid-js");
+
+const _tmpl$$3 = ["<path", " d=\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\"></path>"];
+const _hoc_function$1 = createSvgIcon(() => ssr(_tmpl$$3, ssrHydrationKey()), "CheckBoxOutlineBlank");
+
+__astro_tag_component__(_hoc_function$1, "@astrojs/solid-js");
+
+const _tmpl$$2 = ["<path", " d=\"M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z\"></path>"];
+const _hoc_function = createSvgIcon(() => ssr(_tmpl$$2, ssrHydrationKey()), "IndeterminateCheckBox");
+
+__astro_tag_component__(_hoc_function, "@astrojs/solid-js");
+
+function getCheckboxUtilityClass(slot) {
+    return generateUtilityClass("MuiCheckbox", slot);
+}
+const checkboxClasses = generateUtilityClasses("MuiCheckbox", [
+    "root",
+    "checked",
+    "disabled",
+    "indeterminate",
+    "colorPrimary",
+    "colorSecondary",
+]);
+
+const $$1 = createComponentFactory()({
+  name: "MuiCheckbox",
+  propDefaults: ({
+    set
+  }) => set({
+    color: "primary",
+    indeterminate: false,
+    size: "medium",
+    checkedIcon: () => createComponent$1(_hoc_function$2, {}),
+    icon: () => createComponent$1(_hoc_function$1, {}),
+    indeterminateIcon: () => createComponent$1(_hoc_function, {})
+  }),
+  selfPropNames: ["checked", "checkedIcon", "classes", "color", "disableRipple", "disabled", "icon", "id", "indeterminate", "indeterminateIcon", "inputProps", "inputRef", "onChange", "required", "size", "value"],
+  utilityClass: getCheckboxUtilityClass,
+  slotClasses: ownerState => ({
+    root: ["root", ownerState.indeterminate && "indeterminate", `color${capitalize(ownerState.color)}`]
+  })
+});
+const CheckboxRoot = _hoc_function$5(SwitchBase, {
+  skipProps: skipRootProps.filter(v => v !== "classes"),
+  name: "MuiCheckbox",
+  slot: "Root",
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.indeterminate && styles.indeterminate, ownerState.color !== "default" && styles[`color${capitalize(ownerState.color)}`]];
+  }
+})(({
+  theme,
+  ownerState
+}) => ({
+  color: theme.palette.text.secondary,
+  ...(!ownerState.disableRipple && {
+    "&:hover": {
+      backgroundColor: alpha(ownerState.color === "default" ? theme.palette.action.active : theme.palette[ownerState.color].main, theme.palette.action.hoverOpacity),
+      "@media (hover: none)": {
+        backgroundColor: "transparent"
+      }
+    }
+  }),
+  ...(ownerState.color !== "default" && {
+    [`&.${checkboxClasses.checked}, &.${checkboxClasses.indeterminate}`]: {
+      color: theme.palette[ownerState.color].main
+    },
+    [`&.${checkboxClasses.disabled}`]: {
+      color: theme.palette.action.disabled
+    }
+  })
+}));
+const Checkbox = $$1.component(function Checkbox2({
+  allProps,
+  classes,
+  props
+}) {
+  const icon = createMemo(() => props.indeterminate ? props.indeterminateIcon : props.icon);
+  const indeterminateIcon = createMemo(() => props.indeterminate ? props.indeterminateIcon : props.checkedIcon);
+  const [, baseProps] = splitProps(allProps, ["checkedIcon", "color", "icon", "indeterminate", "indeterminateIcon", "inputProps", "size"]);
+  const allClasses = mergeProps(() => props.classes || {}, classes);
+  return createComponent$1(SvgIconContext.Provider, {
+    value: {
+      get fontSize() {
+        return props.size;
+      }
+    },
+    get children() {
+      return createComponent$1(CheckboxRoot, mergeProps({
+        type: "checkbox"
+      }, baseProps, {
+        classes: allClasses,
+        get inputProps() {
+          return {
+            ["data-indeterminate"]: props.indeterminate,
+            ...(props.inputProps || {})
+          };
+        },
+        get icon() {
+          return icon();
+        },
+        get checkedIcon() {
+          return indeterminateIcon();
+        },
+        ownerState: allProps
+      }));
+    }
+  });
+});
+
+__astro_tag_component__(Checkbox, "@astrojs/solid-js");
+
+function getPaperUtilityClass(slot) {
+    return generateUtilityClass("MuiPaper", slot);
+}
+generateUtilityClasses("MuiPaper", [
+    "root",
+    "rounded",
+    "outlined",
+    "elevation",
+    "elevation0",
+    "elevation1",
+    "elevation2",
+    "elevation3",
+    "elevation4",
+    "elevation5",
+    "elevation6",
+    "elevation7",
+    "elevation8",
+    "elevation9",
+    "elevation10",
+    "elevation11",
+    "elevation12",
+    "elevation13",
+    "elevation14",
+    "elevation15",
+    "elevation16",
+    "elevation17",
+    "elevation18",
+    "elevation19",
+    "elevation20",
+    "elevation21",
+    "elevation22",
+    "elevation23",
+    "elevation24",
+]);
+
+const $ = createComponentFactory()({
+  name: "MuiPaper",
+  selfPropNames: ["children", "classes", "elevation", "square", "variant"],
+  propDefaults: ({
+    set
+  }) => set({
+    component: "div",
+    elevation: 1,
+    square: false,
+    variant: "elevation"
+  }),
+  utilityClass: getPaperUtilityClass,
+  slotClasses: o => ({
+    root: ["root", o.variant, !o.square && "rounded", o.variant === "elevation" && `elevation${o.elevation}`]
+  })
+});
+const getOverlayAlpha = elevation => {
+  let alphaValue;
+  if (elevation < 1) {
+    alphaValue = 5.11916 * elevation ** 2;
+  } else {
+    alphaValue = 4.5 * Math.log(elevation + 1) + 2;
+  }
+  return Number((alphaValue / 100).toFixed(2));
+};
+const PaperRoot = _hoc_function$5("div", {
+  name: "MuiPaper",
+  slot: "Root"
+})(({
+  theme,
+  ownerState
+}) => ({
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
+  transition: theme.transitions.create("box-shadow"),
+  ...(!ownerState.square && {
+    borderRadius: theme.shape.borderRadius
+  }),
+  ...(ownerState.variant === "outlined" && {
+    border: `1px solid ${theme.palette.divider}`
+  }),
+  ...(ownerState.variant === "elevation" && {
+    boxShadow: theme.shadows[ownerState.elevation],
+    ...(theme.palette.mode === "dark" && {
+      backgroundImage: `linear-gradient(${alpha("#fff", getOverlayAlpha(ownerState.elevation))}, ${alpha("#fff", getOverlayAlpha(ownerState.elevation))})`
+    })
+  })
+}));
+const Paper = $.component(function Paper2({
+  allProps,
+  props,
+  otherProps,
+  classes
+}) {
+  if (process.env.NODE_ENV !== "production") {
+    const theme = useTheme$1();
+    if (theme.shadows[props.elevation] === void 0) {
+      console.error([`MUI: The elevation provided <Paper elevation={${props.elevation}}> is not available in the theme.`, `Please make sure that \`theme.shadows[${props.elevation}]\` is defined.`].join("\n"));
+    }
+  }
+  return createComponent$1(PaperRoot, mergeProps(otherProps, {
+    ownerState: allProps,
+    get ["class"]() {
+      return clsx(classes.root, allProps.class);
+    },
+    get children() {
+      return props.children;
+    }
+  }));
+});
+
+__astro_tag_component__(Paper, "@astrojs/solid-js");
+
+const _tmpl$$1 = ["<div", " style=\"", "\">", "</div>"];
+const LEFT_ARROW = "<";
+const RIGHT_ARROW = ">";
+const LIST_STYLE = style("list", {
+  my: 0.5,
+  fontWeight: 700
+});
+function not(a, b) {
+  return a.filter(value => b.indexOf(value) === -1);
+}
+const CustomList = ({
+  items,
+  checked,
+  onToggle,
+  customStyle = {
+    width: "200px",
+    height: "300px"
+  }
+}) => createComponent$1(Paper, {
+  get sx() {
+    return style("list", customStyle);
+  },
+  get children() {
+    return createComponent$1(List, {
+      dense: true,
+      component: "div",
+      role: "list",
+      get children() {
+        return [items().map(value => {
+          const labelId = `transfer-list-item-${value}-label`;
+          return createComponent$1(ListItem, {
+            role: "listitem",
+            onClick: () => onToggle(value),
+            get children() {
+              return [createComponent$1(ListItemIcon, {
+                get children() {
+                  return createComponent$1(Checkbox, {
+                    get checked() {
+                      return checked().indexOf(value) !== -1;
+                    },
+                    tabIndex: -1,
+                    disableRipple: true,
+                    get sx() {
+                      return style("checkbox", {
+                        transform: "scale(1.2)"
+                      });
+                    },
+                    color: "success",
+                    size: "medium",
+                    inputProps: {
+                      "aria-labelledby": labelId
+                    }
+                  });
+                }
+              }), createComponent$1(ListItemText, {
+                id: labelId,
+                primary: `Item ${value + 1}`
+              })];
+            }
+          });
+        }), createComponent$1(ListItem, {})];
+      }
+    });
+  }
+});
+const MultiSelect$1 = () => {
+  const [checked, setChecked] = createSignal([]);
+  const [left, setLeft] = createSignal([0, 1, 2]);
+  const [right, setRight] = createSignal([3, 4, 5]);
+  const [leftChecked, setLeftChecked] = createSignal([]);
+  const [rightChecked, setRightChecked] = createSignal([]);
+  const handleToggle = value => {
+    const currentIndex = checked().indexOf(value);
+    const newChecked = [...checked()];
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    setChecked(newChecked);
+  };
+  const handleAllRight = () => {
+    setRight([...right(), ...left()]);
+    setLeft([]);
+  };
+  const handleCheckedRight = () => {
+    setRight([...right(), ...leftChecked()]);
+    setLeft(not(left(), leftChecked()));
+    setChecked(not(checked(), leftChecked()));
+  };
+  const handleCheckedLeft = () => {
+    setLeft([...left(), ...rightChecked()]);
+    setRight(not(right(), rightChecked()));
+    setChecked(not(checked(), rightChecked()));
+  };
+  const handleAllLeft = () => {
+    setLeft([...left(), ...right()]);
+    setRight([]);
+  };
+  return ssr(_tmpl$$1, ssrHydrationKey(), "text-align:" + "center", escape(createComponent$1(Grid, {
+    container: true,
+    spacing: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    get children() {
+      return [createComponent$1(Grid, {
+        item: true,
+        get children() {
+          return createComponent$1(CustomList, {
+            items: left,
+            checked: checked,
+            onToggle: handleToggle
+          });
+        }
+      }), createComponent$1(Grid, {
+        item: true,
+        get children() {
+          return createComponent$1(Grid, {
+            container: true,
+            direction: "column",
+            alignItems: "center",
+            get children() {
+              return [createComponent$1(Button, {
+                sx: LIST_STYLE,
+                variant: "contained",
+                color: "success",
+                size: "medium",
+                onClick: handleAllRight,
+                get disabled() {
+                  return left().length === 0;
+                },
+                "aria-label": "move all right",
+                children: "\u226B"
+              }), createComponent$1(Button, {
+                sx: LIST_STYLE,
+                variant: "outlined",
+                color: "success",
+                size: "medium",
+                onClick: handleCheckedRight,
+                get disabled() {
+                  return leftChecked().length === 0;
+                },
+                "aria-label": "move selected right",
+                children: RIGHT_ARROW
+              }), createComponent$1(Button, {
+                sx: LIST_STYLE,
+                variant: "outlined",
+                color: "success",
+                size: "medium",
+                onClick: handleCheckedLeft,
+                get disabled() {
+                  return rightChecked().length === 0;
+                },
+                "aria-label": "move selected left",
+                children: LEFT_ARROW
+              }), createComponent$1(Button, {
+                sx: LIST_STYLE,
+                variant: "contained",
+                color: "success",
+                size: "medium",
+                onClick: handleAllLeft,
+                get disabled() {
+                  return right().length === 0;
+                },
+                "aria-label": "move all left",
+                children: "\u226A"
+              })];
+            }
+          });
+        }
+      }), createComponent$1(Grid, {
+        item: true,
+        get children() {
+          return createComponent$1(CustomList, {
+            items: right,
+            checked: checked,
+            onToggle: handleToggle
+          });
+        }
+      })];
+    }
+  })));
+};
+
+__astro_tag_component__(MultiSelect$1, "@astrojs/solid-js");
+
+const MDXLayout$6 = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/FormLayout.901608f8.mjs')).default;
+  const Layout = (await import('./chunks/FormLayout.f8dbe823.mjs')).default;
   const {
     layout,
     ...content
@@ -8588,48 +11242,37 @@ const frontmatter$6 = {
 function getHeadings$6() {
   return [{
     "depth": 2,
-    "slug": "this-is-h2",
-    "text": "This is H2"
+    "slug": "v\xFDhody---nev\xFDhody",
+    "text": "V\xFDhody - nev\xFDhody"
   }];
 }
 function _createMdxContent$6(props) {
   const _components = Object.assign({
-      p: "p",
-      h2: "h2"
-    }, props.components),
-    {
-      Quote
-    } = _components;
-  if (!Quote) _missingMdxReference$2("Quote", true);
+    h2: "h2",
+    p: "p"
+  }, props.components);
   return createVNode(Fragment, {
-    children: [createVNode(_components.p, {
+    children: [createVNode(_components.h2, {
+      id: "v\xFDhody---nev\xFDhody",
+      children: "V\xFDhody - nev\xFDhody"
+    }), "\n", createVNode(_components.p, {
       children: "Bla Bla Bla\r\nInfo text advantages / disadvantages"
-    }), "\n", createVNode(Quote, {
-      isRed: true,
-      children: "This is a quote"
-    }), "\n", createVNode(_components.h2, {
-      id: "this-is-h2",
-      children: "This is H2"
     }), "\n", "\n", createVNode("astro-client-only", {
-      name: "name",
       "client:only": "solid-js",
-      "client:display-name": "StringInput",
-      "client:component-path": "@input/StringInput",
+      "client:display-name": "MultiSelect",
+      "client:component-path": "@input/MultiSelect",
       "client:component-export": "default",
       "client:component-hydration": true
     })]
   });
 }
 function MDXContent$6(props = {}) {
-  return createVNode(MDXLayout$4, {
+  return createVNode(MDXLayout$6, {
     ...props,
     children: createVNode(_createMdxContent$6, {
       ...props
     })
   });
-}
-function _missingMdxReference$2(id, component) {
-  throw new Error("Expected " + (component ? "component" : "object") + " `" + id + "` to be defined: you likely forgot to import, pass, or provide it.");
 }
 __astro_tag_component__(getHeadings$6, "astro:jsx");
 __astro_tag_component__(MDXContent$6, "astro:jsx");
@@ -8638,7 +11281,44 @@ const url$6 = "src/projects/rpg/builder/ui/portal/blocks/advantages.mdx";
 const file$6 = "C:/work/killman/rpg-store/src/projects/rpg/builder/ui/portal/blocks/advantages.mdx";
 const Content$6 = MDXContent$6;
 
+const MDXLayout$5 = async function ({
+  children
+}) {
+  const Layout = (await import('./chunks/BuilderLayout.e7e13e1a.mjs')).default;
+  const {
+    layout,
+    ...content
+  } = frontmatter$5;
+  content.file = file$5;
+  content.url = url$5;
+  content.astro = {};
+  Object.defineProperty(content.astro, "headings", {
+    get() {
+      throw new Error('The "astro" property is no longer supported! To access "headings" from your layout, try using "Astro.props.headings."');
+    }
+  });
+  Object.defineProperty(content.astro, "html", {
+    get() {
+      throw new Error('The "astro" property is no longer supported! To access "html" from your layout, try using "Astro.props.compiledContent()."');
+    }
+  });
+  Object.defineProperty(content.astro, "source", {
+    get() {
+      throw new Error('The "astro" property is no longer supported! To access "source" from your layout, try using "Astro.props.rawContent()."');
+    }
+  });
+  return createVNode(Layout, {
+    file: file$5,
+    url: url$5,
+    content,
+    frontmatter: content,
+    headings: getHeadings$5(),
+    "server:root": true,
+    children
+  });
+};
 const frontmatter$5 = {
+  "layout": "@layouts/BuilderLayout.astro",
   "title": "Advantages"
 };
 function getHeadings$5() {
@@ -8650,15 +11330,12 @@ function _createMdxContent$5(props) {
   });
 }
 function MDXContent$5(props = {}) {
-  const {
-    wrapper: MDXLayout
-  } = props.components || {};
-  return MDXLayout ? createVNode(MDXLayout, {
+  return createVNode(MDXLayout$5, {
     ...props,
     children: createVNode(_createMdxContent$5, {
       ...props
     })
-  }) : _createMdxContent$5();
+  });
 }
 __astro_tag_component__(getHeadings$5, "astro:jsx");
 __astro_tag_component__(components, "astro:jsx");
@@ -8681,10 +11358,10 @@ const _page3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   Content: Content$5
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const MDXLayout$3 = async function ({
+const MDXLayout$4 = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/FormLayout.901608f8.mjs')).default;
+  const Layout = (await import('./chunks/FormLayout.f8dbe823.mjs')).default;
   const {
     layout,
     ...content
@@ -8757,7 +11434,7 @@ function _createMdxContent$4(props) {
   });
 }
 function MDXContent$4(props = {}) {
-  return createVNode(MDXLayout$3, {
+  return createVNode(MDXLayout$4, {
     ...props,
     children: createVNode(_createMdxContent$4, {
       ...props
@@ -8774,7 +11451,44 @@ const url$4 = "src/projects/rpg/builder/ui/portal/blocks/equipments.mdx";
 const file$4 = "C:/work/killman/rpg-store/src/projects/rpg/builder/ui/portal/blocks/equipments.mdx";
 const Content$4 = MDXContent$4;
 
+const MDXLayout$3 = async function ({
+  children
+}) {
+  const Layout = (await import('./chunks/BuilderLayout.e7e13e1a.mjs')).default;
+  const {
+    layout,
+    ...content
+  } = frontmatter$3;
+  content.file = file$3;
+  content.url = url$3;
+  content.astro = {};
+  Object.defineProperty(content.astro, "headings", {
+    get() {
+      throw new Error('The "astro" property is no longer supported! To access "headings" from your layout, try using "Astro.props.headings."');
+    }
+  });
+  Object.defineProperty(content.astro, "html", {
+    get() {
+      throw new Error('The "astro" property is no longer supported! To access "html" from your layout, try using "Astro.props.compiledContent()."');
+    }
+  });
+  Object.defineProperty(content.astro, "source", {
+    get() {
+      throw new Error('The "astro" property is no longer supported! To access "source" from your layout, try using "Astro.props.rawContent()."');
+    }
+  });
+  return createVNode(Layout, {
+    file: file$3,
+    url: url$3,
+    content,
+    frontmatter: content,
+    headings: getHeadings$3(),
+    "server:root": true,
+    children
+  });
+};
 const frontmatter$3 = {
+  "layout": "@layouts/BuilderLayout.astro",
   "title": "Equipments"
 };
 function getHeadings$3() {
@@ -8786,15 +11500,12 @@ function _createMdxContent$3(props) {
   });
 }
 function MDXContent$3(props = {}) {
-  const {
-    wrapper: MDXLayout
-  } = props.components || {};
-  return MDXLayout ? createVNode(MDXLayout, {
+  return createVNode(MDXLayout$3, {
     ...props,
     children: createVNode(_createMdxContent$3, {
       ...props
     })
-  }) : _createMdxContent$3();
+  });
 }
 __astro_tag_component__(getHeadings$3, "astro:jsx");
 __astro_tag_component__(components, "astro:jsx");
@@ -8818,7 +11529,7 @@ const _page4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const target = new ResourceAtom(M.uiTarget);
-const targetAtom = target.atom;
+target.atom;
 
 const blockData = new FormData(M.uiBlockData);
 const blockMap = blockData.map;
@@ -8828,59 +11539,441 @@ PubSub.subscribe(M.uiSaveAction, () => {
   PubSub.publish(M.uiSave, { block: blockMap.get(), properties: propertiesMap.get() });
 });
 
-const _tmpl$$1 = ["<p", " style=\"", "\">", "</p>"],
-  _tmpl$2 = ["<select", " multiple", " size=\"8\"", ">", "</select>"],
-  _tmpl$3 = ["<option", "", "", ">", "</option>"];
-const MultiSelect = ({
-  mode = "write",
-  name,
-  options,
-  values,
-  texts = option => option,
-  disabled = () => false,
-  onChange
-}) => {
-  return values() && options() && ssr(_tmpl$$1, ssrHydrationKey(), "color:" + escape("red" , true) + (";font-weight:" + 700) + (";font-size:" + "1.5rem"), mode === "read" ? escape(JSON.stringify(values) ?? "") : escape([name, ":", " ", ssr(_tmpl$2, ssrHydrationKey(), ssrAttribute("id", escape(name, true), false) + ssrAttribute("name", escape(name, true), false), ssrAttribute("disabled", mode === "disabled", true), escape(options().map(option => ssr(_tmpl$3, ssrHydrationKey() + ssrAttribute("value", escape(option, true), false), ssrAttribute("selected", values().includes(option), true), ssrAttribute("disabled", disabled(option), true), escape(texts(option))))))]));
+const _tmpl$ = ["<li", " class=\"groupHeading\" style=\"", "\">", "</li>"],
+  _tmpl$2 = ["<input", " type=\"checkbox\" class=\"checkbox\" readonly", ">"],
+  _tmpl$3 = ["<li", " style=\"", "\" class=\"", "\"><!--#-->", "<!--/--><!--#-->", "<!--/--></li>"],
+  _tmpl$4 = ["<span", " style=\"", "\" class=\"notFound\">", "</span>"],
+  _tmpl$5 = ["<input", " type=\"checkbox\" readonly class=\"checkbox\"", ">"],
+  _tmpl$6 = ["<span", " class=\"notFound\" style=\"", "\">", "</span>"],
+  _tmpl$7 = ["<ul", " class=\"optionContainer\" style=\"", "\">", "</ul>"],
+  _tmpl$8 = ["<img", " class=\"icon_cancel closeIcon\"", ">"],
+  _tmpl$9 = ["<span", " class=\"", "\" style=\"", "\"><!--#-->", "<!--/--><!--#-->", "<!--/--></span>"],
+  _tmpl$10 = ["<i", " class=\"custom-close\">", "</i>"],
+  _tmpl$11 = ["<input", " type=\"text\" class=\"", "\" id=\"", "\"", " style=\"", "\" autocomplete=\"off\"", ">"],
+  _tmpl$12 = ["<img", " class=\"icon_cancel icon_down_dir\"", ">"],
+  _tmpl$13 = ["<div", " class=\"", "\"", " style=\"", "\" tabindex=\"0\"><div class=\"", "\" style=\"", "\"><!--#-->", "<!--/--><!--#-->", "<!--/--><!--#-->", "<!--/--></div><div class=\"", "\">", "</div></div>"];
+const DownArrow = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png";
+const defaultProps = {
+  emptyRecordMsg: "No records found",
+  options: [],
+  selectedValues: [],
+  showArrow: false,
+  singleSelect: false,
+  style: {},
+  placeholder: "select",
+  groupBy: "",
+  disable: false,
+  searchable: true,
+  onSelect: () => {},
+  onRemove: () => {},
+  avoidHighlightFirstOption: true
+};
+const closeIconTypes = {
+  circle: DownArrow,
+  circle2: DownArrow
+};
+const MultiSelect = props => {
+  props = mergeProps(defaultProps, props);
+  const [local] = splitProps(props, ["placeholder", "style", "singleSelect", "id", "hidePlaceholder", "disable", "showArrow", "avoidHighlightFirstOption"]);
+  const {
+    placeholder,
+    style,
+    singleSelect,
+    id,
+    hidePlaceholder,
+    disable,
+    showArrow,
+    avoidHighlightFirstOption
+  } = local;
+  const [toggleOptionsList, setToggleOptionsList] = createSignal(false);
+  const [highlightOption, setHighlightOption] = createSignal(avoidHighlightFirstOption ? -1 : 0);
+  const [inputValue, setInputValue] = createSignal("");
+  const [options, setOptions] = createSignal(props.options);
+  const [filteredOptions, setFilteredOptions] = createSignal(props.options);
+  const [unfilteredOptions, setUnfilteredOptions] = createSignal(props.options);
+  const [selectedValues, setSelectedValues] = createSignal([...props.selectedValues]);
+  const [preSelectedValues, setPreSelectedValues] = createSignal([...props.selectedValues]);
+  createSignal(props.keepSearchTerm);
+  const [closeIconType, setCloseIconType] = createSignal(closeIconTypes[props.closeIcon] || closeIconTypes["circle"]);
+  const [groupedObject, setGroupedObject] = createSignal([]);
+  function renderGroupByOptions() {
+    const isObject = props.isObject || false;
+    const displayValue = props.displayValue;
+    const showCheckbox = props.showCheckbox;
+    const style2 = props.style;
+    const singleSelect2 = props.singleSelect;
+    const groupedObjectKeys = Object.keys(groupedObject());
+    return createComponent$1(For, {
+      each: groupedObjectKeys,
+      children: objKey => [ssr(_tmpl$, ssrHydrationKey(), ssrStyle(style2["groupHeading"]), escape(objKey)), createComponent$1(For, {
+        get each() {
+          return groupedObject()[objKey];
+        },
+        children: option => ssr(_tmpl$3, ssrHydrationKey(), ssrStyle(style2["option"]), `groupChildEle option ${fadeOutSelection(option) || isDisablePreSelectedValues(option) ? "disableSelection" : ""}`, escape(createComponent$1(Show, {
+          when: showCheckbox && !singleSelect2,
+          get children() {
+            return ssr(_tmpl$2, ssrHydrationKey(), ssrAttribute("checked", isSelectedValue(option), true));
+          }
+        })), isObject ? escape(option[displayValue]) : escape((option || "").toString()))
+      })]
+    });
+  }
+  const isSelectedValue = item => {
+    if (props.isObject) {
+      return selectedValues().filter(i => i[props.displayValue] === item[props.displayValue]).length > 0;
+    }
+    return selectedValues().filter(i => i === item).length > 0;
+  };
+  const fadeOutSelection = item => {
+    if (props.singleSelect) {
+      return;
+    }
+    if (props.selectionLimit == -1) {
+      return false;
+    }
+    if (props.selectionLimit != selectedValues().length) {
+      return false;
+    }
+    if (props.selectionLimit == selectedValues().length) {
+      if (!props.showCheckbox) {
+        return true;
+      } else {
+        if (isSelectedValue(item)) {
+          return false;
+        }
+        return true;
+      }
+    }
+  };
+  const isDisablePreSelectedValues = value => {
+    if (!props.disablePreSelectedValues || !preSelectedValues().length) {
+      return false;
+    }
+    if (props.isObject) {
+      return preSelectedValues().filter(i => i[props.displayValue] === value[props.displayValue]).length > 0;
+    }
+    return preSelectedValues().filter(i => i === value).length > 0;
+  };
+  const removeSelectedValuesFromOptions = skipCheck => {
+    if (!skipCheck && props.groupBy) {
+      groupByOptions(options());
+    }
+    if (!selectedValues().length && !skipCheck) {
+      return;
+    }
+    if (props.isObject) {
+      const optionList2 = unfilteredOptions().filter(item => {
+        return selectedValues().findIndex(v => v[props.displayValue] === item[props.displayValue]) === -1 ? true : false;
+      });
+      if (props.groupBy) {
+        groupByOptions(optionList2);
+      }
+      setOptions(optionList2);
+      setFilteredOptions(optionList2);
+      setTimeout(() => {
+        filterOptionsByInput();
+      }, 0);
+      return;
+    }
+    const optionList = unfilteredOptions().filter(item => selectedValues().indexOf(item) === -1);
+    setOptions(optionList);
+    setFilteredOptions(optionList);
+    setTimeout(() => {
+      filterOptionsByInput();
+    }, 0);
+  };
+  const initialSetValue = () => {
+    if (!props.showCheckbox && !props.singleSelect) {
+      removeSelectedValuesFromOptions(false);
+    }
+    if (props.groupBy) {
+      groupByOptions(options());
+    }
+  };
+  createEffect(prevOptions => {
+    if (JSON.stringify(prevOptions) !== JSON.stringify(props.options)) {
+      setOptions(props.options);
+      setFilteredOptions(props.options);
+      setUnfilteredOptions(props.options);
+      setTimeout(() => {
+        initialSetValue();
+      }, 0);
+    }
+    return props.options;
+  }, props.options);
+  createEffect(prevSelectedValues => {
+    if (JSON.stringify(prevSelectedValues) !== JSON.stringify(props.selectedValues)) {
+      setSelectedValues(Object.assign([], props.selectedValues));
+      setPreSelectedValues(Object.assign([], props.selectedValues));
+      setTimeout(() => {
+        initialSetValue();
+      }, 0);
+    }
+    return props.selectedValues;
+  }, props.selectedValues);
+  function renderNormalOption() {
+    return createComponent$1(For, {
+      get each() {
+        return options();
+      },
+      get fallback() {
+        return ssr(_tmpl$4, ssrHydrationKey(), ssrStyle(props.style["notFound"]), escape(props.emptyRecordMsg) ?? "No Options Available");
+      },
+      children: (option, index) => ssr(_tmpl$3, ssrHydrationKey(), ssrStyle(props.style["option"]), `option ${fadeOutSelection(option) ? "disableSelection" : ""} ${highlightOption() === index() ? "highlightOption highlight" : ""}`, escape(createComponent$1(Show, {
+        get when() {
+          return props.showCheckbox && !props.singleSelect;
+        },
+        get children() {
+          return ssr(_tmpl$5, ssrHydrationKey(), ssrAttribute("checked", isSelectedValue(option), true));
+        }
+      })), escape(createComponent$1(Show, {
+        get when() {
+          return props.isObject;
+        },
+        fallback: () => (option || "").toString(),
+        get children() {
+          return option[props.displayValue];
+        }
+      })))
+    });
+  }
+  function renderOptionList() {
+    const loadingMessage = props.loadingMessage ?? "loading...";
+    if (props.loading) {
+      return ssr(_tmpl$7, ssrHydrationKey(), ssrStyle(props.style["optionContainer"]), escape(createComponent$1(Show, {
+        when: typeof loadingMessage === "string",
+        fallback: loadingMessage,
+        get children() {
+          return ssr(_tmpl$6, ssrHydrationKey(), ssrStyle(props.style["loadingMessage"]), escape(loadingMessage));
+        }
+      })));
+    }
+    return ssr(_tmpl$7, ssrHydrationKey(), ssrStyle(props.style["optionContainer"]), !props.groupBy ? escape(renderNormalOption()) : escape(renderGroupByOptions()));
+  }
+  const matchValues = (value, search) => {
+    if (props.caseSensitiveSearch) {
+      return value.indexOf(search) > -1;
+    }
+    if (value.toLowerCase) {
+      return value.toLowerCase().indexOf(search.toLowerCase()) > -1;
+    }
+    return value.toString().indexOf(search) > -1;
+  };
+  const filterOptionsByInput = () => {
+    let newOptions;
+    if (props.isObject) {
+      newOptions = filteredOptions().filter(option => matchValues(option[props.displayValue], inputValue()));
+    } else {
+      newOptions = filteredOptions().filter(option => matchValues(option.toString(), inputValue()));
+    }
+    groupByOptions(newOptions);
+    setOptions(newOptions);
+  };
+  const groupByOptions = options2 => {
+    const groupBy = props.groupBy;
+    const groupedObject2 = options2.reduce(function (r, a) {
+      const key = a[groupBy] || "Others";
+      r[key] = r[key] || [];
+      r[key].push(a);
+      return r;
+    }, /* @__PURE__ */Object.create({}));
+    setGroupedObject(groupedObject2);
+  };
+  function renderSelectedList() {
+    return createComponent$1(For, {
+      get each() {
+        return selectedValues();
+      },
+      children: value => ssr(_tmpl$9, ssrHydrationKey(), `chip ${props.singleSelect ? "singleChip" : ""} ${isDisablePreSelectedValues(value) ? "disableSelection" : ""}`, ssrStyle(props.style["chips"]), !props.isObject ? escape((value || "").toString()) : escape(value[props.displayValue]), escape(createComponent$1(Show, {
+        get when() {
+          return !isDisablePreSelectedValues(value);
+        },
+        get children() {
+          return createComponent$1(Show, {
+            get when() {
+              return !props.customCloseIcon;
+            },
+            fallback: () => ssr(_tmpl$10, ssrHydrationKey(), escape(props.customCloseIcon)),
+            get children() {
+              return ssr(_tmpl$8, ssrHydrationKey(), ssrAttribute("src", escape(closeIconType(), true), false));
+            }
+          });
+        }
+      })))
+    });
+  }
+  function renderMultiSelectContainer() {
+    return ssr(_tmpl$13, ssrHydrationKey(), `multiSelect-container multiSelectContainer ${disable ? "disable_ms" : ""}`, ssrAttribute("id", escape(id, true) || "multiSelectContainerSolid", false), ssrStyle(style["multiSelectContainer"]), `search-wrapper searchWrapper ${singleSelect ? "singleSelect" : ""}`, ssrStyle(style["searchBox"]), escape(renderSelectedList()), escape(createComponent$1(Show, {
+      get when() {
+        return props.searchable;
+      },
+      get children() {
+        return ssr(_tmpl$11, ssrHydrationKey(), `searchBox ${singleSelect ? "searchSingle" : ""}`, `${escape(id, true) || "search"}_input`, ssrAttribute("value", escape(inputValue(), true), false) + ssrAttribute("placeholder", singleSelect && selectedValues().length || hidePlaceholder && selectedValues().length ? "" : escape(placeholder, true), false), ssrStyle(style["inputField"]), ssrAttribute("disabled", disable, true));
+      }
+    })), escape(createComponent$1(Show, {
+      when: singleSelect || showArrow,
+      get children() {
+        return ssr(_tmpl$12, ssrHydrationKey(), ssrAttribute("src", escape(DownArrow, true), false));
+      }
+    })), `optionListContainer ${toggleOptionsList() ? "displayBlock" : ""} ${!toggleOptionsList() ? "displayNone" : ""}`, escape(renderOptionList()));
+  }
+  return renderMultiSelectContainer();
 };
 
 __astro_tag_component__(MultiSelect, "@astrojs/solid-js");
+__astro_tag_component__(MultiSelect, "@astrojs/solid-js");
+
+__astro_tag_component__(MultiSelect, "@astrojs/solid-js");
+
+const SingleSelect = ({
+  disabled,
+  label,
+  options,
+  texts = option => option,
+  value,
+  onChange,
+  customSelectStyle = {},
+  customOptionStyle = {},
+  customOptionsStyle = {}
+}) => {
+  return [label && createComponent$1(InputLabel, {
+    get sx() {
+      return style("text");
+    },
+    children: label
+  }), createComponent$1(MultiSelect, {
+    singleSelect: true,
+    isObject: true,
+    searchable: false,
+    placeholder: "Vyberte rasu",
+    displayValue: "label",
+    onSelect: data => {
+      console.log("SEL", data[0]["id"]);
+      onChange(data[0]["id"]);
+    },
+    onRemove: data => {
+      console.log("REMOVE", data);
+    },
+    onSearch: search => {
+      console.log("search", search);
+      if (search.trim() === "") {
+        onChange(value());
+      }
+    },
+    disable: disabled,
+    get style() {
+      return {
+        multiSelectContainer: style("select", customSelectStyle),
+        optionContainer: style("options", customOptionsStyle),
+        option: style("option", customOptionStyle)
+      };
+    },
+    emptyRecordMsg: "",
+    get options() {
+      return options().map(option => ({
+        id: option,
+        label: texts(option)
+      }));
+    },
+    get selectedValues() {
+      return [{
+        id: value(),
+        label: texts(value())
+      }];
+    }
+  })];
+};
+
+__astro_tag_component__(SingleSelect, "@astrojs/solid-js");
 
 const RaceSelector = () => {
   const properties = useStore(propertiesMap);
   const block = useStore(blockMap);
   const info = useStore(infoAtom);
+  const state = useStore(stateAtom);
+  const ready = useStore(readyAtom);
   const text = race => info()[race].name + " (" + info()[race].points + ")";
-  const points = races => races.reduce((sum, race) => sum + info()[race].points, 0);
-  const updateRaces = races => {
-    const newPoints = properties().points - points(block().races) + points(races);
-    blockMap.setKey("races", races);
+  const updateRace = race => {
+    const prevRace = block().races[0];
+    const newPoints = properties().points - info()[prevRace].points + info()[race].points;
+    blockMap.setKey("races", [race]);
     propertiesMap.setKey("points", newPoints);
   };
-  const disabled = race => !block().races.includes(race) && properties().points + info()[race].points < 0;
-  return createComponent$1(MultiSelect, {
-    name: "races",
-    options: () => Object.keys(info()).sort(),
-    values: () => block().races,
-    texts: race => info() ? text(race) : "",
-    disabled: disabled,
-    onChange: updateRaces
+  return createComponent$1(Show, {
+    get when() {
+      return ready();
+    },
+    get children() {
+      return createComponent$1(SingleSelect, {
+        label: "Rasa",
+        get disabled() {
+          return state() === "saving";
+        },
+        options: () => Object.keys(info()).sort(),
+        value: () => block().races[0],
+        texts: race => info() ? text(race) : "",
+        onChange: updateRace
+      });
+    }
   });
 };
 
 __astro_tag_component__(RaceSelector, "@astrojs/solid-js");
 
-const _tmpl$ = ["<div", ">", "</div>"];
-const TargetDisplay = () => {
-  const target = useStore(targetAtom);
-  return ssr(_tmpl$, ssrHydrationKey(), escape(JSON.stringify(target())));
-};
+const select = (target, params) => new Promise((resolve) => {
+  PubSub.subscribeOnce(msgResponse(apiSelect(target)), (msg, data) => {
+    resolve(data);
+  });
+  PubSub.publish(msgRequest(apiSelect(target)), params);
+});
+const update = (target, data) => new Promise((resolve) => {
+  PubSub.subscribeOnce(msgResponse(apiUpdate(target)), () => {
+    resolve();
+  });
+  PubSub.publish(msgRequest(apiUpdate(target)), data);
+});
 
-__astro_tag_component__(TargetDisplay, "@astrojs/solid-js");
+const $$Astro$f = createAstro("C:/work/killman/rpg-store/src/projects/rpg/builder/widgets/InfoTableCell.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$InfoTableCell = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$f, $$props, $$slots);
+  Astro2.self = $$InfoTableCell;
+  const { align, url } = Astro2.props;
+  return renderTemplate`${maybeRenderHead($$result)}<td${addAttribute(align, "align")}>
+  ${url ? renderTemplate`<a${addAttribute(url, "href")} target="_blank" rel="noopener noreferrer">
+        ${renderSlot($$result, $$slots["default"])}
+      </a>` : renderTemplate`${renderSlot($$result, $$slots["default"])}`}
+</td>`;
+});
+
+const $$Astro$e = createAstro("C:/work/killman/rpg-store/src/projects/rpg/builder/widgets/InfoTable.astro", "", "file:///C:/work/killman/rpg-store/");
+const $$InfoTable = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$e, $$props, $$slots);
+  Astro2.self = $$InfoTable;
+  const { block, width = "100%", descriptor } = Astro2.props;
+  const rpgInfo = block !== "properties" ? await select(T.rpgInfo, block) : void 0;
+  const ids = Object.keys(rpgInfo).sort();
+  console.log("rpgInfo", rpgInfo);
+  const theme = themeHolder.atom.get();
+  return renderTemplate`${maybeRenderHead($$result)}<div>
+  <table${addAttribute(theme, "class")}${addAttribute({ width }, "style")}>
+    <thead>
+      <tr>
+        ${descriptor.map((col) => renderTemplate`<th>${col.label}</th>`)}
+      </tr>
+    </thead>
+    <tbody>
+      ${ids.map((id) => renderTemplate`<tr>
+            ${descriptor.map((col) => renderTemplate`${renderComponent($$result, "InfoTableCell", $$InfoTableCell, { "align": col.align, "url": rpgInfo[id][col.urlKey] }, { "default": () => renderTemplate`${rpgInfo[id][col.key]}` })}`)}
+          </tr>`)}
+    </tbody>
+  </table>
+</div>`;
+});
 
 const MDXLayout$2 = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/FormLayout.901608f8.mjs')).default;
+  const Layout = (await import('./chunks/FormLayout.f8dbe823.mjs')).default;
   const {
     layout,
     ...content
@@ -8920,40 +12013,78 @@ const frontmatter$2 = {
 function getHeadings$2() {
   return [{
     "depth": 2,
-    "slug": "h2-h2",
-    "text": "H2 H2"
+    "slug": "rasa",
+    "text": "Rasa"
   }];
 }
 function _createMdxContent$2(props) {
   const _components = Object.assign({
       h2: "h2",
-      p: "p"
+      p: "p",
+      a: "a"
     }, props.components),
     {
-      Quote
+      Gap,
+      Form,
+      Row
     } = _components;
-  if (!Quote) _missingMdxReference("Quote", true);
+  if (!Form) _missingMdxReference("Form", true);
+  if (!Gap) _missingMdxReference("Gap", true);
+  if (!Row) _missingMdxReference("Row", true);
   return createVNode(Fragment, {
     children: [createVNode(_components.h2, {
-      id: "h2-h2",
-      children: "H2 H2"
+      id: "rasa",
+      children: "Rasa"
     }), "\n", createVNode(_components.p, {
-      children: "Bla Bla Bla\r\nInfo text races"
-    }), "\n", createVNode(Quote, {
-      isRed: true,
-      children: "This is a quote"
-    }), "\n", "\n", createVNode("astro-client-only", {
-      "client:only": "solid-js",
-      "client:display-name": "PointDisplay",
-      "client:component-path": "@portal/components/PointDisplay",
-      "client:component-export": "default",
-      "client:component-hydration": true
-    }), "\n", createVNode("astro-client-only", {
-      "client:only": "solid-js",
-      "client:display-name": "RaceSelector",
-      "client:component-path": "@portal/components/races/RaceSelector",
-      "client:component-export": "default",
-      "client:component-hydration": true
+      children: "Na Odrii \u017Eije mnoho ras inteligentn\xEDch tvor\u016F. Lidi jsou lidi a na Odrii nepat\u0159\xED k n\u011Bjak\xFDm otlouk\xE1nk\u016Fm, ale stejn\u011Btak m\u016F\u017Eete vyzkou\u0161et hr\xE1t t\u0159eba elfa \u010Di trpasl\xEDka. V z\xE1kladn\xEDm p\u0159ehledu ras jsou uvedeny nejb\u011B\u017En\u011Bj\u0161\xED hr\xE1\u010Dsk\xE9 rasy. Nen\xED to \xFApln\xFD v\xFD\u010Det mo\u017En\xFDch ras. Ty kter\xE9 uvedeny nejsou, jsou obvykle takov\xE9, kter\xE9 jsou komplikovan\u011Bj\u0161\xED a v\u011Bt\u0161inou mocn\u011Bj\u0161\xED ne\u017E ty uveden\xE9 a proto by nebylo f\xE9r je za\u0159adit po bok ostatn\xEDch - zvl\xE1\u0161t\u011B pokud hra za\u010D\xEDn\xE1 na ni\u017E\u0161\xEDch \xFArovn\xEDch.\r\nP\u0159i h\u0159e zku\u0161en\xFDch hr\xE1\u010D\u016F v\u0161ak nen\xED probl\xE9m aby byla hr\xE1\u010Dsk\xE1 postava t\u0159eba lykantrop anebo drak. Krom\u011B \u010Dist\xFDch ras je mo\u017En\xE9 aby postava byla m\xED\u0161encem. Pro m\xED\u0161ence obvykle neexistuj\xED konkr\xE9tn\xED pravidla, tak\u017Ee jejich konkr\xE9tn\xED parametry je t\u0159eba ur\u010Dit bu\u010Fto zpr\u016Fm\u011Brov\xE1n\xEDm anebo jin\xFDm vybalancov\xE1n\xEDm - p\u0159\xEDpadn\u011B poradou s PJ."
+    }), "\n", createVNode(_components.p, {
+      children: "Zvolen\xE1 rasa ur\u010Duje z\xE1kladn\xED po\u010Det bod\u016F, kter\xE9 bude m\xEDt hr\xE1\u010D k dispozici na tvorbu postavy, p\u0159\xEDpadn\u011B kolik bude muset zaplatit z jin\xFDch zdroj\u016F."
+    }), "\n", createVNode(_components.p, {
+      children: createVNode(_components.a, {
+        href: "http://odria.eu/wiki/index.php/Kategorie:Z%C3%A1kladn%C3%AD_rasy",
+        children: "Z\xE1kladn\xED rasy"
+      })
+    }), "\n", createVNode(_components.p, {
+      children: "Je jasn\xE9, \u017Ee nap\u0159. krollov\xE9 b\xFDvaj\xED siln\u011Bj\u0161\xED ne\u017E hobiti a \u017Ee elfov\xE9 jsou obvykle chyt\u0159ej\u0161\xED ne\u017E zrovna krollov\xE9. Tv\u016Fj hrdina v\u0161ak m\u016F\u017Ee b\xFDt ten v\xFDjime\u010Dn\xFD a je jen na tob\u011B jak jej\xED body rozd\u011Bl\xED\u0161, a proto sp\xED\u0161e ne\u017E na obvyklou v\xFD\u0161i vlastnost\xED u dan\xE9 rasy bych doporu\u010Dil se zam\u011B\u0159it na to, jak kter\xE1 rasa \u017Eije a jak zapad\xE1 do settingu, kter\xFD se bude hr\xE1t. Z toho plyne jak\xE9 bude m\xEDt postava z\xE1zem\xED, jak na n\xED budou pohl\xED\u017Eet apod. \u0158eknete, ale trpasl\xEDk m\xE1 do za\u010D\xE1tku infravizi, a elf talent na magii. Inu pokud je to to, co je pro v\xE1s ve h\u0159e d\u016Fle\u017Eit\xE9, tak i takov\xE9 v\u011Bci se daj\xED za body p\u0159ikoupit u rasy, kter\xE1 takov\xE9to schopnosti b\u011B\u017En\u011B nem\xE1.\r\nPodle typu hry m\u016F\u017Ee PJ d\xE1t hr\xE1\u010Di na tvorbu postavy body nav\xEDc, pokud chce aby postavy byly mocn\u011Bj\u0161\xED, nap\u0159\xEDklad pokud se za\u010D\xEDn\xE1 na vy\u0161\u0161\xED \xFArovni. P\u0159i tvorb\u011B za\u010D\xE1te\u010Dnick\xE9 postavy se obvykle body nav\xEDc ned\xE1vaj\xED."
+    }), "\n", "\n", createVNode(Gap, {
+      height: 4
+    }), "\n", createVNode(Form, {
+      height: "170px",
+      children: [createVNode(Row, {
+        justifyContent: "flex-end",
+        children: createVNode("astro-client-only", {
+          "client:only": "solid-js",
+          "client:display-name": "PointDisplay",
+          "client:component-path": "@portal/components/PointDisplay",
+          "client:component-export": "default",
+          "client:component-hydration": true
+        })
+      }), createVNode(Gap, {
+        height: 3
+      }), createVNode("astro-client-only", {
+        "client:only": "solid-js",
+        "client:display-name": "RaceSelector",
+        "client:component-path": "@portal/components/races/RaceSelector",
+        "client:component-export": "default",
+        "client:component-hydration": true
+      })]
+    }), "\n", createVNode(Gap, {
+      height: 4
+    }), "\n", createVNode($$InfoTable, {
+      block: "races",
+      width: "min(600px, 100%)",
+      descriptor: [{
+        key: "name",
+        label: "N\xE1zev",
+        urlKey: "wiki"
+      }, {
+        key: "points",
+        label: "Body"
+      }, {
+        key: "strength",
+        label: "S\xEDla",
+        align: "right"
+      }]
     })]
   });
 }
@@ -8978,7 +12109,7 @@ const Content$2 = MDXContent$2;
 const MDXLayout$1 = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/BuilderLayout.97769b25.mjs')).default;
+  const Layout = (await import('./chunks/BuilderLayout.e7e13e1a.mjs')).default;
   const {
     layout,
     ...content
@@ -9055,7 +12186,7 @@ const _page5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 const MDXLayout = async function ({
   children
 }) {
-  const Layout = (await import('./chunks/MdxLayout.739e2dda.mjs')).default;
+  const Layout = (await import('./chunks/MdxLayout.59d0cb33.mjs')).default;
   const {
     layout,
     ...content
@@ -9426,19 +12557,6 @@ ${renderComponent($$result, "MainTestLayout", $$MainTestLayout, { "pageTitle": p
 `;
 });
 
-const select = (target, params) => new Promise((resolve) => {
-  PubSub.subscribeOnce(msgResponse(apiSelect(target)), (msg, data) => {
-    resolve(data);
-  });
-  PubSub.publish(msgRequest(apiSelect(target)), params);
-});
-const update = (target, data) => new Promise((resolve) => {
-  PubSub.subscribeOnce(msgResponse(apiUpdate(target)), () => {
-    resolve();
-  });
-  PubSub.publish(msgRequest(apiUpdate(target)), data);
-});
-
 const API_URL = "/api/rpg" + "/tiles";
 class Data {
   tiles;
@@ -9626,13 +12744,13 @@ const initdb = async () => {
     switch ("supabase") {
       case "lowdb": {
         console.log("------ init lowdb --------");
-        await import('./chunks/lowdb.e2d5f4b6.mjs');
+        await import('./chunks/lowdb.b8f6e8af.mjs');
         break;
       }
       case "supabase":
       default: {
         console.log("------ TILES init supabase --------");
-        await import('./chunks/supabase.70dd4873.mjs');
+        await import('./chunks/supabase.39c556e9.mjs');
         break;
       }
     }
@@ -9919,7 +13037,7 @@ function deserializeManifest(serializedManifest) {
   };
 }
 
-const _manifest = Object.assign(deserializeManifest({"adapterName":"@astrojs/netlify/functions","routes":[{"file":"","links":[],"scripts":[],"routeData":{"route":"/","type":"page","pattern":"^\\/$","segments":[],"params":[],"component":"src/pages/index.astro","pathname":"/","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.a59dd997.css","assets/advantages.556af67d.css","assets/advantages.ad56316c.css","assets/index.f29b7ee6.css"],"scripts":[{"type":"external","value":"hoisted.eabb78d0.js"}],"routeData":{"route":"/builder","type":"page","pattern":"^\\/builder\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/index.mdx","pathname":"/builder","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/builder/blocklist","type":"page","pattern":"^\\/builder\\/BlockList\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"BlockList","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/BlockList.astro","pathname":"/builder/BlockList","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/advantages.ad56316c.css","assets/index.a59dd997.css","assets/advantages.556af67d.css","assets/index.f29b7ee6.css"],"scripts":[{"type":"external","value":"hoisted.eabb78d0.js"}],"routeData":{"route":"/builder/blocks/advantages","type":"page","pattern":"^\\/builder\\/blocks\\/advantages\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"blocks","dynamic":false,"spread":false}],[{"content":"advantages","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/blocks/advantages.mdx","pathname":"/builder/blocks/advantages","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/advantages.ad56316c.css","assets/index.a59dd997.css","assets/advantages.556af67d.css","assets/index.f29b7ee6.css"],"scripts":[{"type":"external","value":"hoisted.eabb78d0.js"}],"routeData":{"route":"/builder/blocks/equipments","type":"page","pattern":"^\\/builder\\/blocks\\/equipments\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"blocks","dynamic":false,"spread":false}],[{"content":"equipments","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/blocks/equipments.mdx","pathname":"/builder/blocks/equipments","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/advantages.ad56316c.css","assets/index.a59dd997.css","assets/advantages.556af67d.css","assets/index.f29b7ee6.css"],"scripts":[{"type":"external","value":"hoisted.eabb78d0.js"}],"routeData":{"route":"/builder/blocks/races","type":"page","pattern":"^\\/builder\\/blocks\\/races\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"blocks","dynamic":false,"spread":false}],[{"content":"races","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/blocks/races.mdx","pathname":"/builder/blocks/races","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/sample.c40bc159.css"],"scripts":[{"type":"external","value":"hoisted.331e226a2.js"}],"routeData":{"route":"/sample","type":"page","pattern":"^\\/sample\\/?$","segments":[[{"content":"sample","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/sample.mdx","pathname":"/sample","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.2b5f5430.css","assets/index.a59dd997.css","assets/index.f29b7ee6.css"],"scripts":[{"type":"external","value":"hoisted.fb0428a2.js"}],"routeData":{"route":"/board","type":"page","pattern":"^\\/board\\/?$","segments":[[{"content":"board","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/board/index.astro","pathname":"/board","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.a59dd997.css","assets/index.4c4b1a6a.css","assets/index.9299a98a.css"],"scripts":[],"routeData":{"route":"/tests","type":"page","pattern":"^\\/tests\\/?$","segments":[[{"content":"tests","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tests/index.astro","pathname":"/tests","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.a59dd997.css","assets/index.4c4b1a6a.css","assets/data.4c3d58e1.css","assets/index.f29b7ee6.css"],"scripts":[],"routeData":{"route":"/tests/projects/rpg/tiles/business/data","type":"page","pattern":"^\\/tests\\/projects\\/rpg\\/tiles\\/business\\/data\\/?$","segments":[[{"content":"tests","dynamic":false,"spread":false}],[{"content":"projects","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"business","dynamic":false,"spread":false}],[{"content":"data","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tests/projects/rpg/tiles/business/data.astro","pathname":"/tests/projects/rpg/tiles/business/data","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.a59dd997.css","assets/index.4c4b1a6a.css","assets/data.4c3d58e1.css","assets/index.f29b7ee6.css"],"scripts":[],"routeData":{"route":"/tests/projects/rpg/tiles/stores/tiles","type":"page","pattern":"^\\/tests\\/projects\\/rpg\\/tiles\\/stores\\/tiles\\/?$","segments":[[{"content":"tests","dynamic":false,"spread":false}],[{"content":"projects","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"stores","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tests/projects/rpg/tiles/stores/tiles.astro","pathname":"/tests/projects/rpg/tiles/stores/tiles","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.a59dd997.css","assets/tiles.db41faf9.css","assets/index.f29b7ee6.css"],"scripts":[{"type":"external","value":"hoisted.331e226a.js"}],"routeData":{"route":"/tiles","type":"page","pattern":"^\\/tiles\\/?$","segments":[[{"content":"tiles","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tiles.astro","pathname":"/tiles","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/board/count.json","type":"endpoint","pattern":"^\\/api\\/board\\/count\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"board","dynamic":false,"spread":false}],[{"content":"count.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/board/count.json.ts","pathname":"/api/board/count.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/rpgcharacter.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/rpgCharacter\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"rpgCharacter.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/builder/rpgCharacter.json.ts","pathname":"/api/rpg/builder/rpgCharacter.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/properties.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/properties\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"properties.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/builder/properties.json.ts","pathname":"/api/rpg/builder/properties.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/theme.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/theme\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"theme.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/builder/theme.json.ts","pathname":"/api/rpg/builder/theme.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/[block]","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/([^/]+?)Block\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"block","dynamic":true,"spread":false},{"content":"Block.json","dynamic":false,"spread":false}]],"params":["block"],"component":"src/pages/api/rpg/builder/[block]Block.json.ts","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/[block]","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/([^/]+?)Info\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"block","dynamic":true,"spread":false},{"content":"Info.json","dynamic":false,"spread":false}]],"params":["block"],"component":"src/pages/api/rpg/builder/[block]Info.json.ts","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/tiles/rpgtiles.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/tiles\\/rpgTiles\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"rpgTiles.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/tiles/rpgTiles.json.ts","pathname":"/api/rpg/tiles/rpgTiles.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/tiles/tiles.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/tiles\\/tiles\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"tiles.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/tiles/tiles.json.ts","pathname":"/api/rpg/tiles/tiles.json","_meta":{"trailingSlash":"ignore"}}}],"base":"/","markdown":{"drafts":false,"syntaxHighlight":"shiki","shikiConfig":{"langs":[],"theme":"github-dark","wrap":false},"remarkPlugins":[],"rehypePlugins":[],"remarkRehype":{},"extendDefaultPlugins":false,"isAstroFlavoredMd":false},"pageMap":null,"renderers":[],"entryModules":{"\u0000@astrojs-ssr-virtual-entry":"entry.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/layouts/BuilderLayout.astro":"chunks/BuilderLayout.97769b25.mjs","C:/work/killman/rpg-store/src/projects/rpg/tiles/layouts/MdxLayout.astro":"chunks/MdxLayout.739e2dda.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/layouts/FormLayout.astro":"chunks/FormLayout.901608f8.mjs","C:/work/killman/rpg-store/src/projects/rpg/tiles/db/lowdb.ts":"chunks/lowdb.e2d5f4b6.mjs","C:/work/killman/rpg-store/src/projects/rpg/tiles/db/supabase.ts":"chunks/supabase.70dd4873.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/business/db/lowdb.ts":"chunks/lowdb.a044d5a4.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/business/db/supabase.ts":"chunks/supabase.500af40d.mjs","@widgets/CardLink":"CardLink.a023025b.js","@components/BlockDisplay":"BlockDisplay.60c6820f.js","projects/board/components/Board":"Board.2222d1b5.js","projects/rpg/tiles/components/Tile":"Tile.1217e201.js","@input/StringInput":"StringInput.5d928b91.js","@portal/components/PointDisplay":"PointDisplay.bb5209db.js","@portal/components/races/RaceSelector":"RaceSelector.f8782104.js","@portal/components/MoneyDisplay":"MoneyDisplay.5f8c622b.js","@portal/components/properties/NameInput":"NameInput.b75d7f1d.js","@widgets/form/ThemeSelector":"ThemeSelector.edce2734.js","@widgets/form/FormControls":"FormControls.1a31eb7a.js","tests/components/TestSuite":"TestSuite.1bd76e64.js","tests/components/TestAction":"TestAction.68c22c57.js","tests/components/TestResult":"TestResult.249de5b6.js","tests/components/ProgressBar":"ProgressBar.9de0a997.js","tests/components/ProgressResultText":"ProgressResultText.75ca46be.js","@astrojs/solid-js/client.js":"client.bbf3da8f.js","/astro/hoisted.js?q=0":"hoisted.fb0428a2.js","/astro/hoisted.js?q=1":"hoisted.331e226a.js","/astro/hoisted.js?q=2":"hoisted.331e226a2.js","/astro/hoisted.js?q=3":"hoisted.eabb78d0.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/properties/store.ts":"chunks/store.711ffaa4.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/store/target.ts":"chunks/target.62526ec1.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/store/properties.ts":"chunks/properties.9f5dff7b.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/races/store.ts":"chunks/store.aafa45f5.js","C:/work/killman/rpg-store/src/pubsub/log.ts":"chunks/log.7c671722.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/races/transport.ts":"chunks/transport.06034d7c.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/equipments/store.ts":"chunks/store.3cd49487.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/equipments/transport.ts":"chunks/transport.76f54bc1.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/advantages/store.ts":"chunks/store.ee8afe48.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/advantages/transport.ts":"chunks/transport.b3a39c99.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/transport/properties.ts":"chunks/properties.7f29abb6.js","C:/work/killman/rpg-store/src/projects/rpg/builder/ui/stores/blockAtom.ts":"chunks/blockAtom.f2b00dc8.js","astro:scripts/before-hydration.js":""},"assets":["/assets/advantages.556af67d.css","/assets/advantages.ad56316c.css","/assets/data.4c3d58e1.css","/assets/index.9299a98a.css","/assets/index.4c4b1a6a.css","/assets/index.2b5f5430.css","/assets/sample.c40bc159.css","/assets/tiles.db41faf9.css","/assets/index.a59dd997.css","/BlockDisplay.60c6820f.js","/Board.2222d1b5.js","/CardLink.a023025b.js","/client.bbf3da8f.js","/favicon.svg","/FormControls.1a31eb7a.js","/hoisted.331e226a.js","/hoisted.331e226a2.js","/hoisted.eabb78d0.js","/hoisted.fb0428a2.js","/MoneyDisplay.5f8c622b.js","/NameInput.b75d7f1d.js","/PointDisplay.bb5209db.js","/ProgressBar.9de0a997.js","/ProgressResultText.75ca46be.js","/RaceSelector.f8782104.js","/StringInput.5d928b91.js","/TestAction.68c22c57.js","/TestResult.249de5b6.js","/TestSuite.1bd76e64.js","/ThemeSelector.edce2734.js","/Tile.1217e201.js","/assets/index.f29b7ee6.css","/chunks/block.6d382636.js","/chunks/blockAtom.f2b00dc8.js","/chunks/businessStore.48b35e1d.js","/chunks/Button.2795326a.js","/chunks/ButtonBase.d1edc7cf.js","/chunks/ChipDisplay.a9069ccb.js","/chunks/data.54d6c0b9.js","/chunks/gridSideLength.52159dfa.js","/chunks/index.3254e3ac.js","/chunks/index.341d0d08.js","/chunks/index.5ce26aac.js","/chunks/index.69c0b923.js","/chunks/index.a734dd66.js","/chunks/index.e3b0c442.50a188a4.js","/chunks/info.c6491951.js","/chunks/log.7c671722.js","/chunks/preload-helper.1de719f8.js","/chunks/properties.7f29abb6.js","/chunks/properties.9f5dff7b.js","/chunks/pubsub.e9085963.js","/chunks/sign.7336ae09.js","/chunks/solid.9c01704e.js","/chunks/startup.c105fbd4.js","/chunks/stateAtom.e5f42f76.js","/chunks/store.39ac366f.js","/chunks/store.3cd49487.js","/chunks/store.711ffaa4.js","/chunks/store.aafa45f5.js","/chunks/store.ee8afe48.js","/chunks/style.c765070e.js","/chunks/target.62526ec1.js","/chunks/tests.76ac8d03.js","/chunks/theme.fdd64ba5.js","/chunks/tiles.ac5985dc.js","/chunks/transport.06034d7c.js","/chunks/transport.76f54bc1.js","/chunks/transport.b3a39c99.js","/chunks/web.0627afa2.js"]}), {
+const _manifest = Object.assign(deserializeManifest({"adapterName":"@astrojs/netlify/functions","routes":[{"file":"","links":[],"scripts":[],"routeData":{"route":"/","type":"page","pattern":"^\\/$","segments":[],"params":[],"component":"src/pages/index.astro","pathname":"/","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.b6e78728.css","assets/advantages.3e5414c4.css","assets/advantages.ad56316c.css"],"scripts":[{"type":"external","value":"hoisted.b673b32d.js"}],"routeData":{"route":"/builder","type":"page","pattern":"^\\/builder\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/index.mdx","pathname":"/builder","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/builder/blocklist","type":"page","pattern":"^\\/builder\\/BlockList\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"BlockList","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/BlockList.astro","pathname":"/builder/BlockList","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/advantages.ad56316c.css","assets/index.b6e78728.css","assets/advantages.3e5414c4.css"],"scripts":[{"type":"external","value":"hoisted.b673b32d.js"}],"routeData":{"route":"/builder/blocks/advantages","type":"page","pattern":"^\\/builder\\/blocks\\/advantages\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"blocks","dynamic":false,"spread":false}],[{"content":"advantages","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/blocks/advantages.mdx","pathname":"/builder/blocks/advantages","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/advantages.ad56316c.css","assets/index.b6e78728.css","assets/advantages.3e5414c4.css"],"scripts":[{"type":"external","value":"hoisted.b673b32d.js"}],"routeData":{"route":"/builder/blocks/equipments","type":"page","pattern":"^\\/builder\\/blocks\\/equipments\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"blocks","dynamic":false,"spread":false}],[{"content":"equipments","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/blocks/equipments.mdx","pathname":"/builder/blocks/equipments","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/advantages.ad56316c.css","assets/index.b6e78728.css","assets/advantages.3e5414c4.css","assets/races.b25bb13b.css"],"scripts":[{"type":"external","value":"hoisted.b673b32d.js"}],"routeData":{"route":"/builder/blocks/races","type":"page","pattern":"^\\/builder\\/blocks\\/races\\/?$","segments":[[{"content":"builder","dynamic":false,"spread":false}],[{"content":"blocks","dynamic":false,"spread":false}],[{"content":"races","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/builder/blocks/races.mdx","pathname":"/builder/blocks/races","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/sample.c40bc159.css"],"scripts":[{"type":"external","value":"hoisted.331e226a2.js"}],"routeData":{"route":"/sample","type":"page","pattern":"^\\/sample\\/?$","segments":[[{"content":"sample","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/sample.mdx","pathname":"/sample","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.2b5f5430.css","assets/index.b6e78728.css","assets/index.653979b1.css"],"scripts":[{"type":"external","value":"hoisted.fb0428a2.js"}],"routeData":{"route":"/board","type":"page","pattern":"^\\/board\\/?$","segments":[[{"content":"board","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/board/index.astro","pathname":"/board","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.b6e78728.css","assets/index.4c4b1a6a.css","assets/index.9299a98a.css"],"scripts":[],"routeData":{"route":"/tests","type":"page","pattern":"^\\/tests\\/?$","segments":[[{"content":"tests","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tests/index.astro","pathname":"/tests","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.b6e78728.css","assets/index.4c4b1a6a.css","assets/data.4c3d58e1.css","assets/index.653979b1.css"],"scripts":[],"routeData":{"route":"/tests/projects/rpg/tiles/business/data","type":"page","pattern":"^\\/tests\\/projects\\/rpg\\/tiles\\/business\\/data\\/?$","segments":[[{"content":"tests","dynamic":false,"spread":false}],[{"content":"projects","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"business","dynamic":false,"spread":false}],[{"content":"data","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tests/projects/rpg/tiles/business/data.astro","pathname":"/tests/projects/rpg/tiles/business/data","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.b6e78728.css","assets/index.4c4b1a6a.css","assets/data.4c3d58e1.css","assets/index.653979b1.css"],"scripts":[],"routeData":{"route":"/tests/projects/rpg/tiles/stores/tiles","type":"page","pattern":"^\\/tests\\/projects\\/rpg\\/tiles\\/stores\\/tiles\\/?$","segments":[[{"content":"tests","dynamic":false,"spread":false}],[{"content":"projects","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"stores","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tests/projects/rpg/tiles/stores/tiles.astro","pathname":"/tests/projects/rpg/tiles/stores/tiles","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":["assets/index.b6e78728.css","assets/tiles.db41faf9.css","assets/index.653979b1.css"],"scripts":[{"type":"external","value":"hoisted.331e226a.js"}],"routeData":{"route":"/tiles","type":"page","pattern":"^\\/tiles\\/?$","segments":[[{"content":"tiles","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/tiles.astro","pathname":"/tiles","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/board/count.json","type":"endpoint","pattern":"^\\/api\\/board\\/count\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"board","dynamic":false,"spread":false}],[{"content":"count.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/board/count.json.ts","pathname":"/api/board/count.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/rpgcharacter.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/rpgCharacter\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"rpgCharacter.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/builder/rpgCharacter.json.ts","pathname":"/api/rpg/builder/rpgCharacter.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/properties.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/properties\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"properties.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/builder/properties.json.ts","pathname":"/api/rpg/builder/properties.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/theme.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/theme\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"theme.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/builder/theme.json.ts","pathname":"/api/rpg/builder/theme.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/[block]","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/([^/]+?)Block\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"block","dynamic":true,"spread":false},{"content":"Block.json","dynamic":false,"spread":false}]],"params":["block"],"component":"src/pages/api/rpg/builder/[block]Block.json.ts","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/builder/[block]","type":"endpoint","pattern":"^\\/api\\/rpg\\/builder\\/([^/]+?)Info\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"builder","dynamic":false,"spread":false}],[{"content":"block","dynamic":true,"spread":false},{"content":"Info.json","dynamic":false,"spread":false}]],"params":["block"],"component":"src/pages/api/rpg/builder/[block]Info.json.ts","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/tiles/rpgtiles.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/tiles\\/rpgTiles\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"rpgTiles.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/tiles/rpgTiles.json.ts","pathname":"/api/rpg/tiles/rpgTiles.json","_meta":{"trailingSlash":"ignore"}}},{"file":"","links":[],"scripts":[],"routeData":{"route":"/api/rpg/tiles/tiles.json","type":"endpoint","pattern":"^\\/api\\/rpg\\/tiles\\/tiles\\.json$","segments":[[{"content":"api","dynamic":false,"spread":false}],[{"content":"rpg","dynamic":false,"spread":false}],[{"content":"tiles","dynamic":false,"spread":false}],[{"content":"tiles.json","dynamic":false,"spread":false}]],"params":[],"component":"src/pages/api/rpg/tiles/tiles.json.ts","pathname":"/api/rpg/tiles/tiles.json","_meta":{"trailingSlash":"ignore"}}}],"base":"/","markdown":{"drafts":false,"syntaxHighlight":"shiki","shikiConfig":{"langs":[],"theme":"github-dark","wrap":false},"remarkPlugins":[],"rehypePlugins":[],"remarkRehype":{},"extendDefaultPlugins":false,"isAstroFlavoredMd":false},"pageMap":null,"renderers":[],"entryModules":{"\u0000@astrojs-ssr-virtual-entry":"entry.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/layouts/BuilderLayout.astro":"chunks/BuilderLayout.e7e13e1a.mjs","C:/work/killman/rpg-store/src/projects/rpg/tiles/layouts/MdxLayout.astro":"chunks/MdxLayout.59d0cb33.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/layouts/FormLayout.astro":"chunks/FormLayout.f8dbe823.mjs","C:/work/killman/rpg-store/src/projects/rpg/tiles/db/lowdb.ts":"chunks/lowdb.b8f6e8af.mjs","C:/work/killman/rpg-store/src/projects/rpg/tiles/db/supabase.ts":"chunks/supabase.39c556e9.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/business/db/lowdb.ts":"chunks/lowdb.5d789001.mjs","C:/work/killman/rpg-store/src/projects/rpg/builder/business/db/supabase.ts":"chunks/supabase.aa33c012.mjs","@widgets/CardLink":"CardLink.e3cbcfb8.js","@components/BlockDisplay":"BlockDisplay.f5f1955e.js","projects/board/components/Board":"Board.a6e0155f.js","projects/rpg/tiles/components/Tile":"Tile.210b40f3.js","@portal/components/PointDisplay":"PointDisplay.1ddd0036.js","@portal/components/MoneyDisplay":"MoneyDisplay.681e44d8.js","@portal/components/properties/NameInput":"NameInput.9732d290.js","@input/StringInput":"StringInput.25928437.js","@portal/components/races/RaceSelector":"RaceSelector.84ec6eee.js","@input/MultiSelect":"MultiSelect.e48ebfa9.js","@widgets/form/FormControls":"FormControls.739f73b9.js","tests/components/TestSuite":"TestSuite.7d5f7a97.js","@builder/ui/widgets/form/ThemeSelector":"ThemeSelector.8d2a2b25.js","tests/components/TestAction":"TestAction.1e892732.js","tests/components/TestResult":"TestResult.40746010.js","tests/components/ProgressBar":"ProgressBar.9a50b828.js","tests/components/ProgressResultText":"ProgressResultText.645d0a9e.js","@astrojs/solid-js/client.js":"client.5497a539.js","/astro/hoisted.js?q=0":"hoisted.fb0428a2.js","/astro/hoisted.js?q=1":"hoisted.331e226a.js","/astro/hoisted.js?q=2":"hoisted.331e226a2.js","/astro/hoisted.js?q=3":"hoisted.b673b32d.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/properties/store.ts":"chunks/store.711ffaa4.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/store/target.ts":"chunks/target.62526ec1.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/store/properties.ts":"chunks/properties.9f5dff7b.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/races/store.ts":"chunks/store.aafa45f5.js","C:/work/killman/rpg-store/src/pubsub/log.ts":"chunks/log.7c671722.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/races/transport.ts":"chunks/transport.1b6e25ae.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/equipments/store.ts":"chunks/store.3cd49487.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/equipments/transport.ts":"chunks/transport.cf2d9ccc.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/advantages/store.ts":"chunks/store.ee8afe48.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/blocks/advantages/transport.ts":"chunks/transport.ddcec6e7.js","C:/work/killman/rpg-store/src/projects/rpg/builder/business/transport/properties.ts":"chunks/properties.dc320628.js","C:/work/killman/rpg-store/src/projects/rpg/builder/ui/stores/blockAtom.ts":"chunks/blockAtom.f2b00dc8.js","astro:scripts/before-hydration.js":""},"assets":["/assets/advantages.3e5414c4.css","/assets/advantages.ad56316c.css","/assets/data.4c3d58e1.css","/assets/index.9299a98a.css","/assets/index.4c4b1a6a.css","/assets/index.2b5f5430.css","/assets/races.b25bb13b.css","/assets/sample.c40bc159.css","/assets/tiles.db41faf9.css","/assets/index.b6e78728.css","/BlockDisplay.f5f1955e.js","/Board.a6e0155f.js","/CardLink.e3cbcfb8.js","/client.5497a539.js","/favicon.svg","/FormControls.739f73b9.js","/hoisted.331e226a.js","/hoisted.331e226a2.js","/hoisted.b673b32d.js","/hoisted.fb0428a2.js","/MoneyDisplay.681e44d8.js","/MultiSelect.e48ebfa9.js","/NameInput.9732d290.js","/PointDisplay.1ddd0036.js","/ProgressBar.9a50b828.js","/ProgressResultText.645d0a9e.js","/RaceSelector.84ec6eee.js","/StringInput.25928437.js","/TestAction.1e892732.js","/TestResult.40746010.js","/TestSuite.7d5f7a97.js","/ThemeSelector.8d2a2b25.js","/Tile.210b40f3.js","/assets/index.653979b1.css","/chunks/block.8f9fb95f.js","/chunks/blockAtom.f2b00dc8.js","/chunks/breakpoints.fb4bc898.js","/chunks/businessStore.48b35e1d.js","/chunks/Button.47bc965c.js","/chunks/ButtonBase.be2a3a6d.js","/chunks/ChipDisplay.849e3b51.js","/chunks/createRef.863185dc.js","/chunks/createSvgIcon.6a3329e7.js","/chunks/data.54d6c0b9.js","/chunks/gridSideLength.52159dfa.js","/chunks/index.0f1399f1.js","/chunks/index.3254e3ac.js","/chunks/index.5ce26aac.js","/chunks/index.69c0b923.js","/chunks/index.a734dd66.js","/chunks/index.e3b0c442.99a4c5f1.js","/chunks/info.c6491951.js","/chunks/InputLabel.a53efe27.js","/chunks/isHostComponent.e5fad849.js","/chunks/log.7c671722.js","/chunks/Paper.5d218b1d.js","/chunks/preload-helper.1de719f8.js","/chunks/properties.9f5dff7b.js","/chunks/properties.dc320628.js","/chunks/pubsub.e9085963.js","/chunks/readyAtom.1771f20c.js","/chunks/sign.7336ae09.js","/chunks/SingleSelect.9cf90874.js","/chunks/solid.0139c303.js","/chunks/startup.c105fbd4.js","/chunks/stateAtom.af5b51be.js","/chunks/store.3cd49487.js","/chunks/store.711ffaa4.js","/chunks/store.aafa45f5.js","/chunks/store.ac6fae57.js","/chunks/store.ee8afe48.js","/chunks/style.3e8f2296.js","/chunks/target.62526ec1.js","/chunks/tests.76ac8d03.js","/chunks/theme.df51250e.js","/chunks/tiles.ac5985dc.js","/chunks/transport.1b6e25ae.js","/chunks/transport.cf2d9ccc.js","/chunks/transport.ddcec6e7.js","/chunks/useFormControl.33744b8e.js","/chunks/web.73e53853.js"]}), {
 	pageMap: pageMap,
 	renderers: renderers
 });
@@ -9933,4 +13051,4 @@ if(_start in adapter) {
 	adapter[_start](_manifest, _args);
 }
 
-export { Theme$1 as T, T as a, createComponent as b, createAstro as c, addAttribute as d, style as e, renderSlot as f, renderComponent as g, msgRequest as h, handler, msgResponse as i, apiSelect as j, apiUpdate as k, maybeRenderHead as m, renderTemplate as r, select as s };
+export { T, createComponent as a, addAttribute as b, createAstro as c, style as d, renderSlot as e, renderComponent as f, msgRequest as g, apiSelect as h, handler, msgResponse as i, apiUpdate as j, maybeRenderHead as m, renderTemplate as r, select as s, themeHolder as t };
