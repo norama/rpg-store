@@ -112,6 +112,16 @@ const defaultStyles = {
     width: '100%',
     overflowX: 'hidden',
   },
+  checkbox: {
+    color: 'text',
+    background: 'muted',
+  },
+  list: {
+    color: 'text',
+    background: 'muted',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+  },
   header: {
     backgroundColor: 'background',
     padding: '5px 30px',
