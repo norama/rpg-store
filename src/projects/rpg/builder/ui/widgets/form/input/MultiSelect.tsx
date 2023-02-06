@@ -16,6 +16,8 @@ import style from 'styles/style'
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
+const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
+
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1)
 }
@@ -106,8 +108,6 @@ const MultiSelect = ({ customStyle }: Props) => {
     setRight([])
   }
 
-  const buttonStyle = { my: 0.5, fontWeight: 700 }
-
   return (
     <div style={{ 'text-align': 'center' }}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
@@ -122,7 +122,7 @@ const MultiSelect = ({ customStyle }: Props) => {
         <Grid item>
           <Grid container direction="column" alignItems="center">
             <Button
-              sx={style('list', buttonStyle)}
+              sx={LIST_STYLE}
               variant="contained"
               color="success"
               size="medium"
@@ -133,7 +133,7 @@ const MultiSelect = ({ customStyle }: Props) => {
               ≫
             </Button>
             <Button
-              sx={style('list', buttonStyle)}
+              sx={LIST_STYLE}
               variant="outlined"
               color="success"
               size="medium"
@@ -144,7 +144,7 @@ const MultiSelect = ({ customStyle }: Props) => {
               {RIGHT_ARROW}
             </Button>
             <Button
-              sx={style('list', buttonStyle)}
+              sx={LIST_STYLE}
               variant="outlined"
               color="success"
               size="medium"
@@ -155,7 +155,7 @@ const MultiSelect = ({ customStyle }: Props) => {
               {LEFT_ARROW}
             </Button>
             <Button
-              sx={style('list', buttonStyle)}
+              sx={LIST_STYLE}
               variant="contained"
               color="success"
               size="medium"
