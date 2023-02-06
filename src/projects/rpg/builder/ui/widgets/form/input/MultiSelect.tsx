@@ -26,7 +26,12 @@ function intersection(a, b) {
   return a.filter((value) => b.indexOf(value) !== -1)
 }
 
-const CustomList = ({ items, checked, onToggle, customStyle }) => (
+const CustomList = ({
+  items,
+  checked,
+  onToggle,
+  customStyle = { width: '200px', height: '300px' },
+}) => (
   <Paper sx={style('list', customStyle)}>
     <List dense component="div" role="list">
       {items().map((value) => {
@@ -56,11 +61,7 @@ const CustomList = ({ items, checked, onToggle, customStyle }) => (
   </Paper>
 )
 
-type Props = {
-  customStyle: object
-}
-
-const MultiSelect = ({ customStyle = { width: '200px', height: '300px' } }: Props) => {
+const MultiSelect = () => {
   const [checked, setChecked] = createSignal([])
   const [left, setLeft] = createSignal([0, 1, 2])
   const [right, setRight] = createSignal([3, 4, 5])
@@ -112,12 +113,7 @@ const MultiSelect = ({ customStyle = { width: '200px', height: '300px' } }: Prop
     <div style={{ 'text-align': 'center' }}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item>
-          <CustomList
-            items={left}
-            checked={checked}
-            onToggle={handleToggle}
-            customStyle={customStyle}
-          />
+          <CustomList items={left} checked={checked} onToggle={handleToggle} />
         </Grid>
         <Grid item>
           <Grid container direction="column" alignItems="center">
@@ -168,12 +164,7 @@ const MultiSelect = ({ customStyle = { width: '200px', height: '300px' } }: Prop
           </Grid>
         </Grid>
         <Grid item>
-          <CustomList
-            items={right}
-            checked={checked}
-            onToggle={handleToggle}
-            customStyle={customStyle}
-          />
+          <CustomList items={right} checked={checked} onToggle={handleToggle} />
         </Grid>
       </Grid>
     </div>
