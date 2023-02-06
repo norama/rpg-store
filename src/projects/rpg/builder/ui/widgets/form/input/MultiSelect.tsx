@@ -11,12 +11,12 @@ import {
   Paper,
 } from '@suid/material'
 import { createSignal, createEffect } from 'solid-js'
-import style from 'styles/style'
+//import style from 'styles/style'
 
 const LEFT_ARROW = '\u003c'
 const RIGHT_ARROW = '\u003e'
 
-const LIST_STYLE = style('list', { my: 0.5, fontWeight: 700 })
+const LIST_STYLE = { my: 0.5, fontWeight: 700 } //style('list', { my: 0.5, fontWeight: 700 })
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1)
@@ -32,7 +32,7 @@ const CustomList = ({
   onToggle,
   customStyle = { width: '200px', height: '300px' },
 }) => (
-  <Paper sx={style('list', customStyle)}>
+  <Paper sx={customStyle}>
     <List dense component="div" role="list">
       {items().map((value) => {
         const labelId = `transfer-list-item-${value}-label`
@@ -44,7 +44,7 @@ const CustomList = ({
                 checked={checked().indexOf(value) !== -1}
                 tabIndex={-1}
                 disableRipple
-                sx={style('checkbox', { transform: 'scale(1.2)' })}
+                sx={{ transform: 'scale(1.2)' }}
                 color="success"
                 size="medium"
                 inputProps={{
