@@ -14,7 +14,7 @@
 }
 
 .searchWrapper {
-  border: none;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   padding: 5px;
   min-height: 22px;
@@ -58,10 +58,9 @@
 }
 
 .closeIcon {
-  height: 13px;
-  width: 13px;
+  font-size: xx-small;
   float: right;
-  margin-left: 5px;
+  margin-left: 8px;
   cursor: pointer;
 }
 
@@ -78,24 +77,31 @@
   display: block;
   padding: 0;
   margin: 0;
+  border: 1px solid #ccc;
   border-radius: 4px;
   max-height: 250px;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.multiSelectContainer li {
-  padding: 10px 10px;
+.selectedListContainer {
+  margin-bottom: 10px;
 }
 
-.multiSelectContainer li:hover {
-  background: #0096fb !important;
-  color: #fff !important;
+.multiSelectContainer li {
+  padding: 8px 8px;
+}
+
+.optionContainer li:hover {
+  background: #0096fb;
+  color: #fff;
   cursor: pointer;
 }
 
 .checkbox {
   margin-right: 10px;
+  cursor: pointer;
+  transform: scale(1.2);
 }
 
 .disableSelection {
@@ -138,15 +144,10 @@ li.groupChildEle {
 
 .icon_down_dir {
   position: absolute;
-  right: 10px;
+  right: 15px;
   top: 50%;
-  transform: translateY(-50%);
-  width: 14px;
+  transform: translateY(-70%) scale(2, 1);
   cursor: pointer;
-}
-
-.icon_down_dir:before {
-  content: '\e803';
 }
 
 .custom-close {

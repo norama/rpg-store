@@ -29,11 +29,11 @@ const SingleSelect = ({
     <>
       {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
       <Select
-        singleSelect
-        isObject
+        type="single"
         searchable={false}
         placeholder="Vyberte rasu"
-        displayValue="label"
+        displayKey="label"
+        idKey="id"
         onSelect={(data) => onChange(data[0]['id'])}
         onRemove={(data) => {
           console.log('REMOVE', data)
@@ -44,7 +44,7 @@ const SingleSelect = ({
             onChange(value())
           }
         }}
-        disable={disabled}
+        disabled={disabled}
         style={{
           multiSelectContainer: style('select', customSelectStyle),
           optionContainer: style('options', customOptionsStyle),
