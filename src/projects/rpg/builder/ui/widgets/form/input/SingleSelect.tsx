@@ -1,22 +1,25 @@
 import { InputLabel } from '@suid/material'
 import style from 'styles/style'
 import Select from '@norama.matema/solid-multiselect'
+import { JSX } from 'solid-js'
 
 type Props = {
   disabled?: boolean
   label?: string
+  placeholder?: string
   options: () => string[]
   texts?: (option: string) => string
   value: () => string
   onChange: (value: string) => void
-  customSelectStyle?: object
-  customOptionStyle?: object
-  customOptionsStyle?: object
+  customSelectStyle?: JSX.CSSProperties
+  customOptionStyle?: JSX.CSSProperties
+  customOptionsStyle?: JSX.CSSProperties
 }
 
 const SingleSelect = ({
   disabled,
   label,
+  placeholder = '',
   options,
   texts = (option) => option,
   value,
@@ -31,7 +34,7 @@ const SingleSelect = ({
       <Select
         type="single"
         searchable={false}
-        placeholder="Vyberte rasu"
+        placeholder={placeholder}
         displayKey="label"
         idKey="id"
         onSelect={(data) => onChange(data[0]['id'])}

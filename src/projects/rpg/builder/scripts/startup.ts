@@ -27,6 +27,7 @@ const startup = async (page: string) => {
       console.log('=== > equipments')
       break
     case 'advantages':
+    case 'advantagesTransfer':
       await import('@business/blocks/advantages/store')
       const { default: Advantages } = await import('@business/blocks/advantages/transport')
       transport = new Advantages()

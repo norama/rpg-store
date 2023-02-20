@@ -26,6 +26,7 @@ const RaceSelector = () => {
     <Show when={ready()}>
       <SingleSelect
         label="Rasa"
+        placeholder="Vyberte rasu"
         disabled={state() === 'saving'}
         options={() => Object.keys(info()).sort()}
         value={() => block().races[0]}

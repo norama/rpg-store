@@ -1,5 +1,5 @@
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/advantages/store'
-import MultiSelect from '@builder/ui/widgets/form/input/MultiSelect'
+import TransferListSelect from '@builder/ui/widgets/form/input/TransferListSelect'
 import { useStore } from '@nanostores/solid'
 import { Show } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
@@ -26,14 +26,14 @@ const AdvantagesSelector = () => {
 
   return (
     <Show when={ready()}>
-      <MultiSelect
+      <TransferListSelect
         label="Výhody - nevýhody"
         disabled={state() === 'saving'}
         options={() => Object.keys(info()).sort()}
         values={() => block().advantages}
         texts={(advantage) => (info() ? text(advantage) : '')}
         onChange={updateAdvantages}
-        customSelectStyle={{ height: '300px' }}
+        customStyle={{ width: '200px', height: '400px' }}
       />
     </Show>
   )

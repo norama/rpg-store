@@ -1,0 +1,12 @@
+---
+layout: '@layouts/BuilderLayout.astro'
+title: 'Advantages'
+---
+
+import { components } from 'styles/components/index.mdx'
+
+export { components }
+
+import { Content as Advantages } from '@blocks/advantagesTransfer.mdx'
+
+<Advantages components={components} />
