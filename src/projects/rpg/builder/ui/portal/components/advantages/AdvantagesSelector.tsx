@@ -31,9 +31,8 @@ const AdvantagesSelector = () => {
         disabled={state() === 'saving'}
         options={() => Object.keys(info()).sort()}
         values={() => block().advantages}
-        texts={(advantage) => (info() ? text(advantage) : '')}
+        texts={(advantage) => text(advantage)}
         onChange={updateAdvantages}
-        customSelectStyle={{ height: '300px' }}
       />
     </Show>
   )

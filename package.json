@@ -18,7 +18,7 @@
     "@astrojs/vercel": "^3.0.1",
     "@nanostores/persistent": "^0.7.0",
     "@nanostores/solid": "^0.3.0",
-    "@norama.matema/solid-multiselect": "^0.2.4",
+    "@norama.matema/solid-multiselect": "^0.2.6",
     "@suid/icons-material": "^0.5.3",
     "@suid/material": "^0.8.2",
     "@supabase/supabase-js": "^2.1.1",

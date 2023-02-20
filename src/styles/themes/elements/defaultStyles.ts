@@ -95,7 +95,7 @@ const defaultStyles = {
   select: {
     color: 'text',
     background: 'muted',
-    width: '400px100%',
+    width: '400px',
     border: 'none',
   },
   options: {
@@ -112,6 +112,15 @@ const defaultStyles = {
     width: '100%',
     overflowX: 'hidden',
   },
+  multiSelect: {},
+  multiOption: {
+    color: 'text',
+    background: 'muted',
+    cursor: 'pointer',
+    overflowX: 'hidden',
+  },
+  multiOptions: {},
+  multiSelectList: {},
   checkbox: {
     color: 'text',
     background: 'muted',
