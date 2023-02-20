@@ -1,6 +1,7 @@
 import { InputLabel } from '@suid/material'
 import style from 'styles/style'
 import Select from '@norama.matema/solid-multiselect'
+import { Show } from 'solid-js'
 
 type Props = {
   disabled?: boolean
@@ -9,7 +10,8 @@ type Props = {
   options: () => string[]
   texts?: (option: string) => string
   values: () => string[]
-  onChange: (values: string[]) => void
+  onSelect: (value: string) => void
+  onRemove: (value: string) => void
 }
 
 const MultiSelect = ({
@@ -19,12 +21,15 @@ const MultiSelect = ({
   options,
   texts = (option) => option,
   values,
-  onChange,
+  onSelect,
+  onRemove,
 }: Props) => {
   return (
     <>
-      {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
-      <div style={{ height: '10px' }} />
+      <Show when={label}>
+        <InputLabel sx={style('text')}>{label}</InputLabel>
+        <div style={{ height: '10px' }} />
+      </Show>
       <Select
         type="multiList"
         searchable={true}
@@ -32,8 +37,8 @@ const MultiSelect = ({
         placeholder={placeholder}
         displayKey="label"
         idKey="id"
-        onSelect={(data) => onChange(data.map((item) => item['id']))}
-        onRemove={(data) => onChange(data.map((item) => item['id']))}
+        onSelect={(_data, item) => onSelect(item['id'])}
+        onRemove={(_data, item) => onRemove(item['id'])}
         disabled={disabled}
         style={{
           multiSelectContainer: style('multiSelect'),
