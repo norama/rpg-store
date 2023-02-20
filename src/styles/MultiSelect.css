@@ -96,7 +96,14 @@
 .optionContainer li:hover {
   background: #0096fb !important;
   color: #fff !important;
+}
+
+.optionContainer .option {
   cursor: pointer;
+}
+
+.selectedListContainer .option {
+  cursor: default;
 }
 
 .checkbox {

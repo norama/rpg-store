@@ -116,7 +116,6 @@ const defaultStyles = {
   multiOption: {
     color: 'text',
     background: 'muted',
-    cursor: 'pointer',
     overflowX: 'hidden',
   },
   multiOptions: {},

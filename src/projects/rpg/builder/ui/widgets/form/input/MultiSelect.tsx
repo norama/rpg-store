@@ -15,7 +15,7 @@ type Props = {
 const MultiSelect = ({
   disabled,
   label,
-  placeholder = '',
+  placeholder = 'Hledat',
   options,
   texts = (option) => option,
   values,
