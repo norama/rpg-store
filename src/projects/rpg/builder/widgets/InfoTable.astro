@@ -26,14 +26,16 @@ const rpgInfo =
     ? await select<IInfoRaces | IInfoAdvantages | IInfoEquipments>(T.rpgInfo, block)
     : undefined
 
-const ids = Object.keys(rpgInfo).sort()
+const ids = Object.keys(rpgInfo).sort((id1, id2) =>
+  rpgInfo[id1].name.localeCompare(rpgInfo[id2].name)
+)
 console.log('rpgInfo', rpgInfo)
 
 const theme = themeHolder.atom.get()
 ---
 
 <div>
-  <table class={theme} style={{ width }}>
+  <table class={theme} style={{ width }} id="infoTable">
     <thead>
       <tr>
         {descriptor.map((col) => <th>{col.label}</th>)}
@@ -42,7 +44,7 @@ const theme = themeHolder.atom.get()
     <tbody>
       {
         ids.map((id) => (
-          <tr>
+          <tr id={id}>
             {descriptor.map((col) => (
               <InfoTableCell align={col.align} url={rpgInfo[id][col.urlKey]}>
                 {rpgInfo[id][col.key]}

@@ -1,7 +1,7 @@
 import { propertiesMap, blockMap, infoAtom } from '@builder/business/blocks/advantages/store'
 import MultiSelect from '@builder/ui/widgets/form/input/MultiSelect'
 import { useStore } from '@nanostores/solid'
-import { Show, createSignal } from 'solid-js'
+import { Show, createSignal, createEffect } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
 import stateAtom from '@builder/ui/stores/stateAtom'
 import Tabs from '@builder/ui/widgets/form/Tabs'
@@ -22,6 +22,22 @@ const AdvantagesSelector = () => {
     disadvantages: (advantage: string) => info()[advantage].points > 0,
     all: () => true,
   }
+
+  createEffect(() => {
+    if (!ready()) {
+      return
+    }
+    const infoTable = document.getElementById('infoTable')
+    const currentFilter = filters[filter()]
+    const infoRows = infoTable.querySelector('tbody').getElementsByTagName('tr')
+    for (let row of infoRows) {
+      if (currentFilter(row.id)) {
+        row.style.display = 'table-row'
+      } else {
+        row.style.display = 'none'
+      }
+    }
+  })
 
   const text = (advantage: string) => info()[advantage].name + ' (' + info()[advantage].points + ')'
 
