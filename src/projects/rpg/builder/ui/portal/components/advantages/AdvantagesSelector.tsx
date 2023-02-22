@@ -4,7 +4,7 @@ import { useStore } from '@nanostores/solid'
 import { Show, createSignal } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
 import stateAtom from '@builder/ui/stores/stateAtom'
-import { Radio, RadioGroup, FormControlLabel } from '@suid/material'
+import Tabs from '@builder/ui/widgets/form/Tabs'
 
 type IFilter = 'advantages' | 'disadvantages' | 'all'
 
@@ -39,23 +39,16 @@ const AdvantagesSelector = () => {
 
   return (
     <Show when={ready()}>
-      <RadioGroup row value={filter()} onChange={(e, value) => setFilter(value as IFilter)}>
-        <FormControlLabel
-          value="advantages"
-          control={<Radio color="success" size="small" />}
-          label="Výhody"
-        />
-        <FormControlLabel
-          value="disadvantages"
-          control={<Radio color="error" size="small" />}
-          label="Nevýhody"
-        />
-        <FormControlLabel
-          value="all"
-          control={<Radio color="primary" size="small" />}
-          label="Všechny"
-        />
-      </RadioGroup>
+      <Tabs
+        tabs={[
+          { value: 'advantages', color: 'success', label: 'Výhody' },
+          { value: 'disadvantages', color: 'error', label: 'Nevýhody' },
+          { value: 'all', color: 'primary', label: 'Všechny' },
+        ]}
+        value={filter}
+        onChange={(value) => setFilter(value as IFilter)}
+      />
+
       <div style={{ height: '5px' }} />
       <MultiSelect
         disabled={state() === 'saving'}
