@@ -5,6 +5,7 @@ import { Show, createSignal, createEffect } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
 import stateAtom from '@builder/ui/stores/stateAtom'
 import Tabs from '@builder/ui/widgets/form/Tabs'
+import infoTableFilter from '@builder/widgets/infoTableFilter'
 
 type IFilter = 'advantages' | 'disadvantages' | 'all'
 
@@ -27,16 +28,7 @@ const AdvantagesSelector = () => {
     if (!ready()) {
       return
     }
-    const infoTable = document.getElementById('infoTable')
-    const currentFilter = filters[filter()]
-    const infoRows = infoTable.querySelector('tbody').getElementsByTagName('tr')
-    for (let row of infoRows) {
-      if (currentFilter(row.id)) {
-        row.style.display = 'table-row'
-      } else {
-        row.style.display = 'none'
-      }
-    }
+    infoTableFilter(filters[filter()])
   })
 
   const text = (advantage: string) => info()[advantage].name + ' (' + info()[advantage].points + ')'
