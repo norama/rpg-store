@@ -1,9 +1,8 @@
-import { Radio, RadioGroup, FormControlLabel } from '@suid/material'
-
-type IColor = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
+import { Box, Radio, RadioGroup, FormControlLabel } from '@suid/material'
+import './Tabs.css'
 
 type ITab = {
-  color: IColor
+  color: string
   label: string
   value: string
 }
@@ -15,13 +14,14 @@ type Props = {
 }
 
 const Tabs = ({ tabs, value, onChange }: Props) => (
-  <RadioGroup row value={value()} onChange={(e, value) => onChange(value)}>
+  <RadioGroup row value={value()} onChange={(e, value) => onChange(value)} class="tabs">
     {tabs.map((tab) => (
-      <FormControlLabel
-        value={tab.value}
-        control={<Radio color={tab.color} size="small" />}
-        label={tab.label}
-      />
+      <Box
+        class={`tab ${tab.value === value() ? 'selected' : ''}`}
+        sx={tab.value === value() ? { borderBottom: `2px solid ${tab.color}` } : undefined}
+      >
+        <FormControlLabel value={tab.value} control={<Radio />} label={tab.label} />
+      </Box>
     ))}
   </RadioGroup>
 )

@@ -1,0 +1,21 @@
+.tabs {
+  margin-bottom: 10px;
+}
+
+.tab {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.tab:hover {
+  opacity: 1;
+}
+
+.tab .selected {
+  opacity: 1;
+}
+
+.tab input[type='radio'],
+.tab .MuiSvgIcon-root {
+  display: none;
+}

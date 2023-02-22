@@ -41,15 +41,13 @@ const AdvantagesSelector = () => {
     <Show when={ready()}>
       <Tabs
         tabs={[
-          { value: 'advantages', color: 'success', label: 'Výhody' },
-          { value: 'disadvantages', color: 'error', label: 'Nevýhody' },
-          { value: 'all', color: 'primary', label: 'Všechny' },
+          { value: 'advantages', color: 'green', label: 'Výhody' },
+          { value: 'disadvantages', color: 'red', label: 'Nevýhody' },
+          { value: 'all', color: '#0096fb', label: 'Všechny' },
         ]}
         value={filter}
         onChange={(value) => setFilter(value as IFilter)}
       />
-
-      <div style={{ height: '5px' }} />
       <MultiSelect
         disabled={state() === 'saving'}
         options={() => Object.keys(info()).sort().filter(filters[filter()])}
