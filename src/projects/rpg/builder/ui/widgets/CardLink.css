@@ -1,0 +1,22 @@
+@media (max-width: 799px) {
+  .card {
+    width: 100%;
+  }
+}
+
+@media (min-width: 800px) {
+  .card {
+    width: 350px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardAction {
+  margin-top: auto;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}

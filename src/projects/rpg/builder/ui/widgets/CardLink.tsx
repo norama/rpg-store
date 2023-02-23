@@ -3,6 +3,7 @@ import { JSXElement, Show } from 'solid-js'
 import { useStore } from '@nanostores/solid'
 import themeHolder from 'styles/theme'
 import style from 'styles/style'
+import './CardLink.css'
 
 type Props = {
   header: string
@@ -17,12 +18,12 @@ const CardLink = ({ header, action, href, customStyle, children }: Props) => {
 
   return (
     <Show when={theme()}>
-      <Card sx={style('card', customStyle)}>
+      <Card sx={style('card', customStyle)} class="card">
         <CardContent>
           <div>{header}</div>
           <div>{children}</div>
         </CardContent>
-        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} class="cardAction">
           <Button href={href} variant="outlined" size="small" sx={style('linkButton')}>
             {action}
           </Button>
