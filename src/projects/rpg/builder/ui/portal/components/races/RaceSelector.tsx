@@ -4,6 +4,7 @@ import { useStore } from '@nanostores/solid'
 import { Show } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
 import stateAtom from '@builder/ui/stores/stateAtom'
+import style from 'styles/style'
 
 const RaceSelector = () => {
   const properties = useStore(propertiesMap)
@@ -32,6 +33,9 @@ const RaceSelector = () => {
         value={() => block().races[0]}
         texts={(race) => (info() ? text(race) : '')}
         onChange={updateRace}
+        customSelectStyle={style('races')}
+        customOptionStyle={style('races')}
+        customOptionsStyle={style('races')}
       />
     </Show>
   )

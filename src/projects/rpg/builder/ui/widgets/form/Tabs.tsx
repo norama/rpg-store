@@ -20,7 +20,12 @@ const Tabs = ({ tabs, value, onChange }: Props) => (
         class={`tab ${tab.value === value() ? 'selected' : ''}`}
         sx={tab.value === value() ? { borderBottom: `2px solid ${tab.color}` } : undefined}
       >
-        <FormControlLabel value={tab.value} control={<Radio />} label={tab.label} />
+        <FormControlLabel
+          value={tab.value}
+          control={<Radio />}
+          label={<h3>{tab.label}</h3>}
+          disableTypography
+        />
       </Box>
     ))}
   </RadioGroup>

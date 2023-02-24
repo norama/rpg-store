@@ -22,7 +22,7 @@ const SaveButton = () => {
       )}
       onClick={() => PubSub.publish(M.uiSaveAction)}
     >
-      {state() === 'saving' ? <CircularProgress color="inherit" size="1.5rem" /> : <>✓</>}
+      {state() === 'saving' ? <CircularProgress color="inherit" size="2rem" /> : <>✓</>}
     </Button>
   )
 }

@@ -98,8 +98,7 @@ const defaultStyles = {
     color: 'text',
     background: 'muted',
     border: 'none',
-    padding: '1rem 0',
-    fontSize: 1,
+    fontSize: 3,
   },
   options: {
     color: 'text',
@@ -107,6 +106,7 @@ const defaultStyles = {
     width: '100%',
     border: 'none',
     overflowX: 'hidden',
+    fontSize: 3,
   },
   option: {
     color: 'text',
@@ -114,14 +114,20 @@ const defaultStyles = {
     cursor: 'pointer',
     width: '100%',
     overflowX: 'hidden',
+    fontSize: 3,
   },
-  multiSelect: {},
+  multiSelect: {
+    fontSize: 3,
+  },
   multiOption: {
     color: 'text',
     background: 'muted',
     overflowX: 'hidden',
+    fontSize: 3,
   },
-  multiOptions: {},
+  multiOptions: {
+    fontSize: 3,
+  },
   multiSelectList: {},
   checkbox: {
     color: 'text',
@@ -156,7 +162,10 @@ const defaultStyles = {
     width: '12rem',
     marginTop: '5px',
     marginRight: '2rem',
-    fontSize: 3,
+    fontSize: 2,
+  },
+  races: {
+    fontSize: 4,
   },
   text: {
     color: 'text',
@@ -170,7 +179,7 @@ const defaultStyles = {
     border: '1px solid',
     borderColor: 'muted',
     borderRadius: '4px',
-    padding: '3rem',
+    padding: '1.5rem',
     marginTop: 3,
     marginBottom: 3,
     position: 'relative',
@@ -194,6 +203,7 @@ const defaultStyles = {
   controlButton: {
     fontSize: 3,
     width: '8rem',
+    height: '4rem',
   },
   linkButton: {
     fontSize: 2,

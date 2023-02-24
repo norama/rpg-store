@@ -16,7 +16,7 @@ type Props = {
 
 const CardLink = ({ header, action, href, customStyle, children }: Props) => {
   const ready = useStore(readyAtom)
-  const isSmall = createMediaQuery('(max-width: 60rem)')
+  const isSmall = createMediaQuery('(max-width: 70rem)')
 
   return (
     <Show when={ready()}>

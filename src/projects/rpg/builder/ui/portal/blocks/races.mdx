@@ -21,7 +21,7 @@ import InfoTable from '@builder/widgets/InfoTable.astro'
 
 <Gap height={4} />
 
-<Form height="170px">
+<Form height="22rem">
   <Row justifyContent="flex-end">
     <PointDisplay client:only="solid-js" />
   </Row>
@@ -33,7 +33,7 @@ import InfoTable from '@builder/widgets/InfoTable.astro'
 
 <InfoTable
   block="races"
-  width="min(600px, 100%)"
+  width="min(50rem, 100%)"
   descriptor={[
     { key: 'name', label: 'Název', urlKey: 'wiki' },
     { key: 'points', label: 'Body' },

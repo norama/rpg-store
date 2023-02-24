@@ -23,7 +23,8 @@ const theme = {
     heading: 'inherit',
     monospace: 'Menlo, monospace',
   },
-  fontSizes: ['12px', '14px', '16px', '20px', '24px', '32px', '48px', '64px', '72px'],
+  fontSizes: ['1rem', '1.5rem', '2rem', '2.5rem', '3rem', '3.5rem', '4rem', '4.55rem', '5rem'],
+  //fontSizes: ['12px', '14px', '16px', '20px', '24px', '32px', '48px', '64px', '72px'],
   fontWeights: {
     body: 400,
     heading: 700,

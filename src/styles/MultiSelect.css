@@ -6,6 +6,7 @@
   position: relative;
   text-align: left;
   width: 100%;
+  font-size: 2rem;
 }
 
 .disable_ms {
@@ -18,12 +19,14 @@
   padding: 5px;
   min-height: 22px;
   position: relative;
+  border: 1px solid #ccc;
 }
 
 .multiSelectContainer input {
   border: none;
   margin-top: 3px;
   background: transparent;
+  font-size: 2rem;
 }
 
 .multiSelectContainer input:focus {
@@ -57,10 +60,10 @@
 }
 
 .closeIcon {
-  font-size: xx-small;
+  font-size: x-small;
   line-height: 2.5;
   float: right;
-  margin-right: 4px;
+  margin-right: 0.5rem;
   cursor: pointer;
 }
 
@@ -89,7 +92,7 @@
 }
 
 .multiSelectContainer li {
-  padding: 8px 8px;
+  padding: 8px;
 }
 
 .optionContainer li:hover {
@@ -106,9 +109,12 @@
 }
 
 .checkbox {
-  margin-right: 10px;
+  margin-right: 1rem;
+  padding-bottom: 2rem;
   cursor: pointer;
-  transform: scale(1.2);
+  transform: scale(1.5);
+  position: relative;
+  bottom: 0.3rem;
 }
 
 .disableSelection {
@@ -159,4 +165,5 @@ li.groupChildEle {
 
 .custom-close {
   display: flex;
+  align-items: center;
 }
