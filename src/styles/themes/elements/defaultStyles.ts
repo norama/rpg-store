@@ -204,6 +204,7 @@ const defaultStyles = {
     fontSize: 3,
     width: '8rem',
     height: '4rem',
+    zIndex: 5,
   },
   linkButton: {
     fontSize: 2,
