@@ -3,11 +3,13 @@ const props = Astro.props
 
 import style from 'styles/style'
 import FormControls from '@widgets/form/FormControls'
+import Responsivity from '@widgets/Responsivity'
 ---
 
-<div style={style('form', props)}>
+<div style={style('form', props)} class="form">
   <slot />
   <div style={style('formControls')}>
     <FormControls client:only="solid-js" />
   </div>
+  <Responsivity className="form" client:only="solid-js" />
 </div>

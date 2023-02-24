@@ -37,7 +37,6 @@ const ThemeSelector = () => {
     <Show when={theme()}>
       <div style={{ transform: 'scale(0.8)' }}>
         <SingleSelect
-          label="vzhled"
           onChange={(value) => {
             if (value !== theme()) {
               PubSub.subscribeOnce(M.uiThemeStored, () => {

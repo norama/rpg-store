@@ -52,3 +52,13 @@ progress {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(255, 255, 255, 0.6);
 }
+
+/* responsiveness */
+
+.form.small {
+  width: 90%;
+}
+
+.form.large {
+  width: 50rem;
+}

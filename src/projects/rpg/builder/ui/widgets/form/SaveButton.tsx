@@ -3,6 +3,7 @@ import M from 'pubsub/messages'
 import { useStore } from '@nanostores/solid'
 import stateAtom from '@builder/ui/stores/stateAtom'
 import { Button, CircularProgress } from '@suid/material'
+import style from 'styles/style'
 
 const SaveButton = () => {
   const state = useStore(stateAtom)
@@ -13,11 +14,12 @@ const SaveButton = () => {
       variant="contained"
       type="submit"
       disabled={state() !== 'dirty'}
-      sx={
+      sx={style(
+        'controlButton',
         state() !== 'dirty'
           ? { backgroundColor: 'green !important', color: 'white !important' }
           : {}
-      }
+      )}
       onClick={() => PubSub.publish(M.uiSaveAction)}
     >
       {state() === 'saving' ? <CircularProgress color="inherit" size="1.5rem" /> : <>✓</>}

@@ -7,7 +7,8 @@ const theme = {
     heading: 'Roboto, system-ui, sans-serif',
     monospace: '"Roboto Mono", monospace',
   },
-  fontSizes: ['12px', '14px', '16px', '20px', '24px', '32px', '48px', '64px', '96px'],
+  fontSizes: ['1rem', '1.5rem', '2rem', '2.5rem', '3rem', '3.5rem', '4rem', '4.55rem', '5rem'],
+  //fontSizes: ['12px', '14px', '16px', '20px', '24px', '32px', '48px', '64px', '96px'],
   fontWeights: {
     body: 400,
     heading: 600,

@@ -2,6 +2,7 @@
 import Row from 'styles/components/custom/row.astro'
 import CardLink from '@widgets/CardLink'
 import BlockDisplay from '@components/BlockDisplay'
+import Responsivity from '@widgets/Responsivity'
 
 const blocks = [
   { url: '/builder/blocks/races', header: 'Rasa', action: 'Vybrat rasu', type: 'races' },
@@ -33,10 +34,10 @@ const blocks = [
         href={block.url}
         header={block.header}
         action={block.action}
-        customStyle={{ minWidth: '300px', color: 'background' }}
+        customStyle={{ color: 'background', padding: '0 2rem 2rem 2rem' }}
         client:only="solid-js"
       >
-        <Row marginTop={3}>
+        <Row>
           <BlockDisplay type={block.type} client:only="solid-js" />
         </Row>
       </CardLink>

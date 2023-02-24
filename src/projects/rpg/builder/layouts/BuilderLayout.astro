@@ -8,8 +8,16 @@ import initTheme from '@layouts/initTheme'
 await initTheme()
 
 import style from 'styles/style'
+
+import { useUserAgent } from 'astro-useragent'
+
+const uaString = Astro.request.headers.get('user-agent')
+const { source, isMobile } = useUserAgent(uaString)
+
+console.log('source', source)
+console.log('mobile', isMobile)
 ---
 
-<div style={style('body')}>
+<div style={style('body', { fontSize: isMobile ? '32px' : '16px' })}>
   <slot />
 </div>
