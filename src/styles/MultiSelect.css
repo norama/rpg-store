@@ -86,8 +86,9 @@
   overflow-x: hidden;
 }
 
-.optionContainer ul {
-  max-height: 250px;
+ul.optionContainer {
+  height: 300px;
+  overflow-y: auto;
 }
 
 .selectedListContainer {
