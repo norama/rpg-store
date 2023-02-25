@@ -6,6 +6,7 @@ import readyAtom from '@builder/ui/stores/readyAtom'
 import stateAtom from '@builder/ui/stores/stateAtom'
 import Tabs from '@builder/ui/widgets/form/Tabs'
 import infoTableFilter from '@builder/widgets/infoTableFilter'
+import { Box } from '@suid/material'
 
 type IFilter = 'advantages' | 'disadvantages' | 'all'
 
@@ -56,14 +57,16 @@ const AdvantagesSelector = () => {
         value={filter}
         onChange={(value) => setFilter(value as IFilter)}
       />
-      <MultiSelect
-        disabled={state() === 'saving'}
-        options={() => Object.keys(info()).sort().filter(filters[filter()])}
-        values={() => block().advantages.filter(filters[filter()])}
-        texts={(advantage) => text(advantage)}
-        onSelect={(advantage) => updateAdvantages(advantage, 'select')}
-        onRemove={(advantage) => updateAdvantages(advantage, 'remove')}
-      />
+      <Box marginBottom="2rem" height="100%" sx={{ display: 'flex', alignItems: 'flex-end' }}>
+        <MultiSelect
+          disabled={state() === 'saving'}
+          options={() => Object.keys(info()).sort().filter(filters[filter()])}
+          values={() => block().advantages.filter(filters[filter()])}
+          texts={(advantage) => text(advantage)}
+          onSelect={(advantage) => updateAdvantages(advantage, 'select')}
+          onRemove={(advantage) => updateAdvantages(advantage, 'remove')}
+        />
+      </Box>
     </Show>
   )
 }

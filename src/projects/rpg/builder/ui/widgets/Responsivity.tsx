@@ -6,7 +6,7 @@ type Props = {
 }
 
 const Responsivity = ({ className }: Props) => {
-  const isSmall = createMediaQuery('(max-width: 60rem)')
+  const isSmall = createMediaQuery('(max-width: 70rem)')
 
   createEffect(() => {
     const small = isSmall()

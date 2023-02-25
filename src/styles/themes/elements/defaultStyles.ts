@@ -161,7 +161,7 @@ const defaultStyles = {
   theme: {
     width: '12rem',
     marginTop: '5px',
-    marginRight: '2rem',
+    marginRight: '3.5rem',
     fontSize: 2,
   },
   races: {
