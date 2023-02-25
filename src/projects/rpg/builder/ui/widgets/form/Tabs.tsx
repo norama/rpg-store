@@ -23,7 +23,7 @@ const Tabs = ({ tabs, value, onChange }: Props) => (
         <FormControlLabel
           value={tab.value}
           control={<Radio />}
-          label={<h3>{tab.label}</h3>}
+          label={<h2>{tab.label}</h2>}
           disableTypography
         />
       </Box>

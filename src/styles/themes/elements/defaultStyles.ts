@@ -182,18 +182,17 @@ const defaultStyles = {
     padding: '1.5rem',
     marginTop: 3,
     marginBottom: 3,
-    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
   },
   formControls: {
-    position: 'absolute',
     fontSize: 3,
-    right: '3rem',
-    bottom: '3rem',
+    margin: 'auto 0 1rem 0',
   },
   chip: {
     color: 'sharp',
     fontSize: 3,
-    padding: '2rem 1rem 2rem',
+    padding: '2rem 1rem 2rem 0.8rem',
   },
   card: {
     color: 'sharp',
@@ -204,7 +203,6 @@ const defaultStyles = {
     fontSize: 3,
     width: '8rem',
     height: '4rem',
-    zIndex: 5,
   },
   linkButton: {
     fontSize: 2,

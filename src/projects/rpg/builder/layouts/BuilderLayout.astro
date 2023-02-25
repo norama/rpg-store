@@ -14,12 +14,16 @@ import { useUserAgent } from 'astro-useragent'
 const uaString = Astro.request.headers.get('user-agent')
 const { source, isMobile } = useUserAgent(uaString)
 
-const fontSize = isMobile ? '24px' : '16px'
-
-console.log('source', source)
-console.log('mobile', isMobile)
+const fontSize = isMobile ? '16px' : '8px'
 ---
 
-<div style={style('body', { fontSize })}>
+<div id="main" style={style('body')} data-fontsize={fontSize}>
   <slot />
 </div>
+
+<script>
+  const main = document.getElementById('main')
+  const fontSize = main.dataset.fontsize
+  const root = document.querySelector('html')
+  root.style.fontSize = fontSize
+</script>

@@ -27,7 +27,6 @@ const ChipDisplay = ({
           avatar={label ?? <Avatar>{label}</Avatar>}
           sx={{
             ...style('chip', customStyle),
-            paddingLeft: label ? '10px' : '0',
             height: '4rem',
             borderRadius: '2rem',
           }}

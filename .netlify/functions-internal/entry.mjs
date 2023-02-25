@@ -9075,10 +9075,7 @@ const ChipDisplay = ({
       });
     },
     get sx() {
-      return {
-        ...style("chip", customStyle),
-        paddingLeft: label ? "10px" : "0"
-      };
+      return style("chip", customStyle)
     }
   }));
 };

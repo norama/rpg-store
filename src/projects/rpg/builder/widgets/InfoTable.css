@@ -18,7 +18,7 @@ table.light thead {
   background: linear-gradient(to bottom, #afa396 0%, #9e9081 66%, #948473 100%);
 }
 table.light thead th {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #f0f0f0;
   text-align: center;
@@ -56,7 +56,7 @@ table.dark thead {
   border-bottom: 1px solid #444444;
 }
 table.dark thead th {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #ffffff;
   text-align: center;

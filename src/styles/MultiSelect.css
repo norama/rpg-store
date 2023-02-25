@@ -141,7 +141,7 @@
 }
 
 .singleSelect {
-  padding: 20px;
+  padding: 1rem;
   display: flex;
 }
 
@@ -157,7 +157,7 @@ li.groupChildEle {
 
 .icon_down_dir {
   position: absolute;
-  right: 15px;
+  right: 2rem;
   top: 50%;
   transform: translateY(-70%) scale(2, 1);
   cursor: pointer;
