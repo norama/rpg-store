@@ -55,7 +55,7 @@ const defaultStyles = {
     fontFamily: 'body',
     fontWeight: 'body',
     lineHeight: 'body',
-    fontSize: 1,
+    fontSize: 2,
   },
   a: {
     color: 'link',
@@ -154,7 +154,7 @@ const defaultStyles = {
   },
   home: {
     color: 'secondary',
-    fontSize: '2rem',
+    fontSize: 5,
     fontWeight: 700,
     textDecoration: 'none',
   },
@@ -209,6 +209,15 @@ const defaultStyles = {
     color: 'linkButton',
     borderColor: 'linkButton',
     padding: '1rem',
+  },
+  collapsibleHeader: {
+    fontSize: 3,
+    color: 'text',
+    background: 'muted',
+  },
+  collapsibleContent: {
+    color: 'text',
+    background: 'background2',
   },
   error: {
     background: 'errorbg',

@@ -1,4 +1,4 @@
-const infoTableFilter = (filter: (id: string) => boolean) => {
+export const rowFilter = (filter: (id: string) => boolean) => {
   const infoTable = document.getElementById('infoTable')
   const infoRows = infoTable.querySelector('tbody').getElementsByTagName('tr')
   for (let row of infoRows) {
@@ -9,5 +9,3 @@ const infoTableFilter = (filter: (id: string) => boolean) => {
     }
   }
 }
-
-export default infoTableFilter

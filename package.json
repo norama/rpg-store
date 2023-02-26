@@ -36,7 +36,8 @@
     "@suid/vite-plugin": "^0.1.0",
     "@types/pubsub-js": "^1.8.3",
     "prettier": "^2.7.1",
-    "prettier-plugin-astro": "^0.7.0"
+    "prettier-plugin-astro": "^0.7.0",
+    "sass": "^1.58.3"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.7"

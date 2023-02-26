@@ -1,0 +1,32 @@
+/* https://www.w3schools.com/howto/howto_js_collapsible.asp */
+
+$plus: '\02795';
+$minus: '\2796';
+
+.collapsible {
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.content {
+  padding: 0 18px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.collapsible:after {
+  content: $plus;
+  float: right;
+  margin-left: 1rem;
+  color: #0096fb;
+}
+
+.collapsible.active:after {
+  content: $minus;
+}

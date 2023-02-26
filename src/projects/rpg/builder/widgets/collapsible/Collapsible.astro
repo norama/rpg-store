@@ -1,0 +1,28 @@
+---
+import './Collapsible.scss'
+import style from 'styles/style'
+
+interface Props {
+  header: string
+  open?: boolean
+}
+
+const { header, open } = Astro.props
+---
+
+<button
+  type="button"
+  style={style('collapsibleHeader')}
+  class:list={['collapsible', { active: open }]}
+>
+  {header}
+</button>
+<div style={style('collapsibleContent')} class="content">
+  <slot />
+</div>
+
+<script>
+  import { addCollapseHandler } from './collapsible'
+
+  addCollapseHandler()
+</script>

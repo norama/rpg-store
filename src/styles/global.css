@@ -7,11 +7,9 @@ body {
   margin: 0;
 }
 
-a:hover {
-  filter: brightness(125%);
-}
-
-.MuiCheckbox-root:hover {
+a:hover,
+.MuiCheckbox-root:hover,
+.collapsible:hover {
   filter: brightness(125%);
 }
 

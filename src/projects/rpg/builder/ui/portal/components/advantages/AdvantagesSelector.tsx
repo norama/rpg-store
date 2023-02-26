@@ -5,7 +5,7 @@ import { Show, createSignal, createEffect } from 'solid-js'
 import readyAtom from '@builder/ui/stores/readyAtom'
 import stateAtom from '@builder/ui/stores/stateAtom'
 import Tabs from '@builder/ui/widgets/form/Tabs'
-import infoTableFilter from '@builder/widgets/infoTableFilter'
+import { rowFilter } from '@builder/widgets/table/infoTableFilters'
 import { Box } from '@suid/material'
 
 type IFilter = 'advantages' | 'disadvantages' | 'all'
@@ -17,7 +17,7 @@ const AdvantagesSelector = () => {
   const state = useStore(stateAtom)
   const ready = useStore(readyAtom)
 
-  const [filter, setFilter] = createSignal<IFilter>('advantages')
+  const [filter, setFilter] = createSignal<IFilter>('all')
 
   const filters = {
     advantages: (advantage: string) => info()[advantage].points < 0,
@@ -29,7 +29,7 @@ const AdvantagesSelector = () => {
     if (!ready()) {
       return
     }
-    infoTableFilter(filters[filter()])
+    rowFilter(filters[filter()])
   })
 
   const text = (advantage: string) => info()[advantage].name + ' (' + info()[advantage].points + ')'

@@ -25,6 +25,7 @@ const theme = {
     errorbg: '#d4d0c7',
     text: '#202124',
     background: '#debe6f',
+    background2: '#f6e7c0',
     primary: '#1a73e8',
     secondary: '#9c27b0',
     muted: '#f1f3f4',

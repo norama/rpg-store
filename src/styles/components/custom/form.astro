@@ -6,7 +6,7 @@ import FormControls from '@widgets/form/FormControls'
 import Responsivity from '@widgets/Responsivity'
 ---
 
-<div style={style('form', props)} class="form">
+<div style={style('form', { ...props, visibility: 'hidden' })} class="form">
   <slot />
   <div style={style('formControls')}>
     <FormControls client:only="solid-js" />

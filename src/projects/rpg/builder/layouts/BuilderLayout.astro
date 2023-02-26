@@ -17,13 +17,16 @@ const { source, isMobile } = useUserAgent(uaString)
 const fontSize = isMobile ? '16px' : '8px'
 ---
 
-<div id="main" style={style('body')} data-fontsize={fontSize}>
-  <slot />
-</div>
+<html>
+  <body>
+    <style define:vars={{ fontSize }}>
+      html {
+        font-size: var(--fontSize);
+      }
+    </style>
 
-<script>
-  const main = document.getElementById('main')
-  const fontSize = main.dataset.fontsize
-  const root = document.querySelector('html')
-  root.style.fontSize = fontSize
-</script>
+    <div id="main" style={style('body')} data-fontsize={fontSize}>
+      <slot />
+    </div>
+  </body>
+</html>

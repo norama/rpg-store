@@ -13,12 +13,13 @@ const Responsivity = ({ className }: Props) => {
     const newRespClass = small ? 'small' : 'large'
     const oldRespClass = small ? 'large' : 'small'
 
-    const targets = document.querySelectorAll(`.${className}`)
+    const targets = document.querySelectorAll<HTMLElement>(`.${className}`)
     console.log('targets', targets)
 
     for (let target of targets) {
       target.classList.remove(oldRespClass)
       target.classList.add(newRespClass)
+      target.style.visibility = 'visible'
     }
   })
 

@@ -9,6 +9,7 @@ const theme = {
     errorbg: 'white',
     text: '#debe6f',
     background: '#202124',
+    background2: '#2d2d2f',
     primary: '#3cf',
     secondary: '#e0f',
     muted: '#4a4a4a',
