@@ -5,6 +5,7 @@ export const addCollapseHandler = () => {
     if (coll[i].classList.contains('active')) {
       const content = coll[i].nextElementSibling as HTMLElement
       content.style.maxHeight = content.scrollHeight + 'px'
+      content.style.overflow = 'visible'
     }
 
     coll[i].addEventListener('mousedown', function () {
@@ -12,8 +13,10 @@ export const addCollapseHandler = () => {
       const content = this.nextElementSibling
       if (content.style.maxHeight) {
         content.style.maxHeight = null
+        content.style.overflow = 'hidden'
       } else {
         content.style.maxHeight = content.scrollHeight + 'px'
+        content.style.overflow = 'visible'
       }
     })
   }

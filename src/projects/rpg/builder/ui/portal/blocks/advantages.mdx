@@ -9,7 +9,7 @@ import Collapsible from '@builder/widgets/collapsible/Collapsible.astro'
 
 <Collapsible header="Výhody - nevýhody" open={false}>
 
-<Box height="38rem" overflowY="auto" marginTop="3rem">
+<Box height="38rem" overflowY="auto" paddingTop="3rem">
 
 Množství bodů na tvorbu postavy získané za rasu obvykle není veliké. Další možností, jak získat body, je dát své postavě nějakou [Nevýhody](http://www.odria.eu/wiki/index.php/Nev%C3%BDhody). Nevýhody ovlivní hru postavy, omezí ji a způsobí jí rozličné potíže.
 Je proto potřeba zvážit, co jste ochotni hrát a co už by bylo příliš. Také je dobré se zamyslet nad tím, co zvolené nevýhody udělají se spoluprací s ostatními postavami. Není dobré nevhodně zvolenou nevýhodou nabourávat hru ostatních hráčů. Je třeba si uvědomit, co si kdo chce zahrát.
@@ -32,8 +32,6 @@ import InfoTable from '@builder/widgets/table/InfoTable.astro'
 
 <Gap height={4} />
 
-<Collapsible header="Nastavení" open={false}>
-
 <Form>
   <Row justifyContent="flex-end">
     <PointDisplay client:only="solid-js" />
@@ -42,13 +40,11 @@ import InfoTable from '@builder/widgets/table/InfoTable.astro'
   <AdvantagesSelector client:only="solid-js" />
 </Form>
 
-</Collapsible>
-
 <Gap height={4} />
 
 <Collapsible header="Atributy" open={true}>
 
-<Box height="50rem" overflowY="auto" margin="3rem 0">
+<Box height="60rem" overflowY="auto" padding="3rem 0">
 
 <InfoTable
   block="advantages"

@@ -14,10 +14,14 @@ $minus: '\2796';
 }
 
 .content {
-  padding: 0 18px;
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.3s ease-out;
+}
+
+.inner {
+  padding: 0 18px;
+  margin-right: -18px;
 }
 
 .collapsible:after {

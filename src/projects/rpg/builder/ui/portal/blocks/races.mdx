@@ -9,7 +9,7 @@ import Collapsible from '@builder/widgets/collapsible/Collapsible.astro'
 
 <Collapsible header="Rasa" open={false}>
 
-<Box height="38rem" overflowY="auto" margin="3rem 0">
+<Box height="38rem" overflowY="auto" paddingTop="3rem">
 
 Na Odrii žije mnoho ras inteligentních tvorů. Lidi jsou lidi a na Odrii nepatří k nějakým otloukánkům, ale stejnětak můžete vyzkoušet hrát třeba elfa či trpaslíka. V základním přehledu ras jsou uvedeny nejběžnější hráčské rasy. Není to úplný výčet možných ras. Ty které uvedeny nejsou, jsou obvykle takové, které jsou komplikovanější a většinou mocnější než ty uvedené a proto by nebylo fér je zařadit po bok ostatních - zvláště pokud hra začíná na nižších úrovních.
 Při hře zkušených hráčů však není problém aby byla hráčská postava třeba lykantrop anebo drak. Kromě čistých ras je možné aby postava byla míšencem. Pro míšence obvykle neexistují konkrétní pravidla, takže jejich konkrétní parametry je třeba určit buďto zprůměrováním anebo jiným vybalancováním - případně poradou s PJ.
@@ -31,10 +31,6 @@ import InfoTable from '@builder/widgets/table/InfoTable.astro'
 
 <Gap height={4} />
 
-<Collapsible header="Nastavení" open={true}>
-
-<Box height="38rem" overflowY="auto" margin="3rem 0">
-
 <Form height="22rem">
   <Row justifyContent="flex-end">
     <PointDisplay client:only="solid-js" />
@@ -43,15 +39,11 @@ import InfoTable from '@builder/widgets/table/InfoTable.astro'
   <RaceSelector client:only="solid-js" />
 </Form>
 
-</Box>
-
-</Collapsible>
-
 <Gap height={4} />
 
 <Collapsible header="Atributy" open={true}>
 
-<Box height="38rem" overflowY="auto" marginTop="3rem">
+<Box height="38rem" overflowY="auto" paddingTop="3rem">
 
 <InfoTable
   block="races"

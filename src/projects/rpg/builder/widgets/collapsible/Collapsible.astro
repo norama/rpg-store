@@ -17,8 +17,10 @@ const { header, open } = Astro.props
 >
   {header}
 </button>
-<div style={style('collapsibleContent')} class="content">
-  <slot />
+<div style={style('collapsibleContent')} class:list={['content', { open: open }]}>
+  <div class="inner">
+    <slot />
+  </div>
 </div>
 
 <script>
