@@ -14,6 +14,10 @@ export async function get() {
 }
 
 export async function post({ request }) {
+  console.log('Content-Type', request.headers.get('Content-Type'))
+  console.log('content-type', request.headers.get('content-type'))
+  console.log('request.header', request.headers)
+
   if (request.headers.get('Content-Type') === 'application/json') {
     const properties = await request.json()
 
