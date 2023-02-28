@@ -14,23 +14,20 @@ export async function get() {
 }
 
 export async function post({ request }) {
-  console.log('Content-Type', request.headers.get('Content-Type'))
-  console.log('content-type', request.headers.get('content-type'))
-  console.log('request.header', request.headers)
-
   if (request.headers.get('Content-Type') === 'application/json') {
-    const properties = await request.json()
+    try {
+      const properties = await request.json()
 
-    await update<IProperties>(T.rpgProperties, properties)
+      await update<IProperties>(T.rpgProperties, properties)
 
-    const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
+      const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
 
-    return jsonResponse(rpgCharacter)
+      return jsonResponse(rpgCharacter)
+    } catch (error) {
+      console.log(error)
+      return jsonResponse({ error })
+    }
   } else {
-    return jsonResponse({
-      'Content-Type': request.headers.get('Content-Type'),
-      'content-type': request.headers.get('content-type'),
-    })
-    //return new Response(null, { status: 400 })
+    return new Response(null, { status: 400 })
   }
 }
