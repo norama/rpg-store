@@ -14,19 +14,14 @@ export async function get() {
 }
 
 export async function post({ request }) {
-  if (request.headers.get('Content-Type') === 'application/json') {
-    try {
-      const properties = await request.json()
+  if (request.headers.get('content-type') === 'application/json') {
+    const properties = await request.json()
 
-      await update<IProperties>(T.rpgProperties, properties)
+    await update<IProperties>(T.rpgProperties, properties)
 
-      const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
+    const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
 
-      return jsonResponse(rpgCharacter)
-    } catch (error) {
-      console.log(error)
-      return jsonResponse({ error })
-    }
+    return jsonResponse(rpgCharacter)
   } else {
     return new Response(null, { status: 400 })
   }
