@@ -21,11 +21,6 @@ $minus: '\2796';
   transition: max-height 0.3s ease-out;
 }
 
-.inner {
-  padding: 3rem 18px;
-  height: 60rem;
-}
-
 .collapsible:after {
   content: $plus;
   float: right;
