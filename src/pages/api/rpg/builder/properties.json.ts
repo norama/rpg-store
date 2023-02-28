@@ -27,6 +27,10 @@ export async function post({ request }) {
 
     return jsonResponse(rpgCharacter)
   } else {
-    return new Response(null, { status: 400 })
+    return jsonResponse({
+      'Content-Type': request.headers.get('Content-Type'),
+      'content-type': request.headers.get('content-type'),
+    })
+    //return new Response(null, { status: 400 })
   }
 }
