@@ -56,6 +56,7 @@ const defaultStyles = {
     fontWeight: 'body',
     lineHeight: 'body',
     fontSize: 2,
+    marginBlockStart: 0,
   },
   a: {
     color: 'link',
