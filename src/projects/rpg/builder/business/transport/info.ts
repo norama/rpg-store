@@ -16,6 +16,7 @@ class Info<I> implements IBlockPage {
 
     const response = await fetch(`${API_URL}/${this.type}Info.json`)
     this.info = (await response.json()) as I
+    console.log('INFO', this.info)
   }
 
   publish() {
