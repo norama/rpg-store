@@ -4,6 +4,8 @@ type IAdvantage = {
   multiple: boolean
   advantage: string
   type: string
+  typeId: string
+  advantageId: string
   money: number
   HP: number
   minPoints: number

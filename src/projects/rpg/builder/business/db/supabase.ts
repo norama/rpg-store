@@ -22,7 +22,7 @@ const blockInfoTable = (type: IBlockType) => {
     case 'races':
       return 'races'
     case 'advantages':
-      return 'advantagesview'
+      return 'advantagesView'
     case 'equipments':
       return 'equipments'
     default:
@@ -85,7 +85,7 @@ class Database {
           points,
           money,
           rpgRaces(value, races(name)),
-          rpgAdvantages(value, advantagesview(name, points)),
+          rpgAdvantages(value, advantagesView(id, advantageId, typeId, name, points, type, multiple, minPoints, maxPoints)),
           rpgEquipments(value, equipments(name, price, weight))
         `
         )
@@ -223,6 +223,7 @@ class Database {
     }
 
     const values = block.data[block.type] as string[]
+    console.log('------------------------------------------ values', values)
     let { error: insertError } = await this.db
       .from(blockTable)
       .insert(values.map((value) => ({ rpgId: 1, value })))
