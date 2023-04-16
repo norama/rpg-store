@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config'
-import firebase from 'astro-firebase'
+import vercel from '@astrojs/vercel/serverless'
 
 // https://astro.build/config
 import solidJs from '@astrojs/solid-js'
@@ -12,7 +12,7 @@ import suidPlugin from '@suid/vite-plugin'
 export default defineConfig({
   integrations: [solidJs(), mdx()],
   output: 'server',
-  adapter: firebase(),
+  adapter: vercel(),
   vite: {
     plugins: [suidPlugin()],
     build: {

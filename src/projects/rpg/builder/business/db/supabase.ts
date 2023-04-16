@@ -22,7 +22,7 @@ const blockInfoTable = (type: IBlockType) => {
     case 'races':
       return 'races'
     case 'advantages':
-      return 'advantagesView'
+      return 'advantages'
     case 'equipments':
       return 'equipments'
     default:
@@ -85,7 +85,7 @@ class Database {
           points,
           money,
           rpgRaces(value, races(name)),
-          rpgAdvantages(value, advantagesView(id, advantageId, typeId, name, points, type, multiple, minPoints, maxPoints)),
+          rpgAdvantages(value, advantages(name, minPoints, maxPoints)),
           rpgEquipments(value, equipments(name, price, weight))
         `
         )

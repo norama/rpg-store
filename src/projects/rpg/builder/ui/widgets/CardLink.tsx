@@ -21,14 +21,11 @@ const CardLink = ({ header, action, href, customStyle, children }: Props) => {
   return (
     <Show when={ready()}>
       <Card sx={style('card', customStyle)} class={`card ${isSmall() ? 'small' : 'large'}`}>
-        <CardContent>
+        <CardContent class="cardContent">
           <h3>{header}</h3>
           <div>{children}</div>
         </CardContent>
-        <CardActions
-          sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2rem' }}
-          class="cardAction"
-        >
+        <CardActions class="cardAction">
           <Button href={href} variant="outlined" size="small" sx={style('linkButton')}>
             {action}
           </Button>
