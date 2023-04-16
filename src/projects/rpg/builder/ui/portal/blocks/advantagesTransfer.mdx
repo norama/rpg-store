@@ -3,40 +3,8 @@ layout: '@layouts/FormLayout.astro'
 title: 'Advantages'
 ---
 
-## Výhody - nevýhody
+## RPG Character
 
-Množství bodů na tvorbu postavy získané za rasu obvykle není veliké. Další možností, jak získat body, je dát své postavě nějakou [Nevýhody](http://www.odria.eu/wiki/index.php/Nev%C3%BDhody). Nevýhody ovlivní hru postavy, omezí ji a způsobí jí rozličné potíže.
-Je proto potřeba zvážit, co jste ochotni hrát a co už by bylo příliš. Také je dobré se zamyslet nad tím, co zvolené nevýhody udělají se spoluprací s ostatními postavami. Není dobré nevhodně zvolenou nevýhodou nabourávat hru ostatních hráčů. Je třeba si uvědomit, co si kdo chce zahrát.
-Dobře zvolené nevýhody, kromě bodů pro postavu navíc, oživí hru, zavdají příležitost vzniku humorných či napínavých momentů, inspirují PJ k tvorbě zajímavých dilemat či zápletek.
+import RPGCharacter from '@widgets/RPGCharacter'
 
-Na množství nevýhod není stanoven žádný limit - pokud jej nestanoví váš PJ, nicméně buďte soudní a zkuste si představit jaká bude hra se všemi zvolenými nevýhodami - abyste na ně jako hráči nezapomínali, anebo vás to neomrzelo po dvou hrách, případně aby postava nebyla vyřazena z veškerého dění ve hře.
-No a když už jste si vybrali pro svou postavu všemožná omezení a máte dostatek bodů - můžete se přesunout k [Výhody](http://www.odria.eu/wiki/index.php/V%C3%BDhody), díky kterým vaše postava získá individuální kontury.
-
-Nebojte se při tvorbě s body šachovat a zkoušet jak vám to vychází. Tu přidat a jinde ubrat, dokud vám nevzejde přesně to, co si chcete zahrát.
-
-Jak na vlastnosti postavy se dočtete [zde](http://www.odria.eu/wiki/index.php/Kategorie:Vlastnosti).
-
-import AdvantagesTransferSelector from '@portal/components/advantages/AdvantagesTransferSelector'
-import PointDisplay from '@portal/components/PointDisplay'
-import InfoTable from '@builder/widgets/table/InfoTable.astro'
-
-<Gap height={4} />
-
-<Form width="600px" height="600px">
-  <Row justifyContent="flex-end">
-    <PointDisplay client:only="solid-js" />
-  </Row>
-  <Gap height={3} />
-  <AdvantagesTransferSelector client:only="solid-js" />
-</Form>
-
-<Gap height={4} />
-
-<InfoTable
-  block="advantages"
-  width="min(600px, 100%)"
-  descriptor={[
-    { key: 'name', label: 'Název' },
-    { key: 'points', label: 'Body' },
-  ]}
-/>
+<RPGCharacter client:only="solid-js" />
