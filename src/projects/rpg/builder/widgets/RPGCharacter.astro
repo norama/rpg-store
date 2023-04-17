@@ -1,0 +1,20 @@
+---
+import { db } from 'projects/rpg/lib/firebase/client'
+import { doc, getDoc } from 'firebase/firestore'
+
+const docRef = doc(db, 'rpgCharacters', '1')
+
+const docSnap = await getDoc(docRef)
+const rpgCharacter = docSnap.data()
+---
+
+<style>
+  .rpg {
+    color: green;
+  }
+</style>
+
+<div class="rpg">
+  <h2>name: {rpgCharacter.name}</h2>
+  <h2>points: {rpgCharacter.points}</h2>
+</div>
