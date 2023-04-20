@@ -1,0 +1,15 @@
+.RPGCharacter h2.dark {
+  background-color: grey;
+}
+
+.RPGCharacter button.dark {
+  background-color: blue;
+}
+
+.RPGCharacter h2.light {
+  background-color: white;
+}
+
+.RPGCharacter button.light {
+  background-color: yellow;
+}

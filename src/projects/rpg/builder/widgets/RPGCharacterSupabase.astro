@@ -1,0 +1,12 @@
+---
+import RPGCharacter from './RPGCharacterSupabase'
+import themeHolder from 'styles/theme'
+
+import { select } from 'projects/rpg/api/proxy'
+import { T } from 'pubsub/messages'
+
+const rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
+const theme = themeHolder.atom.get()
+---
+
+<RPGCharacter rpgCharacter={rpgCharacter} theme={theme} client:load />

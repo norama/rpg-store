@@ -25,8 +25,8 @@ const ThemeSelector = () => {
   onMount(() => {
     const progress = themeInProgressAtom.get()
     if (progress === '1') {
-      themeInProgressAtom.set('2')
-      location.reload()
+      themeInProgressAtom.set('0')
+      //location.reload()
     } else if (progress === '2') {
       themeInProgressAtom.set('0')
       location.reload()
