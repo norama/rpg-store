@@ -223,7 +223,6 @@ class Database {
     }
 
     const values = block.data[block.type] as string[]
-    console.log('------------------------------------------ values', values)
     let { error: insertError } = await this.db
       .from(blockTable)
       .insert(values.map((value) => ({ rpgId: 1, value })))
