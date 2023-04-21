@@ -24,12 +24,12 @@ independently. Moreover, components are independently testable and replacable, e
 thanks to the [Astro](https://astro.build/) island architecture. Current widgets are written in [SolidJS](https://www.solidjs.com/).
 
 Backend is currently [Supabase](https://supabase.com/) but my plan is to move to [Firestore](https://firebase.google.com/docs/firestore) because
-the looser NoSQL approach seems to be more suitable for this domain.
+its flexible NoSQL approach seems to be more suitable for this domain.
 
 ## Demo
 
 The application is deployed on Vercel [here](https://rpg-store.vercel.app/builder).
-Note that the app is in a work-in-progress state and deployment currently serves for internal testing.
+Note that the app is in a work-in-progress state and this deployment currently serves for internal testing.
 
 # Astro Starter Kit: Minimal
 
