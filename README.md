@@ -1,3 +1,36 @@
+# RPG Store
+
+This is an experimental project for building RPG characters - or some other configurable objects - based on highly customizable forms
+with corresponding documentation. The idea is that game masters / administrators could define configuration pages with embedded forms
+without programming knowledge, while programmers would implement the specified widgets.
+
+## Architecture
+
+The application is written in the [Astro](https://astro.build/) framework making use of effective sever side rendering as configuration pages
+are documentation oriented and client logic is fairly simple.
+
+Pages are written in [MDX format](https://mdxjs.com/) whithout programming, including placeholders for interactive input widgets with business logic
+specifications. Hence the structure and descriptive content can be maintained without programming.
+
+Data is stored by [Nano Stores](https://github.com/nanostores/nanostores) and directly referenced by business widgets.
+Business widgets are pure logical widgets delegating data to design widgets for display. Design widgets receive data in props and have
+no reference to the store, data changes are propagated to their parent business widgets.
+
+The form frame is responsible for the data synchronization with the server, sending data from the store to the API endpoints.
+Commmunication between the store and the API proceeds through [PubSubJS](https://github.com/mroderick/PubSubJS), an event based messaging library.
+
+This layered architecture enables business administrators, business logic programmers and UI component designers working together but
+independently. Moreover, components are independently testable and replacable, even can be written / rewritten using different front-end frameworks
+thanks to the [Astro](https://astro.build/) island architecture. Current widgets are written in [SolidJS](https://www.solidjs.com/).
+
+Backend is currently [Supabase](https://supabase.com/) but my plan is to move to [Firestore](https://firebase.google.com/docs/firestore) because
+the looser NoSQL approach seems to be more suitable for this domain.
+
+## Demo
+
+The application is deployed on Vercel [here](https://rpg-store.vercel.app/builder).
+Note that the app is in a work-in-progress state and deployment currently serves for internal testing.
+
 # Astro Starter Kit: Minimal
 
 ```
@@ -29,7 +62,7 @@ Any static assets, like images, can be placed in the `public/` directory.
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+All commands are run from thoot of the project, from a terminal:
 
 | Command                | Action                                           |
 | :--------------------- | :----------------------------------------------- |
