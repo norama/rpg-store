@@ -12,10 +12,7 @@ const EquipmentsDisplay = () => {
       {target() !== undefined &&
         info() !== undefined &&
         target().equipments.equipments.map((equipment) => (
-          <SmallChipDisplay
-            value={() => info()[equipment].name}
-            customStyle={{ backgroundColor: 'equipment' }}
-          />
+          <SmallChipDisplay value={() => info()[equipment].name} backgroundColor="green" />
         ))}
     </>
   )

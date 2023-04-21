@@ -3,7 +3,6 @@ import { useStore } from '@nanostores/solid'
 import readyAtom from '@builder/ui/stores/readyAtom'
 import themeHolder from 'styles/theme'
 import { Button } from '@kobalte/core'
-import { ITheme } from 'styles/theme'
 import './RPGCharacterSupabase.css'
 
 type Props = {

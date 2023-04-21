@@ -12,10 +12,7 @@ const AdvantagesDisplay = () => {
       {target() !== undefined &&
         info() !== undefined &&
         target().advantages.advantages.map((advantage) => (
-          <SmallChipDisplay
-            value={() => info()[advantage].name}
-            customStyle={{ backgroundColor: 'advantage' }}
-          />
+          <SmallChipDisplay value={() => info()[advantage].name} backgroundColor="blue" />
         ))}
     </>
   )

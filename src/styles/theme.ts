@@ -4,12 +4,14 @@ import dark from './themes/dark'
 import light from './themes/light'
 import M from 'pubsub/messages'
 import PubSub from 'pubsub-js'
-import { atom } from 'nanostores'
+import { atom, computed } from 'nanostores'
 
 export type ITheme = 'base' | 'bootstrap' | 'dark' | 'light'
 
 class Theme {
   atom = atom<ITheme>()
+
+  theme = computed(this.atom, () => this.getTheme())
 
   constructor() {
     this.subscribe()

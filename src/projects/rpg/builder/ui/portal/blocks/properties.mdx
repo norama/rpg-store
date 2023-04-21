@@ -10,9 +10,8 @@ import MoneyDisplay from '@portal/components/MoneyDisplay'
 
 <Form height="22rem">
   <Row justifyContent="flex-end">
-    <SimpleDisplay title="Simple" client:load />
-    <PointDisplay client:only="solid-js" />
-    <MoneyDisplay client:only="solid-js" />
+    <PointDisplay client:load />
+    <MoneyDisplay client:load />
   </Row>
   <Gap height={3} />
   <NameInput client:only="solid-js" />

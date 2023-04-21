@@ -12,10 +12,7 @@ const RacesDisplay = () => {
       {target() !== undefined &&
         info() !== undefined &&
         target().races.races.map((race) => (
-          <SmallChipDisplay
-            value={() => info()[race].name}
-            customStyle={{ backgroundColor: 'race' }}
-          />
+          <SmallChipDisplay value={() => info()[race].name} backgroundColor="red" />
         ))}
     </>
   )
