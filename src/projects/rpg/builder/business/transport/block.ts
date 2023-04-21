@@ -1,7 +1,8 @@
 import Info from '@builder/business/transport/info'
 import { jsonRequest } from 'http/util/request'
 import PubSub from 'pubsub-js'
-import M from 'pubsub/messages'
+import M, { T } from 'pubsub/messages'
+import { select } from 'projects/rpg/api/proxy'
 
 const API_URL = import.meta.env.PUBLIC_BUILDER_API_URL
 
@@ -18,12 +19,18 @@ class Block<B, I> implements IBlockPage {
   async init() {
     console.log('========== fetching block ' + this.type)
 
-    const response = await fetch(`${API_URL}/rpgCharacter.json`)
-    this.rpgCharacter = await response.json()
+    if (!import.meta.env.SSR) {
+      const response = await fetch(`${API_URL}/rpgCharacter.json`)
+      this.rpgCharacter = await response.json()
+    } else {
+      this.rpgCharacter = await select<IRpgCharacter>(T.rpgTarget)
+    }
 
     await this.info.init()
 
-    this.subscribe()
+    if (!import.meta.env.SSR) {
+      this.subscribe()
+    }
 
     PubSub.publish(M.uiBlockType, this.type)
   }
