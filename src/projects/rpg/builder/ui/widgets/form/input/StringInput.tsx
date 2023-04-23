@@ -1,38 +1,36 @@
-import { Input, InputLabel } from '@suid/material'
-import { InputProps } from '@suid/material/Input'
-import style from 'styles/style'
+import { TextField } from '@kobalte/core'
+import themeHolder from 'styles/theme'
+import { useStore } from '@nanostores/solid'
+import './StringInput.scss'
 
 type Props = {
   disabled?: boolean
   label?: string
   value: () => string
   onChange: (value: string) => void
-  inputProps?: InputProps
+  placeholder?: string
   customStyle?: object
 }
 
-const StringInput = ({
-  disabled,
-  label,
-  value,
-  onChange,
-  inputProps = {},
-  customStyle = {},
-}: Props) => {
+const StringInput = ({ disabled, label, value, onChange, placeholder, customStyle }: Props) => {
+  const theme = useStore(themeHolder.atom)
+  const themeObject = useStore(themeHolder.theme)
+
   return (
-    <>
-      {label && <InputLabel sx={style('text')}>{label}</InputLabel>}
-      <Input
-        {...inputProps}
-        value={value()}
-        onChange={(_e, value) => {
-          onChange(value)
-        }}
-        required
-        disabled={disabled}
-        sx={style('input', customStyle)}
+    <TextField.Root
+      value={value()}
+      onValueChange={onChange}
+      isDisabled={disabled}
+      class={`StringInput ${theme()}`}
+      style={{ ...customStyle, color: themeObject()?.colors['text'] }}
+    >
+      <TextField.Label class="label">{label}</TextField.Label>
+      <TextField.Input
+        class="input"
+        placeholder={placeholder}
+        style={{ color: themeObject()?.colors['text'], background: themeObject()?.colors['muted'] }}
       />
-    </>
+    </TextField.Root>
   )
 }
 
