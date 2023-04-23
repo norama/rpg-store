@@ -1,10 +1,9 @@
-import { Button, Card, CardActions, CardContent } from '@suid/material'
-import { JSXElement, Show } from 'solid-js'
+import { Button, Link } from '@kobalte/core'
+import { JSXElement } from 'solid-js'
+import themeHolder from 'styles/theme'
 import { useStore } from '@nanostores/solid'
-import readyAtom from '@builder/ui/stores/readyAtom'
 import { createMediaQuery } from '@solid-primitives/media'
-import style from 'styles/style'
-import './CardLink.css'
+import './CardLink.scss'
 
 type Props = {
   header: string
@@ -15,23 +14,34 @@ type Props = {
 }
 
 const CardLink = ({ header, action, href, customStyle, children }: Props) => {
-  const ready = useStore(readyAtom)
   const isSmall = createMediaQuery('(max-width: 70rem)')
+  const themeObject = useStore(themeHolder.theme)
 
   return (
-    <Show when={ready()}>
-      <Card sx={style('card', customStyle)} class={`card ${isSmall() ? 'small' : 'large'}`}>
-        <CardContent class="cardContent">
-          <h3>{header}</h3>
-          <div>{children}</div>
-        </CardContent>
-        <CardActions class="cardAction">
-          <Button href={href} variant="outlined" size="small" sx={style('linkButton')}>
-            {action}
-          </Button>
-        </CardActions>
-      </Card>
-    </Show>
+    <div
+      style={{
+        color: themeObject()?.colors['sharp'],
+        'background-color': themeObject()?.colors['card'],
+        ...customStyle,
+      }}
+      class={`card ${isSmall() ? 'small' : 'large'}`}
+    >
+      <h2 style={{ color: themeObject()?.colors['background'] }}>{header}</h2>
+
+      <div>{children}</div>
+      <div class="cardAction">
+        <Button.Root
+          style={{
+            color: themeObject()?.colors['linkButton'],
+            'border-color': themeObject()?.colors['muted'],
+            background: 'transparent',
+          }}
+          class="LinkButton cardAction"
+        >
+          <Link.Root href={href}>{action}</Link.Root>
+        </Button.Root>
+      </div>
+    </div>
   )
 }
 

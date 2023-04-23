@@ -1,0 +1,50 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  padding: 0 2rem 2rem 2rem;
+
+  & h2 {
+    font-size: medium;
+  }
+}
+
+.cardContent {
+  margin-bottom: 2rem;
+}
+
+.cardAction {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.LinkButton {
+  font-size: 2rem;
+  padding: 1rem;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  & a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+/* responsiveness */
+
+.card.small {
+  width: 90%;
+}
+
+.card.large {
+  min-width: 35rem;
+}
