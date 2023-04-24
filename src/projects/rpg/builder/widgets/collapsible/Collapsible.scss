@@ -16,9 +16,13 @@ $minus: '\2796';
 .content {
   overflow-x: hidden;
   overflow-y: auto;
-  height: 60rem;
-  max-height: 0;
-  transition: max-height 0.3s ease-out;
+  height: fit-content;
+  max-height: 60rem;
+
+  &.client {
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+  }
 }
 
 .collapsible:after {

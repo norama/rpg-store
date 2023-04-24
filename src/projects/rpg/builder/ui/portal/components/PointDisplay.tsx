@@ -15,7 +15,7 @@ const PointDisplay = ({ title = 'Body' }: Props) => {
     <ChipDisplay
       label="⬤"
       title={title}
-      value={() => properties().points}
+      value={() => (properties() ? properties().points : '')}
       backgroundColor={theme()?.colors['primary']}
     />
   )

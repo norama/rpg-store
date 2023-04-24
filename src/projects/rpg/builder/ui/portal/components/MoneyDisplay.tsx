@@ -15,7 +15,7 @@ const MoneyDisplay = ({ title = 'Prachy' }: Props) => {
     <ChipDisplay
       label="💰"
       title={title}
-      value={() => properties().money}
+      value={() => (properties() ? properties().money : '')}
       backgroundColor={theme()?.colors['highlight']}
     />
   )

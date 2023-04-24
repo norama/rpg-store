@@ -10,7 +10,7 @@ const NameInput = () => {
   return (
     <StringInput
       label="Jméno"
-      value={() => properties().name}
+      value={() => (properties() ? properties().name : '')}
       disabled={state() === 'saving'}
       onChange={(name) => propertiesMap.setKey('name', name)}
       placeholder="Zadejte název postavy"
