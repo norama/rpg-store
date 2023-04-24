@@ -11,7 +11,7 @@ const basename = Path.basename(frontmatter.url)
 const block = Path.parse(basename).name
 
 import startup from '@scripts/startup'
-startup(block)
+await startup(block)
 ---
 
 <Header block={block} />
