@@ -9,9 +9,6 @@ const { frontmatter } = Astro.props
 import Path from 'path'
 const basename = Path.basename(frontmatter.url)
 const block = Path.parse(basename).name
-
-import startup from '@scripts/startup'
-await startup(block)
 ---
 
 <Header block={block} />

@@ -15,6 +15,15 @@ const uaString = Astro.request.headers.get('user-agent')
 const { source, isMobile } = useUserAgent(uaString)
 
 const fontSize = isMobile ? '16px' : '8px'
+
+const { frontmatter } = Astro.props
+
+import Path from 'path'
+const basename = Path.basename(frontmatter.url)
+const block = Path.parse(basename).name
+
+import startup from '@scripts/startup'
+await startup(block)
 ---
 
 <html>
