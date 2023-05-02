@@ -16,6 +16,7 @@ const MoneyDisplay = ({ title = 'Prachy' }: Props) => {
       label="💰"
       title={title}
       value={() => (properties() ? properties().money : '')}
+      color={theme()?.colors['sharp']}
       backgroundColor={theme()?.colors['highlight']}
     />
   )

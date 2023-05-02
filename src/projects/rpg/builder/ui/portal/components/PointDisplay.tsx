@@ -16,6 +16,7 @@ const PointDisplay = ({ title = 'Body' }: Props) => {
       label="⬤"
       title={title}
       value={() => (properties() ? properties().points : '')}
+      color={theme()?.colors['sharp']}
       backgroundColor={theme()?.colors['primary']}
     />
   )

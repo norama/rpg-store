@@ -2,28 +2,23 @@ import PubSub from 'pubsub-js'
 import M from 'pubsub/messages'
 import { useStore } from '@nanostores/solid'
 import stateAtom from '@builder/ui/stores/stateAtom'
-import { Button, CircularProgress } from '@suid/material'
-import style from 'styles/style'
+import { Button } from '@kobalte/core'
+import CircularProgress from '@builder/ui/widgets/form/CircularProgress'
+import styles from './FormControls.module.scss'
 
 const SaveButton = () => {
   const state = useStore(stateAtom)
 
   return (
-    <Button
+    <Button.Root
       color="success"
-      variant="contained"
       type="submit"
       disabled={state() !== 'dirty'}
-      sx={style(
-        'controlButton',
-        state() !== 'dirty'
-          ? { backgroundColor: 'green !important', color: 'white !important' }
-          : {}
-      )}
+      class={`${styles.button} ${styles.save}`}
       onClick={() => PubSub.publish(M.uiSaveAction)}
     >
-      {state() === 'saving' ? <CircularProgress color="inherit" size="2rem" /> : <>✓</>}
-    </Button>
+      {state() === 'saving' ? <CircularProgress /> : <>✓</>}
+    </Button.Root>
   )
 }
 

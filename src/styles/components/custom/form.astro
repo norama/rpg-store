@@ -9,7 +9,7 @@ import Responsivity from '@widgets/Responsivity'
 <div style={style('form', { ...props, visibility: 'hidden' })} class="form">
   <slot />
   <div style={style('formControls')}>
-    <FormControls client:only="solid-js" />
+    <FormControls client:load />
   </div>
-  <Responsivity className="form" client:only="solid-js" />
+  <Responsivity className="form" client:load />
 </div>

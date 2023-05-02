@@ -1,0 +1,55 @@
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  & :first-child {
+    margin-right: 2rem;
+  }
+}
+
+.button {
+  appearance: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+  width: 8rem;
+  outline: none;
+  border-radius: 6px;
+  padding: 0 16px;
+  line-height: 0;
+  transition: 250ms background-color;
+  font-size: 2.5rem;
+  cursor: pointer;
+  border: none;
+  opacity: 0.9;
+
+  &:not(:disabled):hover {
+    opacity: 1;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: auto;
+  }
+}
+
+.save {
+  background-color: green;
+  color: white;
+}
+
+.reset {
+  background-color: transparent;
+  color: #b82d2e;
+  border: 1px solid transparent;
+
+  &:not(:disabled) {
+    border-color: #7c3434;
+
+    &:hover {
+      border-color: #b82d2e;
+    }
+  }
+}
