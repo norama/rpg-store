@@ -34,7 +34,7 @@ export class FormData<D extends Object> {
       this.map.set({ ...data })
       this.dirtyKeys.clear()
       PubSub.publish(M.uiDirty, false)
-      console.log('resource loaded: ' + resource, this.map.get())
+      //console.log('resource loaded: ' + resource, this.map.get())
       businessReady.resourceLoaded(resource)
     })
 

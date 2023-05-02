@@ -8,7 +8,7 @@ class Transport {
   rpgCharacter: IRpgCharacter
 
   async init() {
-    console.log('========== fetching target')
+    //console.log('========== fetching target')
 
     if (!import.meta.env.SSR) {
       const response = await fetch(`${API_URL}/rpgCharacter.json`)

@@ -16,7 +16,7 @@ class Properties implements IBlockPage {
   ]
 
   async init() {
-    console.log('========== fetching properties')
+    //console.log('========== fetching properties')
 
     if (!import.meta.env.SSR) {
       let response = await fetch(`${API_URL}/rpgCharacter.json`)

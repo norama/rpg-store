@@ -14,7 +14,7 @@ class Info<I> implements IBlockPage {
   }
 
   async init() {
-    console.log('========== fetching info: ' + this.type)
+    //console.log('========== fetching info: ' + this.type)
 
     if (!import.meta.env.SSR) {
       const response = await fetch(`${API_URL}/${this.type}Info.json`)
@@ -22,7 +22,7 @@ class Info<I> implements IBlockPage {
     } else {
       this.info = await select<I>(T.rpgInfo, this.type)
     }
-    console.log('INFO', this.info)
+    //console.log('INFO', this.info)
   }
 
   publish() {

@@ -14,7 +14,7 @@ const Responsivity = ({ className }: Props) => {
     const oldRespClass = small ? 'large' : 'small'
 
     const targets = document.querySelectorAll<HTMLElement>(`.${className}`)
-    console.log('targets', targets)
+    //console.log('targets', targets)
 
     for (let target of targets) {
       target.classList.remove(oldRespClass)
